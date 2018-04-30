@@ -189,6 +189,8 @@ So all we have to do now is to create an `index.html` file that refers to our `a
 </html>
 ~~~
 
+Then, simply open a terminal in the same folder and run the command `parcel index.html`.
+
 ![](parcel.png)
 
 This can't run directly in a browser, of course, so Parcel

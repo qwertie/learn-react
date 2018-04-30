@@ -10,7 +10,7 @@ This is a summary of the four ways you can set up your TypeScript project; see [
 3. (Optional) In a terminal: `npm --global typescript`
 4. (For The Easy Way) In a terminal: `npm install --global parcel-bundler`
 5. (For The Webpack Way) In a terminal: `npm install --global webpack`
-5. (For The Gulp Way) In a terminal: `npm install --global webpack`
+5. (For The Gulp Way) In a terminal: `npm install --global gulp`
 
 ### How to start a new project ###
 
@@ -50,6 +50,7 @@ ReactDOM.render(
 
 - Create this html file to load your app. Notice the reference to `app.tsx`.
 
+~~~html
 <!DOCTYPE html>
 <html>
 <head>
@@ -62,6 +63,7 @@ ReactDOM.render(
   <script src="app.tsx"></script>
 </body>
 </html>
+~~~
 
 - In a terminal: `parcel index.html`
 - Open in web browser: [http://127.0.0.1:1234](http://127.0.0.1:1234)
@@ -100,11 +102,13 @@ app.listen(1234, () => console.log('Express server running at http://127.0.0.1:1
 
 3. Add `"build"` and `"start"` scripts to `package.json`:
 
+~~~json
   "scripts": {
     "test": "echo \"Error: no tests installed\" && exit 1",
     "build": "tsc",
     "start": "node server.js"
   },
+~~~
 
 4. Create an `index.html` file in your app folder:
 
