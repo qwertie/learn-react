@@ -4,7 +4,7 @@ How to write web apps with Typescript & React
 
 In all my years as a developer I've never encountered a wilderness as overwhelming as The JavaScript World. It's a world of bewildering complexity, where making a very simple project seems to require installing numerous tools, editing several text files that connect all those tools together, and running a bunch of terminal commands. There are some tools that try to hide the complexity from you, with varying degrees of success - but as long as those tools don't have universal adoption, such tools just seem to me like even more things you have to learn on top of everything else.
 
-My biggest beef is that most tutorials assume you are *already* familiar with the ecosystem so they don't bother to explain the basics. To make this worse, many tutorials try to shove a bunch of extra tools down your throat - webpack, bower, nvm, redux, etc. - with little explanation. It's ironic because JavaScript itself is already installed on virtually every computer in the world, including phones. Why should writing an app the "professional" way have to be so complex compared to writing an html file with some Javascript code in it?
+For me, the biggest source of irritation is that most tutorials assume you are *already* familiar with the ecosystem so they don't bother to explain the basics. To make this worse, many tutorials try to shove a bunch of extra tools down your throat - webpack, bower, nvm, redux, etc. - with little explanation. It's ironic because JavaScript itself is already installed on virtually every computer in the world, including phones. Why should writing an app the "professional" way have to be so complex compared to writing an html file with some Javascript code in it?
 
 If, like me, you have an **innate need** to understand what is going on - if you can't stand blindly copying commands into terminals and text files, if you want to make sure you need a tool before you install it, if you're wondering why your project folder is 50MB before you've written your first line of code - welcome! You've come to the right place. (On the other hand, if you wanted to start coding in 5 minutes flat, you've *definitely* come to the wrong place.)
 
@@ -13,7 +13,7 @@ In this 3-part tutorial I will assume you **have** some programming experience w
 ### Topics:
 
 - Part 1: Overview of the JavaScript Ecosystem
-- Part 2: Installing tools; setting up a simple file server with React/Preact front-end; how to make the computer recompile your code automatically.
+- Part 2: Installing tools; four different ways you could set up your React/Preact project; how to make the computer recompile your code automatically.
 - Part 3: Understanding React
 
 Part 1: Overview of the JavaScript Ecosystem
@@ -24,6 +24,7 @@ For many programming languages, there's a certain way of doing things that every
 In JavaScript, on the other hand, there are so many competing libraries and tools for almost every aspect of the development process, the barrage of tools can become overwhelming before you write your first line of code! When you go Googling "how to write a web app", every web site you visit seems to give different advice.
 
 ![](js-compile-run-process.svg)
+
 *Thanks [draw.io](https://draw.io) for the diagramming tool!*
 
 The one thing most people seem to agree on is using the Node Package Manager, `npm`, for downloading Javascript libraries (both server-side and browser-only). But even here, some people are using [yarn](https://yarnpkg.com/en/), which is npm-compatible, or possibly [bower](https://bower.io/).

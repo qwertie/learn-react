@@ -43,7 +43,7 @@ In the terminal, run `npm init`. `npm init` will ask you some questions in order
 
 I wanted to make a small educational app to draw some graphs demonstrating how climate science explains the 20th century temperature record. So I called my app climate-app:
 
-~~~
+~~~plaintext
 C:\Dev\climate-app>npm init
 This utility will walk you through creating a package.json file.
 It only covers the most common items, and tries to guess sensible defaults.
