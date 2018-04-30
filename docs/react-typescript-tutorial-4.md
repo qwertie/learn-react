@@ -1,4 +1,4 @@
-Part 3: Understanding React
+Part 4: Understanding React
 ===========================
 
 Part 1: Why do people like React?

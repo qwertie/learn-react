@@ -231,7 +231,7 @@ Running your project, Approach B: The Way of Fewest Tools
 
 Create a text file called `tsconfig.json` (in your root folder) and put this code in it:
 
-~~~json
+~~~js
 {   // TypeScript configuration file: provides options to the TypeScript 
     // compiler (tsc) and makes VSCode recognize this folder as a TS project,
     // enabling the VSCode build tasks "tsc: build" and "tsc: watch".
@@ -571,30 +571,7 @@ List of common npm commands
 
 `npm` commands also have short forms, such as `npm i -D` for `npm install --save-dev`.
 
+Next
+----
 
-Part 3
--------
-
-### One-time installations ###
-
-1. [Install Node.js](https://nodejs.org/en/download/)
-2. [Install Visual Studio Code](https://code.visualstudio.com/download)
-3. In a terminal: `npm --global typescript`
-3. In a terminal: `npm --global typescript`
-4. (For The Easy Way) In a terminal: `npm install --global parcel-bundler`
-5. (For The Webpack Way) In a terminal: `npm install --global webpack`
-5. (For The Gulp Way) In a terminal: `npm install --global webpack`
-
-### How to start a new project ###
-
-1. Create a folder for your project
-2. In a terminal: `npm init`
-3. (Optional) In a terminal: `npm install typescript`
-4. Decide where to store your source code (e.g. In the project root folder? in an `app` subfolder? Or perhaps in a `src` subfolder? It's up to you.)
-5. Create a tsx file and write some code in it (if you are not using JSX/React/Preact, make a ts file instead). Here is a simple React example:
-
-
-
-### How to do it The Easy Way ###
-
-6. Create an html file that loads your
+See [Part 3](react-typescript-tutorial-3.md) for a summary of the four approaches.

@@ -46,7 +46,12 @@ ReactDOM.render(
 );
 ~~~
 
-
 ### How to do it The Easy Way ###
 
-6. Create an html file that loads your
+6. Create this html file to load your app. Notice the 
+
+
+Next
+----
+
+See [Part 4](react-typescript-tutorial-4.md) to learn about React programming.
