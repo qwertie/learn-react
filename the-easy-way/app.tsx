@@ -1,7 +1,5 @@
-/** jsx React.createElement */
-import * as React from 'preact';
-import * as ReactDOM from 'preact';
-var h = React.createElement; // workaround for Parcel+Preact bug
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 class App extends React.Component<{greeting: string}, {count:number}> {
   constructor(props) {
@@ -21,6 +19,5 @@ class App extends React.Component<{greeting: string}, {count:number}> {
 
 ReactDOM.render(
   <App greeting="Hello, world!"/>,
-  document.getElementById('app'),
-  document.getElementById('app').lastChild as Element // extra argument for preact only
+  document.getElementById('app')
 );

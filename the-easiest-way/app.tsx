@@ -1,6 +1,7 @@
-/** jsx React.createElement */
 import * as React from 'preact';
 import * as ReactDOM from 'preact';
+// workaround: Parcel sometimes uses h and sometimes React.createElement in preact mode
+var h = React.createElement;
 
 class App extends React.Component<{greeting: string}, {count:number}> {
   constructor(props) {
