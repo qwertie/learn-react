@@ -6,7 +6,7 @@ Welcome to Part 2 of this series! Here we will go on a grand tour of the JavaScr
 Since this is a **grand** tour, we'll talk about writing your app in four different ways:
 
 - A. The Easiest Way (with Parcel)
-- B. The Way of Fewest Tools (a.k.a. the do-it-yourself way)
+- B. The Way of Fewest Tools (i.e. the do-it-yourself way)
 - C. The Webpack way
 - D. The Gulp way
 
@@ -185,12 +185,14 @@ All we have to do now is to create an `index.html` file that refers to our `app.
 </html>
 ~~~
 
+![](parcel.png)
+
 This can't run directly in a browser, of course, so Parcel
 
 1. Automatically compiles app.tsx
 2. Installs React or Preact because it notices that you're using it
-3. Bundles your app with its dependencies into a single file called `app.dd451710.js` (or another funny name)
-4. Creates a modified index.html that refers to the compiled app
+3. Bundles your app with its dependencies into a single file called `app.dd451710.js` (or some other funny name)
+4. Creates a modified `index.html` that refers to the compiled app
 5. Puts these new files in a folder called `dist`.
 
 Then Parcel does everything else for you:
@@ -204,27 +206,30 @@ It is challenging to set up a conventional build that does all of these things; 
 
 To learn about more features of Parcel, have a look at the [Parcel documentation](https://parceljs.org/getting_started.html). 
 
-Running your project, Approach A: The Easy Way
-----------------------------------------------
+Other approaches
+----------------
 
+The other approaches are more well-known and standard practise in the JavaScript community. We will be creating a folder with the following files inside:
 
-Let's get our development environment up and running! We will be creating a folder with the following files inside:
-
+  - app/index.html
+  - app/app.tsx
   - package.json
   - tsconfig.json
   - server.js
-  - app/index.html
-  - app/app.ts
+  - webpack.config.js (optional)
 
-The `app` folder contains the code of our front end.
+As a matter of communicating to other people who look at your code later, it is useful to separate your program's *front-end code* from its *build configuration* and *app server*. The root folder of a project tends to become cluttered with extra files over time (e.g. `.gitignore` if you use git, `README` and `LICENSE` files, appveyor/travis files if you use [continuous integration](https://en.wikipedia.org/wiki/Continuous_integration), etc.) Therefore we should separate the code of our front end into a different folder.
 
-In addition, TypeScript will compile `app.ts` to `app.js` and `app.js.map`, while `npm` creates a folder called `node_modules` and a file called `package-lock.json` (I can't imagine why it's called "lock", but [this page explains why it exists](https://medium.com/@Quigley_Ja/everything-you-wanted-to-know-about-package-lock-json-b81911aa8ab8).)
+In addition to the files **we** create, TypeScript will compile `app.tsx` into `app.js` and `app.js.map`, while `npm` creates a folder called `node_modules` and a file called `package-lock.json` (I can't imagine why it's called "lock", but [this page explains why it exists](https://medium.com/@Quigley_Ja/everything-you-wanted-to-know-about-package-lock-json-b81911aa8ab8).)
 
+So please begin by creating an `app` folder and putting your `app.tsx` there.
 
-Step 7: Create tsconfig.json and build command
-----------------------------------------------
+Running your project, Approach B: The Way of Fewest Tools
+---------------------------------------------------------
 
-Create a text file called `tsconfig.json` and put this code in it:
+### Step B1: Create tsconfig.json and build command ###
+
+Create a text file called `tsconfig.json` (in your root folder) and put this code in it:
 
 ~~~json
 {   // TypeScript configuration file: provides options to the TypeScript 
@@ -245,13 +250,6 @@ Create a text file called `tsconfig.json` and put this code in it:
 This file marks the folder as a TypeScript project and enables build commands in VSCode with Ctrl+Shift+B (the "tsc: watch" command is useful - it will automatically recompile your code whenever you save it.) **Silly fact**: `tsc` allows comments in json files but `npm` does not. 
 
 This file is very important because if the settings aren't right, something will go wrong and mysterious errors will punch you in the face. Here is the [documentation of tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html), but compiler options are [documented separately](https://www.typescriptlang.org/docs/handbook/compiler-options.html).).
-
-
-
-
-
-
-
 
 To allow `npm` to build your project, you must also add entries in the "scripts" part of package.json. Modify that section so it looks like this:
 
@@ -276,8 +274,7 @@ This would build your project whenever you start your server with `npm start` or
 
 The default behavior of `npm start` is to run `node server.js`, so it seems redundant to include `"start": "node server.js"`. However, if your server is written in TypeScript you'll need this line because `server.js` doesn't exist until `server.ts` is compiled, and if `server.js` doesn't exist, `npm start` will give the error `missing script: start` unless you include this line.
 
-Step 6: Make a simple server
-----------------------------
+### Step B2: Make a simple server ###
 
 To make sure Node.js is working, create a text file called server.js and put this code in it:
 

@@ -34,14 +34,14 @@ Glitchy types
 You may find that TypeScript is overly picky in JSX. For example, it accepts this code:
 
 ~~~ts
-let test = <div style={{textAlign:'right'}}>Text</div>;
+let test = <div style={ {textAlign:'right'} }>Text</div>;
 ~~~
 
 But it rejects this code:
 
 ~~~ts
 let right = 'right';
-let test = <div style={{textAlign: right }}>Text</div>;
+let test = <div style={ {textAlign: right } }>Text</div>;
 ~~~
 
 Its complaint:
@@ -59,31 +59,25 @@ Totally insane, right? And don't try fighting back with
 
 ~~~ts
 let right = 'right';
-let test = <div style={{textAlign:right as TextAlignProperty} as any}>Text</div>;
+let test = <div style={ {textAlign:right as TextAlignProperty} as any }>Text</div>;
 ~~~
 
 TypeScript will just say "`Cannot find name 'TextAlignProperty'`. There are two workarounds. The easy one is "as any":
 
 ~~~ts
 let right = 'right';
-let test = <div style={{textAlign:right} as any}>Text</div>;
+let test = <div style={ {textAlign:right} as any }>Text</div>;
 ~~~
 
-The CSS types are defined in *node_modules/csstype/index.d.ts* (a dependency of *node_modules/@types/react*). So we can import and use them like this:
+The CSS types are defined in *node_modules/csstype/index.d.ts* (a dependency of *node_modules/@types/react*). So another option is to import and use them like this:
 
 ~~~ts
 import * as CSS from 'csstype'; // at top of file
 
 let right = 'right';
-let test = <div style={{textAlign:right as CSS.TextAlignProperty}}>Text</div>;
+let test = <div style={ {textAlign:right as CSS.TextAlignProperty} }>Text</div>;
 ~~~
 
-But there is an easier way:
-
-~~~ts
-let right = 'right';
-let test = <div style={{textAlign:right} as any}>Text</div>;
-~~~
 
 This article can be shared and modified under the [CC-BY-SA license](https://creativecommons.org/licenses/by-sa/4.0/).
 
