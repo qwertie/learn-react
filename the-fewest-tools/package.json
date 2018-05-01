@@ -1,0 +1,24 @@
+{
+  "name": "the-fewest-tools",
+  "version": "1.0.0",
+  "description": "Very simple React app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no tests installed\" && exit 1",
+    "build": "tsc",
+    "start": "node server.js"
+  },
+  "author": "David Piepgrass",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^9.6.6",
+    "@types/react": "^16.3.13",
+    "@types/react-dom": "^16.0.5",
+    "typescript": "^2.8.3"
+  },
+  "dependencies": {
+    "preact": "^8.2.7",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2"
+  }
+}

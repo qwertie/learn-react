@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>App</title>
+  <meta charset="utf-8"/>
+  <script src="node_modules/react/umd/react.development.js"></script>
+  <script src="node_modules/react-dom/umd/react-dom.development.js"></script>
+  <script src="node_modules/preact/dist/preact.dev.js"></script>
+  <script>
+    module = {exports:{}}; exports = {};
+    window.require = function(name) { return window[name]; };
+    window['react'] = window['React'];
+    window['react-dom'] = window['ReactDOM'];
+  </script>
+</head>
+<body>
+  <h1>Mini React app ❤</h1>
+  <div id="app"></div>
+  <script src="app.js"></script>
+</body>
+</html>

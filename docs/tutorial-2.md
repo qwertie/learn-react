@@ -12,8 +12,8 @@ Since this is a **grand** tour, we'll talk about writing your app in four differ
 
 At the end of this guide there will be a quick summary to help you set up new projects faster. 
 
-The more things change, the more they stay the same
----------------------------------------------------
+Common Steps
+------------
 
 The first six steps are the same in all four approaches, so let's get started!
 
