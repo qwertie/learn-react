@@ -28,6 +28,11 @@ This would be slow if it were done naïvely, but React has a clever way of speed
 
 Second, React doesn't *actually* destroy and recreate the DOM; instead it *compares* the DOM to the JavaScript tree you created, and figures out how to change the DOM *as little as possible* to make it match your tree. This is much faster when there are few changes.
 
+Learn More
+----------
+
+Sorry, this article is not yet complete. I recommend reading [Thinking in React](https://reactjs.org/docs/thinking-in-react.html) or [some other tutorial](https://www.google.com.ph/search?q=react+tutorial).
+
 Glitchy types
 -------------
 
@@ -85,3 +90,4 @@ This article can be shared and modified under the [CC-BY-SA license](https://cre
 Debugging (optional)
 ---------------------
 
+Chrome has a usable debugger - press F12 in Chrome and find your code file inside the Sources table. To set breakpoints, click the line number of the line at which you want to stop; you may need to reload the page (F5) to start running code from the beginning. Firefox also has a developer tools interface you can reach with F12 (use the Debugger tab).
