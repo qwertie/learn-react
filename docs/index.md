@@ -2,19 +2,22 @@ How to write web apps with Typescript & React
 =============================================
 *A Detailed Primer*
 
-In all my years as a developer I've never encountered a wilderness as overwhelming as The JavaScript World. It's a world of bewildering complexity, where making a very simple project seems to require installing numerous tools, editing several text files that connect all those tools together, and running a bunch of terminal commands. There are some tools that try to hide the complexity from you, with varying degrees of success - but as long as those tools don't have universal adoption, such tools just seem to me like even more things you have to learn on top of everything else.
+In all my years as a developer I've never encountered a wilderness as overwhelming as The JavaScript World. It's a world of bewildering complexity, where making a very simple project seems to require installing numerous tools, editing several text files that connect all those tools together, and running a bunch of terminal commands. There are some tools that try to hide the complexity from you, with varying degrees of success - but as long as those tools don't have universal adoption, these tools just seem to me like even more things you have to learn on top of everything else.
 
 For me, the biggest source of irritation is that most tutorials assume you are *already* familiar with the ecosystem so they don't bother to explain the basics. To make this worse, many tutorials try to shove a bunch of extra tools down your throat - webpack, bower, nvm, redux, etc. - with little explanation. It's ironic because JavaScript itself is already installed on virtually every computer in the world, including phones. Why should writing an app the "professional" way have to be so complex compared to writing an html file with some Javascript code in it?
 
-If, like me, you have an **innate need** to understand what is going on - if you can't stand blindly copying commands into terminals and text files, if you want to make sure you need a tool before you install it, if you're wondering why your project folder is 50MB before you've written your first line of code - welcome! You've come to the right place. (On the other hand, if you wanted to start coding in 5 minutes flat, skip straight to [Approach A in Part 2](tutorial-2.html#common-steps), than read [Part 4](tutorial-4.md).)
+If, like me, you have an **innate need** to understand what is going on - if you can't stand blindly copying commands into terminals and text files, if you want to make sure you need a tool before you install it, if you're wondering why your project folder is 50MB before you've written your first line of code - welcome! You've come to the right place.
 
-In this 3-part tutorial I will assume you **have** some programming experience with HTML/CSS and Javascript, but **no** experience with TypeScript, React, or node.js. I'll give you an overview of the JS ecosystem as I understand it, I'll explain why I think React (or Preact) with TypeScript is your best bet for making web apps, and I'll help you start a project without unnecessary extras. We will then discuss how and why to add some extras to your project, **if** you decide you want them.
+On the other hand, if you wanted to start coding in 5 minutes flat, I can help you do that too: skip Part 1 and start reading about [Approach A in Part 2](tutorial-2.html#common-steps), then go straight to [Part 4](tutorial-4.md). Likewise, if you think I'm giving you too much information, just skip the parts you don't want to learn about right now.
+
+In this 3-part tutorial I will assume you **have** some programming experience with HTML/CSS and Javascript, but **no** experience with TypeScript, React, or node.js. I'll give you an overview of the JS ecosystem as I understand it, I'll explain why I think React (or Preact) with TypeScript is your best bet for making web apps, and I'll help you start a project without unnecessary extras. In part 2, we will discuss how and why to add a couple of extras to your project, **if** you decide you want them.
 
 ### Topics:
 
 - Part 1: Overview of the JavaScript Ecosystem
 - Part 2: Installing tools; four different ways you could set up your React/Preact project; how to make the computer recompile your code automatically.
-- Part 3: Understanding React
+- Part 3: Summary of Part 2
+- Part 4: Understanding React
 
 Part 1: Overview of the JavaScript Ecosystem
 --------------------------------------------

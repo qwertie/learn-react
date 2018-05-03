@@ -1,0 +1,15 @@
+.fact, .warning, .tip {
+    padding: 0.3em;
+}
+.fact { 
+    background-color: #eee;
+    border: 1px solid #ccc;
+}
+.warning { 
+    background-color: #fcc;
+    border: 1px solid #f88;
+}
+.tip { 
+    background-color: #ffc;
+    border: 1px solid #cc4;
+}
