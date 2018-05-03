@@ -613,4 +613,4 @@ This part not written.
 Next
 ----
 
-See [Part 3](tutorial-3.md) for a summary of the four approaches.
+See [Part 3](tutorial-3.md) for a summary of the approaches above.
