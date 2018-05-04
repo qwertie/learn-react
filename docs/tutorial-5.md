@@ -276,7 +276,7 @@ ReactDOM.render(
 
 This example introduces the concept of state, which is required if the user can make changes to the data in the program. The state of an object is the second type parameter to `React.Component`, in this case `{count:number}`, which means, the state is an object that has a `count` property of type `number`.
 
-**You are not allowed to change the state of a component directly.** Don't write `this.state.count += 1`; instead you must create a _new_ state object and pass that new object to `this.setState`, as denmonstrated in the `onClick` handler in this example:
+**You are not allowed to change the state of a component directly.** Don't write `this.state.count += 1`; instead you must create a _new_ state object and pass that new object to `this.setState`, as demonstrated in the `onClick` handler in this example:
 
     this.setState({count: this.state.count+1});
 
@@ -294,7 +294,7 @@ This example introduces two new things:
 
 ![](bar-graph.png)
 
-First let's define a component that decides how to draw a single bar in the bar chart, including the label on the left-hand side. To make sure the left-hand side of each bar lines up with every other bar in the chart, we will draw the bar chart as a two-column table (left column: labels, right column: bars). Each label has an asterisk on it which is actually a link to the source of the data for that bar (I guess that's an unintuitive way to link to my sources, but a better one didn't come to mind.) The size and color of each bar will be controlled by inline styles.
+First let's define a component that decides how to draw a single bar in the bar chart, including the label on the left-hand side. To make sure the left-hand side of each bar lines up with every other bar in the chart, we will draw the bar chart as a two-column table (left column: labels, right column: bars). Each label has an asterisk on it which is actually a link to the source of the data for that bar (I guess that's an unintuitive way to link to my sources, but a better idea didn't come to mind.) The size and color of each bar will be controlled by inline styles.
 
 For example, here is the HTML of the first bar in the chart (`tr` = table row, `td` = table cell):
 
@@ -367,7 +367,7 @@ You can also see that React supports inline styles in an interesting way: instea
 
 A `BarChart` will consist of a series of `Bars` in a table:
 
-~~~ts
+~~~tsx
 interface BarChartProps {
   title: string;       // title shown above the bars (second column)
   data: BarItem[];     // data items to show
@@ -394,11 +394,11 @@ class BarChart extends React.Component<BarChartProps,{}> {
 }
 ~~~
 
-Originally my `<table>` didn't have `<thead>` or `<tbody>` elements. It worked perfectly, but React complained about the lack of `<tbody>` in the browser console, so I changed the code. React also complained that *'Each child in an array or iterator should have a unique "key" prop.'*, so I added a `key` property to Bar; the issue of `key` properties is [discussed in the React documentation](https://reactjs.org/docs/lists-and-keys.html#keys).
+Originally my `<table>` didn't have `<thead>` or `<tbody>` elements. It worked perfectly, but React complained about the lack of `<tbody>` in the browser console, so I changed the code. React also complained that *'Each child in an array or iterator should have a unique "key" prop.'*, so I added a `key` property to Bar; the reason for `key` properties is [discussed in the React documentation](https://reactjs.org/docs/lists-and-keys.html#keys).
 
 Finally we need to define the data (an array of `BarItem[]`) and call `ReactDOM.render`:
 
-~~~ts
+~~~tsx
 var graphData = [
   //{ name: 'Oil market revenue', value: 1700, source: 'http://www.visualcapitalist.com/size-oil-market/' },
   { name: 'New fossil fuel plants', value: 117.2, source: 'https://www.iea.org/publications/wei2017/' },
@@ -418,6 +418,14 @@ ReactDOM.render(
   </div>,
   document.getElementById('app') 
 )
+~~~
+
+One more thing, the chart looks better with a little CSS:
+
+~~~css
+body    { font-family: sans-serif; }
+a       { text-decoration: none; }
+a:hover { text-decoration: underline; }
 ~~~
 
 #### Exercises for the reader: ####
