@@ -1,6 +1,6 @@
-How to write web apps with Typescript & React
-=============================================
-*A Detailed Primer*
+How to write web apps
+===========================================
+*A Detailed Primer with Typescript & React*
 
 Welcome! Ready to start learning about how to make web apps?
 

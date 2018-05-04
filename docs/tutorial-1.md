@@ -1,6 +1,6 @@
-How to write web apps with Typescript & React
-=============================================
-*A Detailed Primer*
+How to write web apps, Part 1
+===========================================
+*A Detailed Primer with Typescript & React*
 
 In all my years as a developer I've never encountered a wilderness as overwhelming as The JavaScript World. It's a world of bewildering complexity, where making a very simple project seems to require installing numerous tools, editing several text files that connect all those tools together, and running a bunch of terminal commands. There are some tools that try to hide the complexity from you, with varying degrees of success - but as long as those tools don't have universal adoption, these tools just seem to me like even more things you have to learn on top of everything else.
 
