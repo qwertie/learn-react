@@ -25,15 +25,15 @@ z = "Not a number";
 You'll get an error on the second line. TypeScript originally did adopt a loophole though: any variable can be `null` or `undefined`:
 
 ~~~ts
-notNumber = null;      // Allowed!
-notNumber = undefined; // Allowed!
+z = null;      // Allowed!
+z = undefined; // Allowed!
 ~~~
 
 If you're new to JavaScript, you're probably wondering what `null` and `undefined` are (or why they are two different things) - that's a hard question that I can dodge because I promised to tell you about _TypeScript_ and null/undefined are _JavaScript_ things. Ha! Anyway, many people (including me) are of the opinion that allowing _any_ variable to be null/undefined was a terrible idea, so TypeScript 2.0 [allows you to take away that permission](https://blog.mariusschulz.com/2016/09/27/typescript-2-0-non-nullable-types) with the `"strictNullChecks": true` compiler option in tsconfig.json. Instead you would write
 
     let z: number | null = 26;
 
-if you want z to be potentially null (`|` means "or").
+if you **want** z to be potentially null (`|` means "or").
 
 TypeScript has the ability to understand variables that can have multiple types. For example, here is some normal JavaScript code:
 
@@ -66,7 +66,7 @@ Since TypeScript is just JavaScript with types, you can use the console to help 
 
 ### Classes ###
 
-As you know, classes are bundles of functions and variables that can be instantiated into multiple objects; functions inside classes must refer to other functions and variables inside the class with the prefix `this.`. A typical JavaScript class might look like this:
+As you know, classes are bundles of functions and variables that can be instantiated into multiple objects. Functions inside classes can refer to other functions and variables inside the class, but in JavaScript and TypeScript you must use the prefix `this.`. A typical JavaScript class might look like this:
 
 ~~~js
 class Box {
@@ -148,7 +148,7 @@ console.log(x.width); // ERROR: 'width' is private and only accessible within cl
 
 ### Interfaces ###
 
-Interfaces are a way of referring to "shapes" of objects. Interfaces in TypeScript work like interfaces in Go, not like interfaces in Java and C# - and that's a good thing. Here's an example:
+Interfaces are a way of referring to "shapes" of objects. Interfaces in TypeScript work like interfaces in the Go programming language, not like interfaces in Java and C# - and that's a good thing. Here's an example:
 
 ~~~ts
 interface IBox {
@@ -181,11 +181,13 @@ interface IArea {
   area: number; // area is not readonly, so it can be changed
 }
 
-let iarea: IArea = new Box(10,100);
-iarea.area = 5; // Accepted by TypeScript, but causes a runtime error
+let ia: IArea = new Box(10,100);
+ia.area = 5; // Accepted by TypeScript, but causes a runtime error
 ~~~
 
-I think of it as a bug in TypeScript. TypeScript also has a concept of optional parts of an interface:
+I think of it as a bug in TypeScript.
+
+TypeScript also has a concept of optional parts of an interface:
 
 ~~~ts
 interface Person {
@@ -195,7 +197,7 @@ interface Person {
 }
 ~~~
 
-For example we can write `let p: Person = {name:'John Doe', age:37}`. Since `p` is a `Person`, we can later refer to `p.spouse`, which is equal to `undefined` in this case but could be a `Person` if a different object were assigned to it that has a `spouse`. However, you are not allowed to write `p = {name:'Chad', age:19, spouse:'Jennifer'}` with the wrong data type for `spouse` (TypeScript explains that *"Type 'string' is not assignable to type 'Person | undefined'."*)
+For example we can write `let p: Person = {name:'John Doe', age:37}`. Since `p` is a `Person`, we can later refer to `p.spouse`, which is equal to `undefined` in this case but could be a `Person` if a different object were assigned to it that has a `spouse`. However, you are not allowed to write `p = {name:'Chad', age:19, spouse:'Jennifer'}` with the wrong data type for `spouse` (TypeScript explains that *"Type `string` is not assignable to type `Person | undefined`."*)
 
 ### Function types ###
 
@@ -276,8 +278,6 @@ Now we have now created a completely useless variable called `zed` whose type is
 Technically we can set `zed` to `null` and `undefined` but luckily with `"strictNullChecks": true` we can close that loophole so that this variable will never be anything except "Zed". Thank God for that, is all I can say.
 
 Confused? Well, never mind, hopefully you'll get it later. Honestly, it doesn't matter right now.
-
-The thing is, 
 
 JSX
 ---

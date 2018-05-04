@@ -402,7 +402,7 @@ app.use('/', express.static('app'));
 app.listen(1234, () => console.log('Express server running at http://127.0.0.1:1234'));
 ~~~
 
-### Step B4: Make a web page to hold your app ###
+### Step B5: Make a web page to hold your app ###
 
 Finally, in your `app` folder, create an `index.html` file in there to load your app:
 
