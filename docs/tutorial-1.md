@@ -4,9 +4,9 @@ How to write web apps, Part 1
 
 In all my years as a developer I've never encountered a wilderness as overwhelming as The JavaScript World. It's a world of bewildering complexity, where making a very simple project seems to require installing numerous tools, editing several text files that connect all those tools together, and running a bunch of terminal commands. There are some tools that try to hide the complexity from you, with varying degrees of success - but as long as those tools don't have universal adoption, these tools just seem to me like even more things you have to learn on top of everything else.
 
-For me, the biggest source of irritation is that most tutorials assume you are *already* familiar with the ecosystem so they don't bother to explain the basics. To make this worse, many tutorials try to shove a bunch of extra tools down your throat - webpack, bower, nvm, redux, etc. - with little explanation. It's ironic because JavaScript itself is already installed on virtually every computer in the world, including phones. Why should writing an app the "professional" way have to be so complex compared to writing an html file with some Javascript code in it?
+For me, the biggest source of irritation is that most tutorials assume you are *already* familiar with the ecosystem so they don't bother to explain the basics. To make this worse, many tutorials try to push a bunch of extra tools on you - webpack, bower, nvm, redux, etc. - with little explanation. It's ironic because JavaScript itself is already installed on virtually every computer in the world, including phones. Why should writing an app the "professional" way have to be so complex compared to writing an html file with some Javascript code in it?
 
-If, like me, you have an **innate need** to understand what is going on - if you can't stand blindly copying commands into terminals and text files, if you want to make sure you need a tool before you install it, if you're wondering why your project folder is 50MB before you've written your first line of code - welcome! You've come to the right place.
+If, like me, you have an **innate need** to understand what is going on - if you can't stand blindly copying commands into terminals and text files, if you want to make sure you need a tool before you install it, if you're wondering why your npm-based project is 50MB before you've written your first line of code - welcome! You've come to the right place.
 
 On the other hand, if you wanted to start programming in 5 minutes flat, I know a trick for that: skip this article and start reading about [Approach A in Part 2](tutorial-2.html#common-steps), then go straight to [Part 4](tutorial-4.md). Or if you think I’m giving you too much information, just skip the parts you don’t want to learn about right now.
 
@@ -85,11 +85,13 @@ When you see `$` in JavaScript code, it typically refers to jQuery; when you see
 
 There are libraries that let you write JavaScript (or other code-like things) embedded in HTML (or other files), usually for generating text output, often with a syntax like this:
 
+{% raw %}
 ~~~html
 <html>
   <body>{{content}}</body>
 </html>
 ~~~
+{% endraw %}
 
 Popular Javascript templating libraries include [Jade](http://jade-lang.com), [Pug](https://pugjs.org/), [Mustache](https://mustache.github.io/) and [Handlebars](https://handlebarsjs.com/).
 
