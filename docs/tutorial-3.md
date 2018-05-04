@@ -204,6 +204,11 @@ Then a file like `app/my_app.ts` will be compiled to `js/app/my_app.js`. If your
 
 Also, you'll need to change the server code so it can serve your code from the new location.
 
+Debugging
+---------
+
+Chrome has a usable debugger - press F12 in Chrome and find your code file inside the Sources table. To set breakpoints, click the line number of the line at which you want to stop; you may need to reload the page (F5) to start running code from the beginning. Firefox also has a developer tools interface you can reach with F12 (use the Debugger tab).
+
 List of common npm commands
 ---------------------------
 
@@ -219,4 +224,4 @@ List of common npm commands
 Next
 ----
 
-See [Part 4](tutorial-4.md) to learn about React programming.
+See [Part 4](tutorial-4.md) to learn about TypeScript (and JSX), or skip straight to [Part 5](tutorial-5.md) to learn React.
