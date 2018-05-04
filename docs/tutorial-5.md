@@ -1,8 +1,8 @@
 Part 5: Understanding React by Example
 ======================================
 
-Part 1: Why do people like React?
----------------------------------
+So, Why do people like React?
+-----------------------------
 
 There have been many different ways of synchronizing an internal collection of data (the Model) with the graphical user interface (GUI or UI) that a user sees (also known as the View). In my early days as a programmer, I would often synchronize manually. So if I had a textbox (which, in HTML, is called `<input type="text">`) I would have to install an event handler to find out when the textbox changed, and I would write some code to copy its value into an internal variable. When the internal variable changed, I would have to manually call a function whose job is to copy the model into the view. (In simple cases, I could skip this work and do nothing until the user clicks "OK" or "Submit".)
 
