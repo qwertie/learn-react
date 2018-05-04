@@ -8,7 +8,7 @@ For me, the biggest source of irritation is that most tutorials assume you are *
 
 If, like me, you have an **innate need** to understand what is going on - if you can't stand blindly copying commands into terminals and text files, if you want to make sure you need a tool before you install it, if you're wondering why your project folder is 50MB before you've written your first line of code - welcome! You've come to the right place.
 
-On the other hand, if you wanted to start coding in 5 minutes flat, I can help you do that too: skip this article and start reading about [Approach A in Part 2](tutorial-2.html#common-steps), then go straight to [Part 4](tutorial-4.md). Likewise, if you think I'm giving you too much information, just skip the parts you don't want to learn about right now.
+On the other hand, if you wanted to start programming in 5 minutes flat, I know a trick for that: skip this article and start reading about [Approach A in Part 2](tutorial-2.html#common-steps), then go straight to [Part 4](tutorial-4.md). Or if you think I’m giving you too much information, just skip the parts you don’t want to learn about right now.
 
 In this tutorial I will assume you **have** some programming experience with HTML/CSS and Javascript, but **no** experience with TypeScript, React, or node.js. I'll give you an overview of the JS ecosystem as I understand it, I'll explain why I think React (or Preact) with TypeScript is your best bet for making web apps, and I'll help you start a project without unnecessary extras. In part 2, we will discuss how and why to add a couple of extras to your project, **if** you decide you want them.
 

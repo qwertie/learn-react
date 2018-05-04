@@ -17,15 +17,19 @@ However you often don't have to *write down* the type. For example, if you write
 
 TypeScript *infers* that z is a number. So if you write
 
-    let z = 26;
-    z = "Not a number";
+~~~ts
+let z = 26;
+z = "Not a number";
+~~~
 
 You'll get an error on the second line. TypeScript originally did adopt a loophole though: any variable can be `null` or `undefined`:
 
-   notNumber = null;      // Allowed!
-   notNumber = undefined; // Allowed!
+~~~ts
+notNumber = null;      // Allowed!
+notNumber = undefined; // Allowed!
+~~~
 
-If you're new to JavaScript, you're probably wondering what `null` and `undefined` are (or why they are two different things) - that's a hard question that I can dodge because I promised to tell you about _TypeScript_ and null/undefined are JavaScript things. Ha! Anyway, many people (including me) are of the opinion that allowing _any_ variable to be null/undefined was a terrible idea, so TypeScript 2.0 [allows you to take away that permission](https://blog.mariusschulz.com/2016/09/27/typescript-2-0-non-nullable-types) with the `"strictNullChecks": true` compiler option in tsconfig.json. Instead you would write
+If you're new to JavaScript, you're probably wondering what `null` and `undefined` are (or why they are two different things) - that's a hard question that I can dodge because I promised to tell you about _TypeScript_ and null/undefined are _JavaScript_ things. Ha! Anyway, many people (including me) are of the opinion that allowing _any_ variable to be null/undefined was a terrible idea, so TypeScript 2.0 [allows you to take away that permission](https://blog.mariusschulz.com/2016/09/27/typescript-2-0-non-nullable-types) with the `"strictNullChecks": true` compiler option in tsconfig.json. Instead you would write
 
     let z: number | null = 26;
 
@@ -41,7 +45,7 @@ if (Math.random() < 0.5)
 else
     y = 25;
 y = [y, y];
-console.log(y); // print [25,25] or ["Why?","Why?"] to the console
+console.log(y); // print [25,25] or ["Why?","Why?"] in browser's console
 ~~~
 
 This is allowed in TypeScript also, because `var y` (by itself) gives `y` a type of `any`, meaning anything. So we can assign any value or object or whatever to `y`. So we can certainly set it to a string or a number or an array of two things. `any` is a special type; it means "this value or variable should act like a JavaScript value or variable and, therefore, not give me any type errors."
@@ -56,7 +60,9 @@ This means "variable y is a string or a number". If `y` is created this way, the
 
 ![](chrome-console.png)
 
-Since TypeScript is just JavaScript with types, you can use the console to help you learn the part of TypeScript that doesn't have types.
+Since TypeScript is just JavaScript with types, you can use the console to help you learn the part of TypeScript that doesn't have types. In your TypeScript file you can call `console.log(something)` to print things in the browser's console. In some browsers, `log` can display complex objects, for example, try writing `console.log({name:"Steve", age:37, favoriteNumbers:[7, 666, -1]})`:
+
+![](chrome-console-2.png)
 
 ### Classes ###
 
@@ -179,7 +185,17 @@ let iarea: IArea = new Box(10,100);
 iarea.area = 5; // Accepted by TypeScript, but causes a runtime error
 ~~~
 
-I think of it as a bug in TypeScript.
+I think of it as a bug in TypeScript. TypeScript also has a concept of optional parts of an interface:
+
+~~~ts
+interface Person {
+    readonly name: string;
+    readonly age: number;
+    readonly spouse?: Person;
+}
+~~~
+
+For example we can write `let p: Person = {name:'John Doe', age:37}`. Since `p` is a `Person`, we can later refer to `p.spouse`, which is equal to `undefined` in this case but could be a `Person` if a different object were assigned to it that has a `spouse`. However, you are not allowed to write `p = {name:'Chad', age:19, spouse:'Jennifer'}` with the wrong data type for `spouse` (TypeScript explains that *"Type 'string' is not assignable to type 'Person | undefined'."*)
 
 ### Function types ###
 

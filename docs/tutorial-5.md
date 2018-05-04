@@ -1,5 +1,5 @@
-Part 5: Understanding React
-===========================
+Part 5: Understanding React by Example
+======================================
 
 Part 1: Why do people like React?
 ---------------------------------
@@ -198,9 +198,11 @@ ReactDOM.render(
 
 This time, `this.props` has this type: `{type?: string, text: string}`. So both of the properties have type `string`, and the question mark indicates that `type` is optional. I would also draw your attention to the `ReactDOM.render` call. Our page contains multiple paragraphs, but `ReactDOM.render` can only accept one element to render. Therefore, we must enclose all the `Para`s in one `div` element, and then we give the `div` element to `ReactDOM.render`.
 
+A strange thing in the `<p>` element is the `className` attribute. You are not allowed to use the `class` attribute in React; you must use `className` instead (don't ask me why; Preact allows you to use `class` but React does not.)
+
 The `Para` component has some relatively complicated logic. The `type` property sets the `class` of each element (as you can see in the first paragraph), but if you use any capital letters in the `type` then it also becomes part of the text of the paragraph (as you can see in most of the other paragraphs).
 
-TypeScript code tends to be a little longer than normal JavaScript code because it contains some type annotations. In this program there are two type annotations. One of them is the type parameter on `React.Component<{type?: string, text: string}>`; in normal JavaScript you would simply write `React.Component` because the entire concept of type parameters does not exist in JavaScript. We receive benefits from this longer code, because VS Code will tell us immediately when we have used a component incorrectly...
+TypeScript code tends to be a little longer than normal JavaScript code because it contains some type annotations. In this program there are two type annotations. One of them is the type parameter on `React.Component<{type?: string, text: string}>`; in normal JavaScript you would simply write `React.Component` because the entire concept of type parameters does not exist in JavaScript. We receive benefits from this longer code, because VS Code will tell us with a red underline when we have used a component incorrectly...
 
 ![](intellisense-3a.png)
 
@@ -245,25 +247,16 @@ Surprisingly there seem to be 8 different versions of `createElement`, but all o
 
 ![](1-two-text-nodes.png)
 
-I just find that kind of interesting because in normal HTML, it's impossible to write two separate text nodes side-by-side like this. Only in the DOM can this funny situation exist.
+I find that interesting because in normal HTML, it's impossible to write two separate text nodes side-by-side like this. The DOM allows it but HTML does not, and so if you convert the DOM to HTML, the two text nodes are merged into one.
 
-Example #2: Bar graph
----------------------
-
-You don't need a fancy graphics package to make a bar graph; some simple ordinary HTML can do the job:
-
-
-Example #3: The button thing from Part 2
+Example #2: The button thing from Part 2
 ----------------------------------------
 
 ![](mini-react-app.png)
 
 ~~~tsx
 class App extends React.Component<{greeting: string}, {count:number}> {
-  constructor(props) {
-    super(props);
-    this.state = {count: 0};
-  }
+  state = {count: 0};
   render() {
       return (
           <div>
@@ -281,9 +274,157 @@ ReactDOM.render(
 );
 ~~~
 
-This example introduces the concept of state, which is required if the user can make changes to the data in the program. The state of a component can be changed 
+This example introduces the concept of state, which is required if the user can make changes to the data in the program. The state of an object is the second type parameter to `React.Component`, in this case `{count:number}`, which means, the state is an object that has a `count` property of type `number`.
 
+**You are not allowed to change the state of a component directly.** Don't write `this.state.count += 1`; instead you must create a _new_ state object and pass that new object to `this.setState`, as denmonstrated in the `onClick` handler in this example:
 
+    this.setState({count: this.state.count+1});
+
+This example demonstrates very simple and basic state. As our program gets more complex, we will have to think more carefully about how we deal with state; usually it's not this simple.
+
+Example #3: Bar graph
+---------------------
+
+You don't need a fancy graphics package just for a bar chart; HTML alone can do them pretty well, so that's what our next example will do.
+
+This example introduces two new things:
+
+1. Defining multiple components in one page. React programs usually contain many components so it's important to learn to break up your user interface into parts.
+2. The representation of CSS styles in React.
+
+![](bar-graph.png)
+
+First let's define a component that decides how to draw a single bar in the bar chart, including the label on the left-hand side. To make sure the left-hand side of each bar lines up with every other bar in the chart, we will draw the bar chart as a two-column table (left column: labels, right column: bars). Each label has an asterisk on it which is actually a link to the source of the data for that bar (I guess that's an unintuitive way to link to my sources, but a better one didn't come to mind.) The size and color of each bar will be controlled by inline styles.
+
+For example, here is the HTML of the first bar in the chart (`tr` = table row, `td` = table cell):
+
+~~~html
+<tr>
+  <td>New fossil fuel plants<a href="https://www.iea.org/publications/wei2017/">*</a></td>
+  <td><span style="display: inline-block; width: 500px; background-color: rgb(52, 73, 39); color: rgb(255, 255, 255); text-align: right; padding: 10px 5px 10px 0px;">$117.2 billion</span></td>
+</tr>
+~~~
+
+And here's the `Bar` component that generates the code:
+
+~~~tsx
+// Expected format of bar chart items and properties
+interface BarItem {
+  name: string;   // label for this bar
+  value: number;  // value of the bar
+  source: string; // citation/reference URL
+}
+interface BarProps {
+  item: BarItem;
+  maxValue: number; // value of largest bar
+  maxWidth: number; // width in pixels of largest bar
+  formatter(value:number): string; // converts BarItem.value to a string
+}
+
+class Bar extends React.Component<BarProps,{color:string}>
+{
+  state = { color: this.randomColor() };
+  render() {  
+    const width = this.props.item.value / this.props.maxValue * this.props.maxWidth;
+
+    const style = { display: 'inline-block', width: width,
+               backgroundColor: this.state.color, color: '#ffffff', 
+               textAlign: 'right', padding: '10px 5px 10px 0' };
+    const formatted = (this.props.formatter || (x => x))(this.props.item.value);
+
+    // If the bar isn't very wide, write value on the right side of the bar 
+    if (this.props.item.value * 2 < this.props.maxValue)
+      var bar = <td>
+            <span style={style as any}
+              onClick={() => this.setState({ color: this.randomColor() })}>
+              {'\u00A0' /* &nbsp; causes bar to have the correct height*/}
+            </span>{" "+formatted}
+          </td>;
+    else
+      // Otherwise, write the bar's value inside the bar
+      var bar = <td>
+            <span style={style as any}
+              onClick={() => this.setState({ color: this.randomColor() })}>
+              {formatted}
+            </span>
+          </td>;
+    return (
+        <tr>
+          <td>{this.props.item.name}<a href={this.props.item.source}>*</a></td>
+          {bar}
+        </tr>);
+  }
+  randomColor() {
+    // Choose an appropriate color for the bar
+    return '#' + (Math.random() * 900000 + 100000 | 0).toString();
+  }
+}
+~~~
+
+As you can see, the _data_ for a bar is in the `BarItem` interface and the _props_ for a bar is `BarProps`. Another point of interest is the state, which holds the bar color. If you click on a bar it will change color.
+
+You can also see that React supports inline styles in an interesting way: instead of writing CSS code, you create a JavaScript object that merely _resemble_ CSS code. The name of the styles must be camelCased (e.g. `text-align` becomes `textAlign`) and if numbers are used as sizes, React assumes they are measured in pixels.
+
+A `BarChart` will consist of a series of `Bars` in a table:
+
+~~~ts
+interface BarChartProps {
+  title: string;       // title shown above the bars (second column)
+  data: BarItem[];     // data items to show
+  maxBarWidth: number; // width in pixels of largest bar
+  formatter(value:number): string; // converts BarItem.value to a string
+}
+
+class BarChart extends React.Component<BarChartProps,{}> {
+  render() {
+    const maxValue = this.props.data
+          .map(item => item.value)
+          .reduce((x,y) => Math.max(x,y), 0);
+    return (
+      <table>
+        <thead><tr>
+          <th></th><th>{this.props.title}</th>
+        </tr></thead>
+        <tbody>
+          {this.props.data.map(item => 
+            <Bar item={item} maxValue={maxValue} maxWidth={this.props.maxBarWidth} formatter={this.props.formatter} key={item.name}/>)}
+        </tbody>
+      </table>);
+  }
+}
+~~~
+
+Originally my `<table>` didn't have `<thead>` or `<tbody>` elements. It worked perfectly, but React complained about the lack of `<tbody>` in the browser console, so I changed the code. React also complained that *'Each child in an array or iterator should have a unique "key" prop.'*, so I added a `key` property to Bar; the issue of `key` properties is [discussed in the React documentation](https://reactjs.org/docs/lists-and-keys.html#keys).
+
+Finally we need to define the data (an array of `BarItem[]`) and call `ReactDOM.render`:
+
+~~~ts
+var graphData = [
+  //{ name: 'Oil market revenue', value: 1700, source: 'http://www.visualcapitalist.com/size-oil-market/' },
+  { name: 'New fossil fuel plants', value: 117.2, source: 'https://www.iea.org/publications/wei2017/' },
+  { name: 'New solar plants', value: 114, source:  'http://fs-unep-centre.org/sites/default/files/publications/globaltrendsinrenewableenergyinvestment2017.pdf' },
+  { name: 'New wind plants', value: 112, source: 'http://fs-unep-centre.org/sites/default/files/publications/globaltrendsinrenewableenergyinvestment2017.pdf' },
+  { name: 'New nuclear plants', value: 26.3, source: 'https://www.iea.org/publications/wei2017/' },
+  { name: 'New geothermal', value: 3, source: 'http://fs-unep-centre.org/sites/default/files/publications/globaltrendsinrenewableenergyinvestment2017.pdf' },
+  { name: 'New hydro', value: 3, source: 'http://fs-unep-centre.org/sites/default/files/publications/globaltrendsinrenewableenergyinvestment2017.pdf' }
+];
+
+ReactDOM.render(
+  <div>
+    <h3>In ordinary HTML (generated by React, of course)</h3>
+    <BarChart title="2017 Worldwide Spending (USD)" 
+              data={graphData} maxBarWidth={500}
+              formatter={value => '$'+value+' billion'}/>
+  </div>,
+  document.getElementById('app') 
+)
+~~~
+
+#### Exercises for the reader: ####
+
+- Change the bar chart to support [stacking](https://www.google.com.ph/search?q=stacked+bar+chart&num=20&tbm=isch) (e.g. each bar is composed of 2 or more smaller bars with different colors "stacked" end-to-end)
+- Change the bar chart to support negative numbers. You can do this by adding a third column dedicated to negative numbers between the two existing columns; you'll need to reduce the margin/padding to zero between the second and third columns.
+- Cheat by searching the internet for someone else's solution.
 
 Example #3: Calendar event editor
 ---------------------------------
@@ -395,3 +536,8 @@ import * as CSS from 'csstype'; // at top of file
 let right: CSS.TextAlignProperty = 'right';
 let test = <div style={ {textAlign:right} }>Text</div>;
 ~~~
+
+The End
+-------
+
+The examples here are in a [repository on GitHub](https://github.com/qwertie/learn-react), and Google offers a [lot more](https://www.google.com.ph/search?q=react+examples). I hope you learned a lot! If you have comments, [leave a message](https://github.com/qwertie/learn-react/issues/new) in the [issue tracker](https://github.com/qwertie/learn-react/issues).
