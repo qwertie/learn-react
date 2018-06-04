@@ -117,10 +117,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
 class App extends React.Component<{greeting: string}, {count:number}> {
-  constructor(props) {
-    super(props);
-    this.state = {count: 0};
-  }
+  state = {count: 0};
   render() {
       return (
           <div>
