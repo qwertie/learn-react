@@ -1,13 +1,18 @@
 .highlight {
-    padding: 0.4em;
-    margin: 0.4em;
     background: #111;
-    font: normal normal normal normal Monaco,'DejaVu Sans Mono','Bitstream Vera Sans Mono',monospace;
+}
+pre.highlight {
+    padding: 0.4em;
+    margin: 0.4em 0.4em 0.4em 0;
     overflow: auto;
     border: 1px solid #CCC;
     -moz-border-radius: 7px;
     -webkit-border-radius: 7px;
     border-radius: 7px
+}
+
+code {
+    font: normal 'Verdana','DejaVu Sans Mono','Bitstream Vera Sans Mono',Monaco,monospace;
 }
 
 .highlight {
