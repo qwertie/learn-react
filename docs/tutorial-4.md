@@ -282,9 +282,9 @@ Confused? Well, never mind, hopefully you'll get it later. Honestly, it doesn't 
 JSX
 ---
 
-React introduced the concept of JSX code. It *looks* like HTML/XML code, but you are not making DOM elements, you're making plain-old JavaScript objects, which we call a "virtual DOM". For example `<img src={imageUrl}/>` actually means `React.createElement("img", { src: imageUrl })` in a .jsx or .tsx file.
+React introduced the concept of JSX code. Or maybe [Hyperscript](https://github.com/hyperhype/hyperscript) introduced it and React copied the idea soon afterward. In any case, JSX *looks* like HTML/XML code, but you are not making DOM elements, you're making plain-old JavaScript objects, which we call a "virtual DOM". For example `<img src={imageUrl}/>` actually means `React.createElement("img", { src: imageUrl })` in a .jsx or .tsx file.
 
-If it's a React thing, why am I talking about it in the TypeScript section? Because support for JSX is built into the TypeScript compiler.
+If JSX is a React thing, why am I talking about it in the TypeScript section? Because support for JSX is built into the TypeScript compiler.
 
 JSX can be used in the same places as normal expressions: you can pass JSX code to a function...
 
@@ -300,7 +300,14 @@ and you can return it from a function...
 
 Because `<h1>I'm JSX code!</h1>` really just means `React.createElement("h1", null, "I'm JSX code!")`.
 
+It is important whether a JSX tag starts with a capital letters; it is translated to TypeScript (or JavaScript) differently if it does. For example,
+
+- `<div class="foo"/>` means `React.createElement('div', {"class":"foo"})`, but
+- `<Div class="foo"/>` means `React.createElement(Div, {"class":"foo"})` (without quotes around `Div`).
+
+At the top of the file, the `@jsx` pragma can control the "factory" function that is called to translate JSX elements. For example if you use `/** @jsx h */` then `<b>this</b>` translates to `h('b', null, "this")` instead of `React.createElement('b', null, "this")`. Some Preact apps use this pragma, but you won't need to use it in this tutorial. Also, in tsconfig.json you can get the same effect with `"jsxFactory": "h"` in the `compilerOptions`.
+
 Next
 ----
 
-See [Part 5](tutorial-5.md) to learn about React programming.
+See [Part 5](tutorial-5.md) to start learning about React!

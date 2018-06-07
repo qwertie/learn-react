@@ -1,24 +1,28 @@
-Part 5: Understanding React by Example
-======================================
+Part 5: React Basics
+====================
 
-So, Why do people like React?
------------------------------
+The pain of UI design
+---------------------
 
-There have been many different ways of synchronizing an internal collection of data (the Model) with the graphical user interface (GUI or UI) that a user sees (also known as the View). In my early days as a programmer, I would often synchronize manually. So if I had a textbox (which, in HTML, is called `<input type="text">`) I would have to install an event handler to find out when the textbox changed, and I would write some code to copy its value into an internal variable. When the internal variable changed, I would have to manually call a function whose job is to copy the model into the view. (In simple cases, I could skip this work and do nothing until the user clicks "OK" or "Submit".)
+Many ways have been invented to synchronize an internal collection of off-screen data (the Model) with the graphical user interface (GUI or UI) that a user sees (also known as the View). In my early days as a programmer, I would often synchronize manually. Often if I had a textbox (which, in HTML, is called `<input type="text">`) I would have to install an event handler to find out when the textbox changed, and I would write some code to copy its value into an internal variable. When the internal variable changed, I would have to manually call a function whose job is to copy the model into the view. (In simple cases, I could skip this work and do nothing until the user clicks "OK" or "Submit".)
 
 Often this wasn't difficult, but it became harder as the user interface got more sophisticated. If GUI widgets (a.k.a. Windows controls, Android views, etc.) depend on each other in complicated ways, or if multiple parts of the user interface showed the same, changing, information (which had to stay synchronized), it became challenging to handle every situation that could possibly arise. As complexity rose, bugs tended to appear in the user interface, and the code tended to be be messy and non-modular.
 
-The most common technique to make it easier to create user interfaces is probably [data binding](https://en.wikipedia.org/wiki/Data_binding), but by itself it doesn't solve the problem entirely (and it still requires manually initiating synchronization from model to view). So beyond that, people typically use [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) or [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel). These techniques, I have found, don't make the code *easier* to write, because they tend to involve a bunch of boilerplate and duplication of concepts in different places. However, these techniques make the code cleaner, better-encapsulated, more scalable and easier to maintain (especially in large programs). Beyond that, there are other ideas floating around to automate the synchronization between model and view, such as [C#'s Update Controls](http://updatecontrols.net/cs/index.html).
+![List UI](list-ui.png)
 
-React is none of these things. Instead, React resembles the idea of immediate-mode user interfaces that was [invented/described by Casey Muratori in 2005](https://www.youtube.com/watch?v=Z1qyvQsjK5Y). The idea of immediate-mode user interfaces is to *eliminate* the problem of synchronizing the View and Model by "eliminating" the View. 
+The difficulty comes from the variety of update operations that must be done as the model and view change over time. Imagine an on-screen listbox: when first created, the list is empty and needs code that will fill it based on the model. If an item is added or removed in the model, the item needs to be added or removed in the view also. Clearing the list and refilling it might be easy, but inefficient, and if you're not careful, the user interface might not have the correct scroll bar position afterward, or it might forget which item is currently selected. Now imagine there is a textbox showing a field from the currently selected list item. When you select a different item in the listbox, that textbox must be updated. If the user changes the text, the new text needs to be stored in the model and perhaps also in the listbox. Likewise if the text changes in the model, that new text needs to be shown in the textbox and perhaps also in the listbox. When no item is selected, the textbox should be hidden; when an item is selected, the textbox should be shown.
+
+This is a pretty simple example, but it could still require a lot of code. One of the easiest ways invented to deal with this synchronization challenge has been [data binding](https://en.wikipedia.org/wiki/Data_binding), but by itself it doesn't solve the problem entirely (e.g. a data binding system typically cannot show and hide the text box for you). Beyond that, people typically use [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) or [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel). These techniques, I have found, don't make the code *easier* to write, because they tend to involve a bunch of boilerplate and duplication of concepts in different places. However, these techniques make the code cleaner, better-encapsulated, more scalable and easier to maintain (especially in large programs). Beyond that, there are other ideas floating around to automate the synchronization between model and view, such as [C#'s Update Controls](http://updatecontrols.net/cs/index.html).
+
+React is none of these things. Instead, React resembles the idea of _immediate-mode_ user interfaces that was [invented/described by Casey Muratori in 2005](https://www.youtube.com/watch?v=Z1qyvQsjK5Y). The idea of immediate-mode user interfaces is to *eliminate* the problem of synchronizing the View and Model by "eliminating" the View. 
 
 What do I mean by that? Obviously the view must exist in some sense, since you can see it on the screen. In the old world of desktop development, GUI widgets are objects that belong to the operating system. They have a long life cycle: you create a window filled with widgets, and those widgets exist as long as the user can see them.
 
-In immediate-mode UIs, often used in game programming, widgets only have the *illusion* of permanence. In reality they exist long enough to be drawn on the screen, and checked against user input, and then they are deleted. A game with an immediate-mode UI will regenerate and redraw the entire UI from the underlying data model about 60 times per second. In this style of UI, there is no need to "synchronize" the UI with the model; the model is what "really" exists and the view is merely a temporary index that points into the model.
+In immediate-mode UIs, often used in game programming, widgets only have the *illusion* of permanance. In reality they exist long enough to be drawn on the screen, and checked against user input, and then they are deleted. A game with an immediate-mode UI might regenerate and redraw the entire UI from the underlying data model about 60 times per second. In this style of UI, there is no need to "synchronize" the UI with the model; the model is what "really" exists and the view is merely a temporary index that points into the model.
 
-So in immediate mode, if there is a text box with the word "Hello" in it, it's directly showing the value `"Hello"` from the underlying model, and if there is a blinking cursor after the 'H', there must be another variable in the model (or in an extra data structure separate from the model) with the value `1` to represent the current location of the cursor. Although this style of programming requires you to include view-related state (such as the cursor position) alongside/inside your model, it is arguably an easier way of UI programming because it eliminates almost every bug and challenge with synchronizing the model with the view.
+So in immediate mode, if there is a text box with the word "Hello" in it, it's directly showing the value `"Hello"` from the underlying model, and if there is a blinking cursor after the 'H', there must be another variable in the model (or in an extra data area separate from the model) with the value `1` to represent the current location of the cursor. Although this style of programming requires you to include view-related state (such as the cursor position) alongside/inside your model, it is arguably an easier way of UI programming because it eliminates almost every bug and challenge with synchronizing the model with the view.
 
-Let's consider the example of a user interface for a calendar entry in a Calendar app. 
+Let's consider another example: a user interface for a calendar entry in a Calendar app. 
 
 ![Calendar entry UI](calendar-ui.png)
 
@@ -42,13 +46,31 @@ class CalendarEvent {
 
 In traditional user interface code, you would respond to a change in the "All day" checkbox or the `allDay` flag by somehow causing the "time range" widgets to be shown or hidden. The code that causes this change might be an event handler in the view, or, if you are using the MVVM pattern, it would be an event generated by the model; either way, a signal is sent **manually**.
 
-By contrast, in immediate mode, we simply write code to create the view (associated somehow with a  model). When the view is changed by the user, the view changes the model, but it doesn't synchronize different parts of itself: there is no code to show or hide things. Likewise, in the model, there is no code to generate "events".
+By contrast, in immediate mode, we would simply write code to create the view (associated somehow with a model). When the user changes the view, the view changes the model, but it doesn't synchronize different parts of itself: there is no code to show or hide things, no code to copy text from a textbox into a listbox. The UI is regenerated simply by running the same code that generated it the first time. Similarly, in the model, no code to generate "events" is needed. The code is simple because it is declarative - it describes how the screen should look, not how to update it.
 
-However, immediate mode is *fundamentally not* how a web browser works. A web browser "owns" all the user interface elements on the screen. Unless you are drawing *everything* on a `<canvas>` element, it is not practical to directly simulate immediate mode because it would be highly inefficient to destroy and recreate the entire [DOM](https://en.wikipedia.org/wiki/Document_Object_Model) frequently.
+However, a web browser is not designed as an immediate-mode system, but rather a _retained-mode_ system. This means that the web browser (not the application) owns (retains) all the user interface elements on the screen and is responsible for drawing them. Unless you are drawing *everything* on a `<canvas>` element, it is not practical to directly simulate immediate mode because it would be highly inefficient to destroy and recreate the entire [DOM](https://en.wikipedia.org/wiki/Document_Object_Model) frequently.
 
-The innovation of React is that it simulates the advantage of immediate-mode UIs in a non-immediate-mode environment. This could be slow if it were done naïvely, but React speeds up the process by figuring out how to change the DOM as little as possible; it changes only parts of the DOM that are different now.
+How React solves the problem
+----------------------------
 
-As a side effect of *not* changing elements that have not changed, React eliminates the main disadvantage of immediate-mode UIs: you **don't** have to keep track of standard view state such as the cursor position. For example, if a user types "Daily run" into a textbox, which causes "Daily run" to be saved into the model, then React will render a new user interface tree. As long as the new tree still includes a textbox that says "Daily run", React will not change the existing textbox, and therefore the cursor position in the textbox will remain unchanged.
+The main innovation of React is to combine the advantage of immediate-mode UIs (i.e. eliminating the effort of synchronizing the model with the view) while keeping the advantages of retained-mode UIs (i.e. automatically keeping track of the text cursor, selections and scroll bars; and supporting reasonably fast incremental updates even when the UI is complex and contains a lot of data.) And since user interfaces are made out of DOM elements, you keep the benefits of HTML and CSS (potentially complex, flexible and beautiful layouts).
+
+How does it work?
+
+Each time you generate your user interface, it's a virtual DOM. Real DOM elements are more expensive to create, so when you write code like `<div><b>this</b> code</div>` or `React.createElement("div", null, React.createElement("b", null, "this"), " code")`, an object tree is created, perhaps something like this:
+
+~~~js
+  { nodeName: 'div',
+    children: [
+      { nodeName: 'b', children: ["this"] },
+      " code"
+    ]
+  }
+~~~
+
+(The actual structure of the tree is not important, since only React will use it.)
+
+To achieve good performance while preserving UI state (such as the text cursor position), React/Preact basically compares your virtual DOM with the real DOM, and tries to find the least disruptive way to change the DOM to match the user interface you asked for.
 
 Example #0: Hello, world!
 -------------------------
@@ -116,9 +138,9 @@ ReactDOM.render(<App message="Hello, world!"/>,
                 document.getElementById("app"));
 ~~~
 
-The part that says `React.Component<{message:string}>` indicates that `React.Component` has a single type parameter, which is `{message:string}`. The first type parameter of `React.Component` controls the type of `this.props`. Therefore, the type of `this.props` is `{message:string}`. What does that mean? It means that `this.props` contains a single property called `message`, and it is a `string`.
+The part that says `React.Component<{message:string}>` indicates that `React.Component` has a single type parameter, which is `{message:string}`. This type parameter controls the type of `this.props`. Therefore, the type of `this.props` is `{message:string}`. What does that mean? It means that `this.props` contains a single property called `message`, and it is a `string`.
 
-This is a bit unusual. In some other programming languages, every type has a name, such as `string` or `double` or `Component`. In TypeScript, many types do have names (e.g. `React.Component` is a type name) but, more fundamentally, most types are defined by their structure... even if they do have a name. `{message:string}` is an example of a "structural" type: it is a type defined entirely by the fact that it has a property called `message` which is a `string`.
+This is a bit unusual. In some other programming languages, every type has a name, such as `string` or `double` or `Component`. In TypeScript, many types do have names (e.g. `React.Component` is a type name) but, more fundamentally, most types are defined by their structure (their name, if they have one, is not important to the type system). `{message:string}` is an example of a "structural" type: it is a type defined entirely by the fact that it has a property called `message` which is a `string`. It has no name, only structure.
 
 When you are writing the JSX code to create a React component, properties are written like XML attributes, so in this case the attribute `message="Hello, world!"` sets `this.props.message` to the string `"Hello, world!"`.
 
@@ -160,8 +182,7 @@ You don't actually have to follow all these instructions, by the way. You can ju
 1. Click the "Clone or download" button and choose "Download ZIP" on that page.
 2. Unzip the master.zip file that you downloaded
 3. Go into the `react-examples` folder inside the unzipped folder
-4. Go into `1-RandomFacts` subfolder 
-5. Run `run.cmd` to serve the example from Parcel.
+4. Run `run-examples.cmd` to serve the example from Parcel.
 6. Visit `127.0.0.1:1234` or whatever address Parcel says the server is using.
 
 Now that our CSS is set up, here is the React code that will generate the page:
@@ -196,13 +217,13 @@ ReactDOM.render(
   document.getElementById('app'));
 ~~~
 
-This time, `this.props` has this type: `{type?: string, text: string}`. So both of the properties have type `string`, and the question mark indicates that `type` is optional. I would also draw your attention to the `ReactDOM.render` call. Our page contains multiple paragraphs, but `ReactDOM.render` can only accept one element to render. Therefore, we must enclose all the `Para`s in one `div` element, and then we give the `div` element to `ReactDOM.render`.
+This time, `this.props` has this type: `{type?: string, text: string}`. So both of the properties have type `string`, and the question mark indicates that `type` is optional. I would also draw your attention to the `ReactDOM.render` call. Our page contains multiple paragraphs, but `ReactDOM.render` can only accept one element to render. Therefore, we must put all the `Para`s in one `div` element, and then we give the `div` element to `ReactDOM.render`.
 
 A strange thing in the `<p>` element is the `className` attribute. You are not allowed to use the `class` attribute in React; you must use `className` instead (don't ask me why; Preact allows you to use `class` but React does not.)
 
 The `Para` component has some relatively complicated logic. The `type` property sets the `class` of each element (as you can see in the first paragraph), but if you use any capital letters in the `type` then it also becomes part of the text of the paragraph (as you can see in most of the other paragraphs).
 
-TypeScript code tends to be a little longer than normal JavaScript code because it contains some type annotations. In this program there are two type annotations. One of them is the type parameter on `React.Component<{type?: string, text: string}>`; in normal JavaScript you would simply write `React.Component` because the entire concept of type parameters does not exist in JavaScript. We receive benefits from this longer code, because VS Code will tell us with a red underline when we have used a component incorrectly...
+In normal JavaScript you would simply write `React.Component` (without type parameters) because the entire concept of type parameters does not exist in JavaScript. We receive benefits from this longer code, because VS Code will tell us with a red underline when we have used a component incorrectly...
 
 ![](intellisense-3a.png)
 
@@ -432,11 +453,10 @@ a:hover { text-decoration: underline; }
 
 By the way, this example is perfect for server-side rendering, but this tutorial doesn't cover that.
 
-#### Exercises for the reader: ####
+#### Exercise for the reader: ####
 
-- Change the bar chart to support [stacking](https://www.google.com.ph/search?q=stacked+bar+chart&num=20&tbm=isch) (e.g. each bar is composed of 2 or more smaller bars with different colors "stacked" end-to-end)
-- Change the bar chart to support negative numbers. You can do this by adding a third column dedicated to negative numbers between the two existing columns; you'll need to reduce the margin/padding to zero between the second and third columns.
-- Cheat by searching the internet for someone else's solution.
+- Edit the style: add a dividing line between the bars and their labels using a style of `border-left: 1px solid #aaa` in the second column. Remember how `border-left` becomes `borderLeft` in React?
+- Change the bar chart to support negative numbers. You can do this by adding a third column dedicated to negative numbers between the two existing columns; you'll need to set the padding to zero between the second and third columns.
 
 Example #4: Calendar event editor
 ---------------------------------
@@ -552,6 +572,12 @@ import * as CSS from 'csstype'; // at top of file
 let right: CSS.TextAlignProperty = 'right';
 let test = <div style={ {textAlign:right} }>Text</div>;
 ~~~
+
+Notes
+-----
+
+- `setState` doesn't replace the entire state. If your state has properties {a, b} and you write `setState({a: 'new_a'})` then `b` is left unchanged.
+- I don't know why this is a thing, but you can call `setState` with a function, e.g. `this.setState(function(state, props) {a: state.a+'more_a'})`. In that case `setState` calls your function and uses the result as the new state.
 
 The End
 -------
