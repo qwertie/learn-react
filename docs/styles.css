@@ -13,24 +13,27 @@ html {
 }
 
 main {
-    max-width: 800px;
-    margin-right: auto;
-    margin-left: auto;
+  max-width: 800px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 h1 {
-    color: #888;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 0.2em 0 0.2em 0;
-    margin: 0.5em 0 0.5em 0;
+  color: #888;
+  padding: 0.2em 0 0.2em 0;
+  margin: 0.5em 0 0.5em 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+h1.site-title {
+  border-bottom: 0px;
 }
 h2 {
-    color: #448;
-    padding: 0.2em 0 0.2em 0;
-    margin: 1em 0 0.5em 0;
-    margin-bottom: 0.2em;
-    font-size: 1.5em;
-    border-bottom: 1px solid #eaecef;
+  color: #448;
+  padding: 0.2em 0 0.2em 0;
+  margin: 1em 0 0.5em 0;
+  margin-bottom: 0.2em;
+  font-size: 1.5em;
+  border-bottom: 1px solid #eaecef;
 }
 
 .post-date {
@@ -52,8 +55,8 @@ h2 {
 }
 
 header, .header {
-  margin: 0;
-  padding: 1em 0 1.5em 0;
+  margin: -1em -1em 0 -1em; /* compensate for default browser margin */
+  padding: 2em 0 2.5em 0;
   text-align: center;
   
   background: -moz-linear-gradient(269deg, #91B8FF 0%, #DAB5FF 31%, #FF8080 69%, #FFBFBF 79%, #ffffff 87%, #ffffff 100%); /* ff3.6+ */
@@ -65,13 +68,13 @@ header, .header {
 }
 
 .site-title {
-   font-family: verdana, sans-serif;
-   color: black;
-   text-shadow:
-     -1px -1px 0 #FFF8, 
-      1px -1px 0 #FFF8,
-      -1px 1px 0 #FFF8,
-       1px 1px 0 #FFF8,
-       3px 3px 3px #000;
-   /*-webkit-text-stroke: 1px black;*/
+  font-family: verdana, sans-serif;
+  color: black;
+  text-shadow:
+    -1px -1px 0 #FFF8, 
+     1px -1px 0 #FFF8,
+    -1px 1px 0 #FFF8,
+     1px 1px 0 #FFF8,
+     3px 3px 3px #000;
+  /*-webkit-text-stroke: 1px black;*/
 }
