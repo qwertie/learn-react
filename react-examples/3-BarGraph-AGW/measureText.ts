@@ -2,14 +2,14 @@ var measurementElem: HTMLSpanElement;
 
 /**
  * Measures the width and height of a plain text string.
- * @param text     Text to be measured
- * @param font     Optional font to use, e.g. 'bold 2em "Verdana", sans-serif'
- *                 If null, font is inherited via css (div > span).
- * @param maxWidth Width of containing element (for word wrapping); the
- *                 width is unlimited if this parameter is undefined.
- * @param collapseWhitespace if this parameter is false or missing, whitespace
- *                 is not collapsed (as in <pre> elements).
- * @param className Class name to attach to the <span>
+ * @param text {string} Text to be measured
+ * @param font {string|null} Optional font to use, e.g. 'bold 2em "Verdana", sans-serif'
+ *             If null, font is inherited via css (div > span).
+ * @param maxWidth {number} Width of containing element (for word wrapping); 
+ *             the width is unlimited if this parameter is undefined.
+ * @param collapseWhitespace {boolean} if this parameter is false or missing,
+ *             whitespace is not collapsed (as in <pre> elements).
+ * @param className {string} Class name to attach to the <span>
  * @returns {{width:number,height:number}} Text size in pixels (integers).
  * @description
  * Provides the ability to measure the width and height of a text string,

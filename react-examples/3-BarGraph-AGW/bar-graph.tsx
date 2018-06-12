@@ -48,12 +48,16 @@ class Bar extends React.Component<BarProps,{}>
   private static renderBar(props: BarProps) {
     var bar: React.ReactNode[];
     if (props.item.value instanceof Array) {
-      // Stacked bar chart! This is complicated because it is difficult
-      // to fit non-overlapping labels on a single bar. To make it easier
-      // to draw lines and measure text, draw on a canvas. We can't draw
-      // on the canvas from render(), but we do need to choose its height
-      // during render(). For this purpose I wrote the measureText module...
-      
+      // Stacked bar chart! This is complicated because:
+      // - It is difficult to fit non-overlapping labels on a single bar,
+      //   so we use an algorithm to prevent overlap using two lines of
+      //   text, but it cannot run during render() when there's no DOM -
+      //   not if we want to use the font inherited via CSS.
+      // - We can't even choose the height of the svg because we can't 
+      //   find out what the font is, let alone its height.
+      // - However, it's good to at least make correctly-sized sub-bars
+      //   here so that v
+      bar = [<svg></svg>];
     } else {
       const value = Bar.getValue(props.item);
       const width = value / props.maxValue * props.maxWidth;
@@ -172,4 +176,3 @@ is 97% or 99.99%?</i> (<a href="https://skepticalscience.com/docs/Skuce_2017_con
   </div>,
   document.getElementById('app') 
 )
-

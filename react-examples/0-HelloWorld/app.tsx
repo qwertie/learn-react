@@ -7,5 +7,8 @@ class App extends React.Component<{message: string}> {
   }
 }
 
+// A simple component like this can also be written as a function:
+//function App(props: {message:string}) { return <h2>{props.message}</h2>; }
+
 ReactDOM.render(<App message="Hello, world!"/>, 
                 document.getElementById("app"));

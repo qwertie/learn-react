@@ -66,7 +66,7 @@ class BarChart extends React.Component<BarChartProps,{}> {
           .map(item => item.value)
           .reduce((x,y) => Math.max(x,y), 0);
     return (
-      <table>
+      <table style={ {borderSpacing:0} }>
         <thead><tr>
           <th></th><th>{this.props.title}</th>
         </tr></thead>
