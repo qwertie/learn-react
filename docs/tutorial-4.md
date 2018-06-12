@@ -305,6 +305,12 @@ It is important whether a JSX tag starts with a capital letters; it is translate
 - `<div class="foo"/>` means `React.createElement('div', {"class":"foo"})`, but
 - `<Div class="foo"/>` means `React.createElement(Div, {"class":"foo"})` (without quotes around `Div`).
 
+Tips for using JSX:
+
+- JSX is XML-like, so all tags must be closed: write `<br/>`, not `<br>`.
+- JSX only supports string attributes and JavaScript expressions. When writing numeric attributes in TypeScript, use `<input type="number" min={0} max={100}/>`, because `max=100` is a syntax error and `max="100"` is a type error.
+- In React/Preact, you can use an array of elements in any location where a list of children are expected. For example, instead of `return <p>Ann<br/>Bob<br/>Cam</p>`, you can write `let x = [<br/>, 'Bob', <br/>]; return <p>Ann{x}Cam</p>`. This has the same effect because React/Preact "flattens" arrays in the child list.
+
 At the top of the file, the `@jsx` pragma can control the "factory" function that is called to translate JSX elements. For example if you use `/** @jsx h */` then `<b>this</b>` translates to `h('b', null, "this")` instead of `React.createElement('b', null, "this")`. Some Preact apps use this pragma, but you won't need to use it in this tutorial. Also, in tsconfig.json you can get the same effect with `"jsxFactory": "h"` in the `compilerOptions`.
 
 Next

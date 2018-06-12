@@ -1,16 +1,16 @@
 Setting up your TypeScript Project: 4 Different Approaches
 ==========================================================
 
-Welcome to Part 2 of this series! Here we will go on a grand tour of the JavaScript tools ecosystem. This part is not about React (we'll get to that in [Part 5](tutorial-5.md)) but it does include a simple React component.
+Welcome to Part 2 of this series! Here we will go on a tour of the JavaScript tools ecosystem. This part is not about React (we'll get to that in [Part 5](tutorial-5.md)) but it does include a simple React component.
 
-Since this is a **grand** tour, we'll talk about writing your app in four different ways:
+Actually this is a **grand** tour, and we'll talk about writing your app in four different ways:
 
 - A. The Easiest Way (with Parcel)
 - B. The Way of Fewest Tools (i.e. the do-it-yourself way)
 - C. The Webpack way
 - D. The Gulp way
 
-At the end of this guide there will be a quick summary to help you set up new projects faster. 
+Afterward there will be a summary to remind you of the key points.
 
 Common Steps
 ------------

@@ -125,6 +125,6 @@ This code refers to one of the other unique things about JavaScript, the idea of
 
 ### Credit ###
 
-I'd like to thank the [State of Javascript](https://stateofjs.com/) survey and [State of JavaScript frameworks](https://www.npmjs.com/npm/the-state-of-javascript-frameworks-2017-part-2-the-react-ecosystem) for much of the information above! For a few items I used [npm-stat](https://npm-stat.com/) to measure popularity.
+I'd like to thank the [State of Javascript](https://stateofjs.com/) survey and [State of JavaScript frameworks](https://www.npmjs.com/npm/the-state-of-javascript-frameworks-2017-part-2-the-react-ecosystem) for much of the information above! For a few items I used [npm-stat](https://npm-stat.com/) to measure popularity. See also this [other new survey](https://ashleynolan.co.uk/blog/frontend-tooling-survey-2018-results).
 
 Are you ready to read [Part 2](tutorial-2.md)?

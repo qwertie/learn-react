@@ -8,17 +8,17 @@ Many ways have been invented to synchronize an internal collection of off-screen
 
 Often this wasn't difficult, but it became harder as the user interface got more sophisticated. If GUI widgets (a.k.a. Windows controls, Android views, etc.) depend on each other in complicated ways, or if multiple parts of the user interface showed the same, changing, information (which had to stay synchronized), it became challenging to handle every situation that could possibly arise. As complexity rose, bugs tended to appear in the user interface, and the code tended to be be messy and non-modular.
 
-![List UI](list-ui.png)
+![](list-ui.png)
 
 The difficulty comes from the variety of update operations that must be done as the model and view change over time. Imagine an on-screen listbox: when first created, the list is empty and needs code that will fill it based on the model. If an item is added or removed in the model, the item needs to be added or removed in the view also. Clearing the list and refilling it might be easy, but inefficient, and if you're not careful, the user interface might not have the correct scroll bar position afterward, or it might forget which item is currently selected. Now imagine there is a textbox showing a field from the currently selected list item. When you select a different item in the listbox, that textbox must be updated. If the user changes the text, the new text needs to be stored in the model and perhaps also in the listbox. Likewise if the text changes in the model, that new text needs to be shown in the textbox and perhaps also in the listbox. When no item is selected, the textbox should be hidden; when an item is selected, the textbox should be shown.
 
-This is a pretty simple example, but it could still require a lot of code. One of the easiest ways invented to deal with this synchronization challenge has been [data binding](https://en.wikipedia.org/wiki/Data_binding), but by itself it doesn't solve the problem entirely (e.g. a data binding system typically cannot show and hide the text box for you). Beyond that, people typically use [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) or [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel). These techniques, I have found, don't make the code *easier* to write, because they tend to involve a bunch of boilerplate and duplication of concepts in different places. However, these techniques make the code cleaner, better-encapsulated, more scalable and easier to maintain (especially in large programs). Beyond that, there are other ideas floating around to automate the synchronization between model and view, such as [C#'s Update Controls](http://updatecontrols.net/cs/index.html).
+This is a pretty simple example, but it could still require a lot of code. One of the easiest ways invented to deal with this synchronization challenge has been [data binding](https://en.wikipedia.org/wiki/Data_binding), but by itself it doesn't solve the problem entirely (e.g. a data binding system typically cannot show and hide the text box for you). Beyond that, people typically use [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) or [MVVM](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93viewmodel). These techniques, I have found, don't make the code *easier* to write, because they tend to involve a bunch of boilerplate and duplication of concepts in different places. However, these techniques make the code cleaner, better-encapsulated, more scalable and easier to maintain (especially in large programs). Beyond that, there are other ideas floating around to automate the synchronization between model and view, such as [.NET's Update Controls](http://updatecontrols.net/cs/index.html).
 
-React is none of these things. Instead, React resembles the idea of _immediate-mode_ user interfaces that was [invented/described by Casey Muratori in 2005](https://www.youtube.com/watch?v=Z1qyvQsjK5Y). The idea of immediate-mode user interfaces is to *eliminate* the problem of synchronizing the View and Model by "eliminating" the View. 
+React is none of these things. Rather, I'd say React resembles the idea of _immediate-mode_ user interfaces that was [invented/described by Casey Muratori in 2005](https://www.youtube.com/watch?v=Z1qyvQsjK5Y). The idea of immediate-mode user interfaces is to *eliminate* the problem of synchronizing the View and Model by "eliminating" the View. 
 
 What do I mean by that? Obviously the view must exist in some sense, since you can see it on the screen. In the old world of desktop development, GUI widgets are objects that belong to the operating system. They have a long life cycle: you create a window filled with widgets, and those widgets exist as long as the user can see them.
 
-In immediate-mode UIs, often used in game programming, widgets only have the *illusion* of permanance. In reality they exist long enough to be drawn on the screen, and checked against user input, and then they are deleted. A game with an immediate-mode UI might regenerate and redraw the entire UI from the underlying data model about 60 times per second. In this style of UI, there is no need to "synchronize" the UI with the model; the model is what "really" exists and the view is merely a temporary index that points into the model.
+In a simple immediate-mode UI, often used in game programming, widgets only have the *illusion* of permanance. In reality they exist long enough to be drawn on the screen, and checked against user input, and then they are deleted. A game with an immediate-mode UI might regenerate and redraw the entire UI from the underlying data model about 60 times per second. In this style of UI, there is no need to "synchronize" the UI with the model; the model is what "really" exists and the view is merely a temporary index that points into the model.
 
 So in immediate mode, if there is a text box with the word "Hello" in it, it's directly showing the value `"Hello"` from the underlying model, and if there is a blinking cursor after the 'H', there must be another variable in the model (or in an extra data area separate from the model) with the value `1` to represent the current location of the cursor. Although this style of programming requires you to include view-related state (such as the cursor position) alongside/inside your model, it is arguably an easier way of UI programming because it eliminates almost every bug and challenge with synchronizing the model with the view.
 
@@ -36,41 +36,29 @@ We might have a model with these data members:
 
 ~~~ts
 class CalendarEvent {
-  name:         string;
-  allDay:       boolean;
-  startTime:    Date;
-  endTime:      Date;
-  alarmMinutes: number;
+  eventName: string,
+  allDay: boolean, 
+  startTime: Date,
+  durationMinutes: number,
+  alarmOn: boolean
+  alarmMinutes: number,
 }
 ~~~
 
 In traditional user interface code, you would respond to a change in the "All day" checkbox or the `allDay` flag by somehow causing the "time range" widgets to be shown or hidden. The code that causes this change might be an event handler in the view, or, if you are using the MVVM pattern, it would be an event generated by the model; either way, a signal is sent **manually**.
 
-By contrast, in immediate mode, we would simply write code to create the view (associated somehow with a model). When the user changes the view, the view changes the model, but it doesn't synchronize different parts of itself: there is no code to show or hide things, no code to copy text from a textbox into a listbox. The UI is regenerated simply by running the same code that generated it the first time. Similarly, in the model, no code to generate "events" is needed. The code is simple because it is declarative - it describes how the screen should look, not how to update it.
+By contrast, in immediate mode, we would simply write code to create the view (associated somehow with a model). When the user changes the view, the view changes the model, but it doesn't synchronize different parts of itself: there is no code to show or hide things, no code to copy text from a textbox into a listbox. The UI is regenerated with the same code that generated it the first time. Similarly, in the model, no code to generate "events" is needed. The code is simple because it is declarative - it describes how the screen should look, not how to update it.
 
 However, a web browser is not designed as an immediate-mode system, but rather a _retained-mode_ system. This means that the web browser (not the application) owns (retains) all the user interface elements on the screen and is responsible for drawing them. Unless you are drawing *everything* on a `<canvas>` element, it is not practical to directly simulate immediate mode because it would be highly inefficient to destroy and recreate the entire [DOM](https://en.wikipedia.org/wiki/Document_Object_Model) frequently.
 
-How React solves the problem
-----------------------------
+Enter React
+-----------
 
-The main innovation of React is to combine the advantage of immediate-mode UIs (i.e. eliminating the effort of synchronizing the model with the view) while keeping the advantages of retained-mode UIs (i.e. automatically keeping track of the text cursor, selections and scroll bars; and supporting reasonably fast incremental updates even when the UI is complex and contains a lot of data.) And since user interfaces are made out of DOM elements, you keep the benefits of HTML and CSS (potentially complex, flexible and beautiful layouts).
+React isn't designed to simulate an immediate-mode UI. It wouldn't surprise me if React was invented by someone who had never even heard of an immediate mode UI.
 
-How does it work?
+But intentionally or not, React shares a major advantage with immediate mode: a _declarative approach_ to describing UIs. That is, you _declare_ how your UI should look based on the current state associated with it, instead of explaining how the UI should _change_ in response to _changes_ in state. Declarative programming requires less careful thought, is less prone to bugs, and if you're doing it correctly, should also require less code.
 
-Each time you generate your user interface, it's a virtual DOM. Real DOM elements are more expensive to create, so when you write code like `<div><b>this</b> code</div>` or `React.createElement("div", null, React.createElement("b", null, "this"), " code")`, an object tree is created, perhaps something like this:
-
-~~~js
-  { nodeName: 'div',
-    children: [
-      { nodeName: 'b', children: ["this"] },
-      " code"
-    ]
-  }
-~~~
-
-(The actual structure of the tree is not important, since only React will use it.)
-
-To achieve good performance while preserving UI state (such as the text cursor position), React/Preact basically compares your virtual DOM with the real DOM, and tries to find the least disruptive way to change the DOM to match the user interface you asked for.
+It doesn't actually work like a typical immediate-mode UI though. For one thing, in React a parent component can be updated without affecting its children (or siblings), and a child component can be updated without affecting its parent (or siblings). This makes React more scalable, but it means you are responsible for designing your UI in such a way that when something changes in one part of the UI, those changes propagate to related components. Another difference (and this is a part I don't like), React is designed to embed state within the UI instead of storing it in a separate model.
 
 Example #0: Hello, world!
 -------------------------
@@ -113,6 +101,12 @@ This code just puts **Hello!!** on the screen. It illustrates how you typically 
 2. Write a class that `extends React.Component` and contains a `render()` function. 
 3. Call `ReactDOM.render` to draw the component on the screen.
 
+React allows simple components like this to be written as functions instead:
+
+~~~js
+function App() { return <h2>Hello!!</h2>; }
+~~~
+
 `document.getElementById` is a function built into all web browsers; it is used to find an element that has a particular `id` attribute. In this case it returns the element represented by `<div id="app"></div>` in our HTML code.
 
 If you use F12 in your web browser to find out the final element tree of the page, it is very simple:
@@ -143,6 +137,14 @@ The part that says `React.Component<{message:string}>` indicates that `React.Com
 This is a bit unusual. In some other programming languages, every type has a name, such as `string` or `double` or `Component`. In TypeScript, many types do have names (e.g. `React.Component` is a type name) but, more fundamentally, most types are defined by their structure (their name, if they have one, is not important to the type system). `{message:string}` is an example of a "structural" type: it is a type defined entirely by the fact that it has a property called `message` which is a `string`. It has no name, only structure.
 
 When you are writing the JSX code to create a React component, properties are written like XML attributes, so in this case the attribute `message="Hello, world!"` sets `this.props.message` to the string `"Hello, world!"`.
+
+Again, because this is a simple component (meaning that it has only a `render` function and no internal state), we could write it as a function instead:
+
+~~~tsx
+function App(props: {message:string}) {
+  return <h2>{props.message}</h2>;
+}
+~~~
 
 Example #1: Random facts
 ------------------------
@@ -270,6 +272,10 @@ Surprisingly there seem to be 8 different versions of `createElement`, but all o
 
 I find that interesting because in normal HTML, it's impossible to write two separate text nodes side-by-side like this. The DOM allows it but HTML does not, and so if you convert the DOM to HTML, the two text nodes are merged into one.
 
+### Exercise for the reader ###
+
+This is another "simple" component. Rewrite it as a function.
+
 Example #2: The button thing from Part 2
 ----------------------------------------
 
@@ -297,11 +303,21 @@ ReactDOM.render(
 
 This example introduces the concept of state, which is required if the user can make changes to the data in the program. The state of an object is the second type parameter to `React.Component`, in this case `{count:number}`, which means, the state is an object that has a `count` property of type `number`.
 
-**You are not allowed to change the state of a component directly.** Don't write `this.state.count += 1`; instead you must create a _new_ state object and pass that new object to `this.setState`, as demonstrated in the `onClick` handler in this example:
+You are not _supposed_ to change the state of a component directly: don't write `this.state.count += 1`; instead, create an object describing which state variables to change, and pass that new object to `this.setState`, as demonstrated in the `onClick` handler in this example:
 
-    this.setState({count: this.state.count+1});
+~~~js
+    () => this.setState({count: this.state.count+1});
+~~~
 
-This example demonstrates very simple and basic state. As our program gets more complex, we will have to think more carefully about how we deal with state; usually it's not this simple. More on that later.
+This convention is not enforced, though. The component still works if you mutate the state, as long as you call `setState` (or `forceUpdate`) to trigger a refresh:
+
+~~~js
+    () => {this.state.count += 1; this.setState({}); /* Naughty. */}
+~~~
+
+**Fun fact:** `setState` _plans_ a refresh rather than actually doing it, so this works even if the state changes afterward as in `this.setState({}); this.state.count += 1;`.
+
+This example demonstrates very simple and basic state. As our program gets more complex, we will have to think more carefully about how we deal with state; more on that later.
 
 Example #3: Bar graph
 ---------------------
@@ -384,7 +400,7 @@ class Bar extends React.Component<BarProps,{color:string}>
 
 As you can see, the _data_ for a bar is in the `BarItem` interface and the _props_ for a bar is `BarProps`. Another point of interest is the state, which holds the bar color. If you click on a bar it will change color.
 
-You can also see that React supports inline styles in an interesting way: instead of writing CSS code, you create a JavaScript object that merely _resemble_ CSS code. The name of the styles must be camelCased (e.g. `text-align` becomes `textAlign`) and if numbers are used as sizes, React assumes they are measured in pixels.
+You can also see that React supports inline styles in an interesting way: instead of writing CSS code, you create a JavaScript object that _resembles_ CSS code. The name of the styles must be camelCased (e.g. `text-align` becomes `textAlign`) and if numbers are used as sizes, React assumes they are measured in pixels.
 
 Perhaps some would argue that the left side (label) and right side (bar) should be two separate components, but that's an argument for another day.
 
@@ -404,7 +420,7 @@ class BarChart extends React.Component<BarChartProps,{}> {
           .map(item => item.value)
           .reduce((x,y) => Math.max(x,y), 0);
     return (
-      <table>
+      <table style={ {borderSpacing:0} }>
         <thead><tr>
           <th></th><th>{this.props.title}</th>
         </tr></thead>
@@ -451,11 +467,9 @@ a       { text-decoration: none; }
 a:hover { text-decoration: underline; }
 ~~~
 
-By the way, this example is perfect for server-side rendering, but this tutorial doesn't cover that.
-
 #### Exercise for the reader: ####
 
-- Edit the style: add a dividing line between the bars and their labels using a style of `border-left: 1px solid #aaa` in the second column. Remember how `border-left` becomes `borderLeft` in React?
+- Edit the style: add a dividing line between the bars and their labels using a style of `border-left: 1px solid #888` in the second column. Remember how `border-left` becomes `borderLeft` in React?
 - Change the bar chart to support negative numbers. You can do this by adding a third column dedicated to negative numbers between the two existing columns; you'll need to set the padding to zero between the second and third columns.
 
 Example #4: Calendar event editor
@@ -510,7 +524,139 @@ Let's create a React-based editor for the `CalendarEvent` model above. Let's sta
   </div>
 ~~~
 
+![Calendar entry UI](calendar-ui.png)
+
 Unfortunately the `datalist` element doesn't behave in a useful way (the dropdown list becomes useless once a time is selected) but it's a reasonable starting point.
+
+Since there are two time-of-day selectors, it's natural to put the code for that in its own component. But first, how will we represent time-of-day values? JavaScript has a `Date` type, but nothing to represent times of the day. We could, for instance, use a `number` to store the number of minutes since midnight. It's easy to print them as strings - given a number of minutes `n` between 0 and 3600, `${n/60|0}:${n%60}` gives us a time string in 24-hour format. But it's more challenging to convert user-provided strings like '4:07 am' into numbers like 167. 
+
+JavaScript `Date`s are actually based on Unix Epoch time, storing the amount of time in milliseconds since midnight January 1, 1970 UTC. So it seems reasonable to represent the time as a time on January 1, 1970 UTC. But can we parse a user-provided `time` string with code like `new Date("1970-01-01 "+time)`? Unfortunately this may not work, because the date parsing behavior is [Reportedly](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse) browser-specific unless it has a very specific format. A browser may not recognize "unofficial" formats at all, or it may choose UTC or local time arbitrarily. Chrome, for instance, recognizes `01 Jan 1970 0:00:00 UTC` as time zero, and `01 Jan 1970 12:00 am UTC` works too, but `01 Jan 1970 12:00am UTC` is not understood, and `01 Jan 1970 12:00 am` is interpreted as local time (and so in general is not time zero). Most importantly, this is browser-specific and therefore unreliable.
+
+We could fix this with a third-party library, but I'm not happy with [Moment.js](https://momentjs.com/) or [Datejs](http://www.datejs.com/) as they are not small libraries but they _still_ don't understand time-of-day as a different concept from a date. So instead I wrote a function to parse time values (you can also find a "test suite" [here](https://stackoverflow.com/a/50769298/22820)):
+
+~~~tsx
+function parseTime(t: string, localDate?: Date): Date|undefined {
+  // ?: means non-capturing group and ?! is zero-width negative lookahead
+  var time = t.match(/^\s*(\d\d?)(?::?(\d\d))?(?::(\d\d))?(?!\d)(\.\d+)?\s*(pm?|am?)?/i);
+  if (time) {
+    var hour = parseInt(time[1]), pm = (time[5] || ' ')[0].toUpperCase();
+    var min = time[2] ? parseInt(time[2]) : 0;
+    var sec = time[3] ? parseInt(time[3]) : 0;
+    var ms = (time[4] ? parseFloat(time[4]) * 1000 : 0);
+    if (pm !== ' ' && (hour == 0 || hour > 12) || hour > 24 || min >= 60 || sec >= 60)
+      return undefined;
+    if (pm === 'A' && hour === 12) hour = 0;
+    if (pm === 'P' && hour !== 12) hour += 12;
+    if (hour === 24) hour = 0;
+    var date = new Date(localDate!==undefined ? localDate.valueOf() : 0);
+    var set = (localDate!==undefined ? date.setHours : date.setUTCHours);
+    set.call(date, hour, min, sec, ms);
+    return date;
+  }
+  return undefined;
+}
+~~~
+
+With that out of the way, I adapted the mockup into a very simple time editor:
+
+~~~tsx
+class TimeSelector extends React.Component<{},{time:Date|undefined}> {
+  state = { time: undefined };
+  render() {
+    return (<span>
+        <input type="text" list="times" style={ {width:70} }
+               onChange={ e => this.setState({time: parseTime(e.target.value)}) }/>
+        <datalist id="times">
+          <option value="12:00am"/><option value="12:30am"/>
+          <option value="1:00am"/><option value="1:30am"/>
+          <option value="2:00am"/><option value="2:30am"/>
+          <option value="3:00am"/><option value="3:30am"/>
+          <option value="4:00am"/><option value="4:30am"/>
+          <option value="5:00am"/><option value="5:30am"/>
+          <option value="6:00am"/><option value="6:30am"/>
+          <option value="7:00am"/><option value="7:30am"/>
+          <option value="8:00am"/><option value="8:30am"/>
+          <option value="9:00am"/><option value="9:30am"/>
+          <option value="10:00am"/><option value="10:30am"/>
+          <option value="11:00am"/><option value="11:30am"/>
+          <option value="12:00pm"/><option value="12:30pm"/>
+          <option value="1:00pm"/><option value="1:30pm"/>
+          <option value="2:00pm"/><option value="2:30pm"/>
+          <option value="3:00pm"/><option value="3:30pm"/>
+          <option value="4:00pm"/><option value="4:30pm"/>
+          <option value="5:00pm"/><option value="5:30pm"/>
+          <option value="6:00pm"/><option value="6:30pm"/>
+          <option value="7:00pm"/><option value="7:30pm"/>
+          <option value="8:00pm"/><option value="8:30pm"/>
+          <option value="9:00pm"/><option value="9:30pm"/>
+          <option value="10:00pm"/><option value="10:30pm"/>
+          <option value="11:00pm"/><option value="11:30pm"/>
+        </datalist>
+      </span>);
+  }
+}
+~~~
+
+Since there are two of these, the `datalist` will be duplicated in the DOM, but it still works.
+
+And I put the rest of the interface in another component (note that the state management is incomplete here):
+
+~~~tsx
+interface CalendarEvent {
+  eventName: string,
+  allDay: boolean, 
+  startTime: Date,
+  durationMinutes: number,
+  alarmOn: boolean
+  alarmMinutes: number,
+}
+
+class EditCalendarEntry extends React.Component<{}, CalendarEvent> {
+  state = {
+    eventName: 'Daily run',
+    allDay: false, 
+    startTime: parseTime('9am')!, // ! means "assume it's not undefined/null"
+    durationMinutes: 60,
+    alarmOn: false,
+    alarmMinutes: 5,
+  }
+  render() {
+    var timeRange: JSX.Element[] = [];
+    if (!this.state.allDay) {
+      timeRange = [
+        <p>Start time <TimeSelector/></p>,
+        <p>End time: <TimeSelector/>&nbsp;
+          (<input type="number" style={ {width:50} } step={5} min={0} max={24*60}
+           onChange={e => this.setState({durationMinutes: e.target.valueAsNumber || this.state.durationMinutes})}
+           value={this.state.durationMinutes}/> minutes).
+        </p>
+      ];
+    }
+    return (<div style={ {width: 300} }>
+      <p><input type="text" style={ {width:280} } 
+                onChange={e=>this.setState({eventName: e.target.value})}
+                value={this.state.eventName}/></p>
+      <p style={ {float: 'right', margin: '0 40px 0 0'} }>
+        <input type="checkbox" checked={this.state.allDay}
+          onChange={e => this.setState({allDay: e.target.checked})}/>All day
+      </p>
+      {timeRange}
+      <p style={ {clear: 'both'} }>
+        <input type="checkbox" checked={this.state.alarmOn}
+          onChange={e => this.setState({alarmOn: e.target.checked})}/>Alarm&nbsp;
+        <input type="number" style={ {width:40} } min={0} max={720} 
+          onChange={e => this.setState({alarmMinutes: 
+              e.target.valueAsNumber || this.state.alarmMinutes, alarmOn: true})}
+            value={this.state.alarmMinutes}/> minutes before
+      </p>
+    </div>);
+  }
+}
+
+ReactDOM.render(<EditCalendarEvent/>, document.getElementById("app"));
+~~~
+
+As you can see, the time range controls appear only if the `allDay` flag is not set, and editing the `alarmMinutes` box will caused the `alarmOn` checkbox to be checked. However, editing `durationMinutes` does not affect the end time or vice versa, because there is no mechanism in place to communicate between `TimeSelector` and `EditCalendarEvent`. So, how should we set up this communication?
 
 *gasp*
 
