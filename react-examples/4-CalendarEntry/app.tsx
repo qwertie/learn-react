@@ -2,18 +2,25 @@ import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import {parseTime, timeToStringUTC} from './time';
 
-class App extends React.Component<{message: string}> {
+class TimeSelector extends React.Component<
+      {time?:Date, onTimeChange:(time?:Date)=>void}, {timeInput?:string}>
+{
+  state = { timeInput: undefined as (string|undefined) };
   render() {
-      return <h2>{this.props.message}</h2>;
-  }
-}
+    let timeString = "";
+    if (this.state.timeInput !== undefined)
+        timeString = this.state.timeInput;
+    else if (this.props.time !== undefined)
+        timeString = timeToStringUTC(this.props.time, false);
 
-class TimeSelector extends React.Component<{},{time:Date|undefined}> {
-  state = { time: undefined };
-  render() {
     return (<span>
-        <input type="text" list="times" style={ {width:70} }
-               onChange={ e => this.setState({time: parseTime(e.target.value)}) }/>
+        <input type="text" list="times" style={ {width:75} }
+               value={timeString}
+               onChange={ e => this.setState({timeInput: e.target.value}) }
+               onBlur={ e => {
+                 this.setState({timeInput: undefined});
+                 this.props.onTimeChange(parseTime(e.target.value)); 
+               } }/>
         <datalist id="times">
           <option value="12:00am"/><option value="12:30am"/>
           <option value="1:00am"/><option value="1:30am"/>
@@ -44,33 +51,42 @@ class TimeSelector extends React.Component<{},{time:Date|undefined}> {
   }
 }
 
-interface CalendarEventData {
-  eventName: string,
-  allDay: boolean, 
-  startTime: Date,
-  durationMinutes: number,
-  alarmOn: boolean
-  alarmMinutes: number,
+interface CalendarEntry {
+  eventName: string;
+  allDay: boolean;
+  startTime?: Date; // Allow undefined when no valid start time is given
+  durationMinutes: number;
+  alarmOn: boolean;
+  alarmMinutes: number;
 }
 
-class CalendarEntry extends React.Component<{}, CalendarEventData> {
+class EditCalendarEntry extends React.Component<{}, CalendarEntry> {
   state = {
     eventName: 'Daily run',
     allDay: false, 
-    startTime: parseTime('9am')!, // ! means "assume it's not undefined/null"
+    startTime: undefined,
     durationMinutes: 60,
     alarmOn: false,
     alarmMinutes: 5,
   }
   render() {
-    var timeRange: JSX.Element[] = [];
+    var timeRangeElements: JSX.Element[] = [];
     if (!this.state.allDay) {
-      timeRange = [
-        <p>Start time <TimeSelector/></p>,
-        <p>End time: <TimeSelector/>&nbsp;
+      let startTime = this.state.startTime;
+      let endTime = startTime===undefined ? undefined :
+          addMinutes(startTime, this.state.durationMinutes);
+      console.log(endTime?timeToStringUTC(endTime,false):'undef');
+      timeRangeElements = [
+        <p>Start time:&nbsp;
+          <TimeSelector time={this.state.startTime}
+                onTimeChange={ time => this.setState({startTime: time}) }/></p>,
+        <p>End time:&nbsp;
+          <TimeSelector time={endTime}
+                onTimeChange={ time => this.setEndTime(time) }/>&nbsp;
           (<input type="number" style={ {width:50} } step={5} min={0} max={24*60}
-           onChange={e => this.setState({durationMinutes: e.target.valueAsNumber || this.state.durationMinutes})}
-           value={this.state.durationMinutes}/> minutes).
+             onChange={e => this.setState({durationMinutes: 
+                     e.target.valueAsNumber || this.state.durationMinutes})}
+             value={this.state.durationMinutes}/> minutes).
         </p>
       ];
     }
@@ -82,7 +98,7 @@ class CalendarEntry extends React.Component<{}, CalendarEventData> {
         <input type="checkbox" checked={this.state.allDay}
           onChange={e => this.setState({allDay: e.target.checked})}/>All day
       </p>
-      {timeRange}
+      {timeRangeElements}
       <p style={ {clear: 'both'} }>
         <input type="checkbox" checked={this.state.alarmOn}
           onChange={e => this.setState({alarmOn: e.target.checked})}/>Alarm&nbsp;
@@ -93,7 +109,23 @@ class CalendarEntry extends React.Component<{}, CalendarEventData> {
       </p>
     </div>);
   }
+  setEndTime(time?: Date) {
+    if (this.state.startTime && time) {
+      // ! means "assume this value is not null or undefined"
+      let dif = diffMinutes(time, this.state.startTime!);
+      if (dif < 0)
+          dif += 24*60;
+      this.setState({durationMinutes: dif});
+    }
+  }
 }
 
-ReactDOM.render(<CalendarEntry/>, 
-                document.getElementById("app"));
+// Functions to add minutes to a Date or get the difference between two dates
+function addMinutes(date: Date, minutes: number) {
+  return new Date(date.valueOf() + minutes * 60000);
+}
+function diffMinutes(high: Date, low: Date) {
+  return (high.valueOf() - low.valueOf()) / 60000;
+}
+
+ReactDOM.render(<EditCalendarEntry/>, document.getElementById("app"));

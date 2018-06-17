@@ -44,7 +44,7 @@ export function unwrapDate(date: Date|number): number
 export function timeToStringUTC(time: Date|number, use24hourTime: boolean, showSeconds?: boolean): string
 {
   time = unwrapDate(time);
-  let ms = time % (24*3600*60000), sec, min, hour;
+  let ms = time % (24*60*60000), sec, min, hour;
   sec = ms / 1000 | 0; ms %= 1000;
   min = sec / 60 | 0; sec %= 60;
   hour = min / 60 | 0; min %= 60;

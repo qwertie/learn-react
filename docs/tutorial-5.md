@@ -35,13 +35,13 @@ We want a user interface for defining both all-day events and normal short event
 We might have a model with these data members:
 
 ~~~ts
-class CalendarEvent {
-  eventName: string,
-  allDay: boolean, 
-  startTime: Date,
-  durationMinutes: number,
-  alarmOn: boolean
-  alarmMinutes: number,
+class CalendarEntry {
+  eventName: string;
+  allDay: boolean;
+  startTime: Date;
+  durationMinutes: number;
+  alarmOn: boolean;
+  alarmMinutes: number;
 }
 ~~~
 
@@ -475,7 +475,7 @@ a:hover { text-decoration: underline; }
 Example #4: Calendar event editor
 ---------------------------------
 
-Let's create a React-based editor for the `CalendarEvent` model above. Let's start by making an HTML mockup of the user interface, without React. The mockup could use this code:
+Let's create a React-based editor for the `CalendarEntry` model above. Let's start by making an HTML mockup of the user interface, without React. The mockup could use this code:
 
 ~~~html
   <h1>Edit Calendar Entry</h1>
@@ -487,7 +487,7 @@ Let's create a React-based editor for the `CalendarEvent` model above. Let's sta
     <p><input type="text" style="width:250px" value="Daily run"></p>
     <p style="float: right; margin: 0 40px 0 0;"><input type="checkbox">All day</p>
     <p>Start time 
-      <input type="text" list="times" style="width:70px" name="startTime">
+      <input type="text" list="times" style="width:75px" name="startTime">
       <datalist id="times">
         <option value="12:00am"><option value="12:30am">
         <option value="1:00am"><option value="1:30am">
@@ -516,7 +516,7 @@ Let's create a React-based editor for the `CalendarEvent` model above. Let's sta
       </datalist>
     </p>
     <p>End time: 
-      <input type="text" list="times" style="width:70px">
+      <input type="text" list="times" style="width:75px">
       (<input type="number" style="width:40px" value="0.5" step="0.25" min="0" max="24"> hours).</p>
     <p><input type="checkbox" checked>Alarm
        <input type="number" style="width:40px" value="5" min="0" max="720"> minutes before
@@ -530,7 +530,7 @@ Unfortunately the `datalist` element doesn't behave in a useful way (the dropdow
 
 Since there are two time-of-day selectors, it's natural to put the code for that in its own component. But first, how will we represent time-of-day values? JavaScript has a `Date` type, but nothing to represent times of the day. We could, for instance, use a `number` to store the number of minutes since midnight. It's easy to print them as strings - given a number of minutes `n` between 0 and 3600, `${n/60|0}:${n%60}` gives us a time string in 24-hour format. But it's more challenging to convert user-provided strings like '4:07 am' into numbers like 167. 
 
-JavaScript `Date`s are actually based on Unix Epoch time, storing the amount of time in milliseconds since midnight January 1, 1970 UTC. So it seems reasonable to represent the time as a time on January 1, 1970 UTC. But can we parse a user-provided `time` string with code like `new Date("1970-01-01 "+time)`? Unfortunately this may not work, because the date parsing behavior is [Reportedly](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse) browser-specific unless it has a very specific format. A browser may not recognize "unofficial" formats at all, or it may choose UTC or local time arbitrarily. Chrome, for instance, recognizes `01 Jan 1970 0:00:00 UTC` as time zero, and `01 Jan 1970 12:00 am UTC` works too, but `01 Jan 1970 12:00am UTC` is not understood, and `01 Jan 1970 12:00 am` is interpreted as local time (and so in general is not time zero). Most importantly, this is browser-specific and therefore unreliable.
+JavaScript `Date`s are actually based on Unix Epoch time, storing the amount of time in milliseconds since midnight January 1, 1970 UTC. So it seems reasonable to represent the time as a time on January 1, 1970 UTC. But can we parse a user-provided `time` string with code like `new Date("1970-01-01 "+time)`? Unfortunately this may not work, because the date parsing behavior is [reportedly](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse) browser-specific unless it has a very specific format. A browser may not recognize "unofficial" formats at all, or it may choose UTC or local time arbitrarily. Chrome, for instance, recognizes `01 Jan 1970 0:00:00 UTC` as time zero, and `01 Jan 1970 12:00 am UTC` works too, but `01 Jan 1970 12:00am UTC` is not understood, and `01 Jan 1970 12:00 am` is interpreted as local time (and so in general is not time zero). Most importantly, this is browser-specific and therefore unreliable.
 
 We could fix this with a third-party library, but I'm not happy with [Moment.js](https://momentjs.com/) or [Datejs](http://www.datejs.com/) as they are not small libraries but they _still_ don't understand time-of-day as a different concept from a date. So instead I wrote a function to parse time values (you can also find a "test suite" [here](https://stackoverflow.com/a/50769298/22820)):
 
@@ -557,15 +557,16 @@ function parseTime(t: string, localDate?: Date): Date|undefined {
 }
 ~~~
 
-With that out of the way, I adapted the mockup into a very simple time editor:
+Having written that function, plus another function to convert a time to a string (`timeToStringUTC`), I adapted the mockup into a very simple time editor:
 
 ~~~tsx
-class TimeSelector extends React.Component<{},{time:Date|undefined}> {
-  state = { time: undefined };
+class TimeSelector extends React.Component<{},{time?:Date}> {
+  state = {time: undefined as (Date|undefined)};
   render() {
+    let time = this.state.time;
     return (<span>
-        <input type="text" list="times" style={ {width:70} }
-               onChange={ e => this.setState({time: parseTime(e.target.value)}) }/>
+        <input type="text" list="times" style={ {width:75} }
+               onChange={ e => this.setState({time: parseTime(e.target.value)}) }value={(time ? timeToStringUTC(time, false) : "")}/>
         <datalist id="times">
           <option value="12:00am"/><option value="12:30am"/>
           <option value="1:00am"/><option value="1:30am"/>
@@ -597,37 +598,79 @@ class TimeSelector extends React.Component<{},{time:Date|undefined}> {
 }
 ~~~
 
-Since there are two of these, the `datalist` will be duplicated in the DOM, but it still works.
+**Note**: There are two time fields, so the `datalist` will be duplicated in the DOM, but it still works. Also, we must set the initial `state` (or it will be `null` and cause a runtime error), but in doing so we need to set the `time` variable with a type annotation, `undefined as (Date|undefined)`, otherwise TypeScript will mistakenly believe that `time` has type `undefined` instead of `Date|undefined`. Interestingly this problem does not occur if you set `this.state` in the constructor (i.e. if your component has a constructor you can simply write `this.state = {}` inside it; in that case, `state` is inherited from `React.Component` with the correct type.)
 
-And I put the rest of the interface in another component (note that the state management is incomplete here):
+**Sadly this code malfunctions**: it will not allow you to type a time such as `9:15` because the first character `9` is immediately interpreted (as `9:00 am`) which causes `render()` to be called again, so the text box is updated which screws up user input.
+
+A classic solution to this problem is to avoid updating the internal state until the textbox loses keyboard focus (i.e. when the cursor stops blinking in the textbox). We can try this by changing `onChange` to `onBlur` ("on blur" is obscure JavaScript terminology that means "when the textbox loses focus".) 
+
+Unfortunately, that doesn't work either; the text field becomes read-only! For some reason, React makes input elements read-only if you set the `value` without updating the state in `onChange`. This behavior would make sense if if `render()` were called on every keypress, but that's _not_ what happens. In fact, React installs its own `onChange` handler that reverts the textbox to its old value.
+
+Removing the following line "solves" the problem by allowing only one-way data flow (from UI to `state`, not from `state` to UI):
 
 ~~~tsx
-interface CalendarEvent {
-  eventName: string,
-  allDay: boolean, 
-  startTime: Date,
-  durationMinutes: number,
-  alarmOn: boolean
-  alarmMinutes: number,
+               value={(time ? timeToStringUTC(time, false) : "")}
+~~~
+
+Sometimes this might be enough, but in most apps we *need* data to flow from `state` to UI. The only workaround I have found is to create a **second** state variable to hold the user's potentially-invalid input. If the extra variable is called `timeInput`, the solution looks like this:
+
+~~~tsx
+class TimeSelector extends React.Component<{},{time?:Date,timeInput?:string}> {
+  state = { timeInput: undefined as (string|undefined),
+            time: undefined as (Date|undefined) };
+  render() {
+    let timeString = "";
+    if (this.state.timeInput !== undefined)
+        timeString = this.state.timeInput;
+    else if (this.state.time !== undefined)
+        timeString = timeToStringUTC(this.state.time, false);
+
+    return (<span>
+        <input type="text" list="times" style={ {width:75} }
+               value={timeString}
+               onBlur={ e => this.setState({timeInput: undefined, 
+                                           time: parseTime(e.target.value)}) }
+               onChange={ e => this.setState({timeInput: e.target.value}) }/>
+        <datalist id="times">
+          (same as before)
+        </datalist>
+      </span>);
+  }
+}
+~~~
+
+Just 8 additional lines of code... no biggie, right?
+
+Here is another component for the rest of the interface (note: the state management is incomplete here):
+
+~~~tsx
+interface CalendarEntry {
+  eventName: string;
+  allDay: boolean;
+  startTime?: Date; // undefined when no valid start time is given
+  durationMinutes: number;
+  alarmOn: boolean;
+  alarmMinutes: number;
 }
 
-class EditCalendarEntry extends React.Component<{}, CalendarEvent> {
+class EditCalendarEntry extends React.Component<{}, CalendarEntry> {
   state = {
     eventName: 'Daily run',
     allDay: false, 
-    startTime: parseTime('9am')!, // ! means "assume it's not undefined/null"
+    startTime: undefined,
     durationMinutes: 60,
     alarmOn: false,
     alarmMinutes: 5,
   }
   render() {
-    var timeRange: JSX.Element[] = [];
+    var timeRangeElements: JSX.Element[] = [];
     if (!this.state.allDay) {
-      timeRange = [
+      timeRangeElements = [
         <p>Start time <TimeSelector/></p>,
         <p>End time: <TimeSelector/>&nbsp;
           (<input type="number" style={ {width:50} } step={5} min={0} max={24*60}
-           onChange={e => this.setState({durationMinutes: e.target.valueAsNumber || this.state.durationMinutes})}
+           onChange={e => this.setState({durationMinutes:
+                     e.target.valueAsNumber || this.state.durationMinutes})}
            value={this.state.durationMinutes}/> minutes).
         </p>
       ];
@@ -640,7 +683,7 @@ class EditCalendarEntry extends React.Component<{}, CalendarEvent> {
         <input type="checkbox" checked={this.state.allDay}
           onChange={e => this.setState({allDay: e.target.checked})}/>All day
       </p>
-      {timeRange}
+      {timeRangeElements}
       <p style={ {clear: 'both'} }>
         <input type="checkbox" checked={this.state.alarmOn}
           onChange={e => this.setState({alarmOn: e.target.checked})}/>Alarm&nbsp;
@@ -653,17 +696,130 @@ class EditCalendarEntry extends React.Component<{}, CalendarEvent> {
   }
 }
 
-ReactDOM.render(<EditCalendarEvent/>, document.getElementById("app"));
+ReactDOM.render(<EditCalendarEntry/>, document.getElementById("app"));
 ~~~
 
-As you can see, the time range controls appear only if the `allDay` flag is not set, and editing the `alarmMinutes` box will caused the `alarmOn` checkbox to be checked. However, editing `durationMinutes` does not affect the end time or vice versa, because there is no mechanism in place to communicate between `TimeSelector` and `EditCalendarEvent`. So, how should we set up this communication?
+As you can see, the time range controls appear only if the `allDay` flag is not set, and editing the `alarmMinutes` box will caused the `alarmOn` checkbox to be checked. However, editing `durationMinutes` does not affect the end time or vice versa, because there is no mechanism in place to communicate between `TimeSelector` and `EditCalendarEntry`. So, how should we set up this communication?
 
-*gasp*
+The classic way to do this is to "push" the state out of the child component to the parent, using two props: one to pass state from parent to child, and one to receive new state from the child. So `state.time` becomes `props.time` in order to receive a time from the parent, and `props.onTimeChange` is added in order to send a new time to the parent. Here's the new code:
 
-Learn More
-----------
+~~~tsx
+class TimeSelector extends React.Component<
+      {time?:Date, onTimeChange:(time?:Date)=>void}, {timeInput?:string}>
+{
+  state = { timeInput: undefined as (string|undefined) };
+  render() {
+    let timeString = "";
+    if (this.state.timeInput !== undefined)
+        timeString = this.state.timeInput;
+    else if (this.props.time !== undefined)
+        timeString = timeToStringUTC(this.props.time, false);
 
-Sorry, this article is not yet complete. I recommend reading [Thinking in React](https://reactjs.org/docs/thinking-in-react.html) or [some other tutorial](https://www.google.com.ph/search?q=react+tutorial).
+    return (<span>
+        <input type="text" list="times" style={ {width:75} }
+               value={timeString}
+               onChange={ e => this.setState({timeInput: e.target.value}) }
+               onBlur={ e => {
+                 this.setState({timeInput: undefined});
+                 this.props.onTimeChange(parseTime(e.target.value)); 
+               } }/>
+        <datalist id="times">
+          (same as before)
+        </datalist>
+      </span>);
+  }
+}
+
+interface CalendarEntry {
+  eventName: string;
+  allDay: boolean;
+  startTime?: Date; // Allow undefined when no valid start time is given
+  durationMinutes: number;
+  alarmOn: boolean;
+  alarmMinutes: number;
+}
+
+class EditCalendarEntry extends React.Component<{}, CalendarEntry> {
+  state = {
+    eventName: 'Daily run',
+    allDay: false, 
+    startTime: undefined,
+    durationMinutes: 60,
+    alarmOn: false,
+    alarmMinutes: 5,
+  }
+  render() {
+    var timeRangeElements: JSX.Element[] = [];
+    if (!this.state.allDay) {
+      let startTime = this.state.startTime;
+      let endTime = startTime===undefined ? undefined :
+          addMinutes(startTime, this.state.durationMinutes);
+      console.log(endTime?timeToStringUTC(endTime,false):'undef');
+      timeRangeElements = [
+        <p>Start time:&nbsp;
+          <TimeSelector time={this.state.startTime}
+                onTimeChange={ time => this.setState({startTime: time}) }/></p>,
+        <p>End time:&nbsp;
+          <TimeSelector time={endTime}
+                onTimeChange={ time => this.setEndTime(time) }/>&nbsp;
+          (<input type="number" style={ {width:50} } step={5} min={0} max={24*60}
+             onChange={e => this.setState({durationMinutes: 
+                     e.target.valueAsNumber || this.state.durationMinutes})}
+             value={this.state.durationMinutes}/> minutes).
+        </p>
+      ];
+    }
+    return (<div style={ {width: 300} }>
+      <p><input type="text" style={ {width:280} } 
+                onChange={e=>this.setState({eventName: e.target.value})}
+                value={this.state.eventName}/></p>
+      <p style={ {float: 'right', margin: '0 40px 0 0'} }>
+        <input type="checkbox" checked={this.state.allDay}
+          onChange={e => this.setState({allDay: e.target.checked})}/>All day
+      </p>
+      {timeRangeElements}
+      <p style={ {clear: 'both'} }>
+        <input type="checkbox" checked={this.state.alarmOn}
+          onChange={e => this.setState({alarmOn: e.target.checked})}/>Alarm&nbsp;
+        <input type="number" style={ {width:40} } min={0} max={720} 
+          onChange={e => this.setState({alarmMinutes: 
+              e.target.valueAsNumber || this.state.alarmMinutes, alarmOn: true})}
+            value={this.state.alarmMinutes}/> minutes before
+      </p>
+    </div>);
+  }
+  setEndTime(time?: Date) {
+    if (this.state.startTime && time) {
+      // ! means "assume this value is not null or undefined". TypeScript
+      // detects that `time` is not undefined based on control flow, because
+      // clearly it's impossible for it to be undefined inside this "if" block.
+      // But sometimes TypeScript doesn't figure it out for members of `state`,
+      // in which case we need ! as a workaround.
+      let dif = diffMinutes(time, this.state.startTime!);
+      if (dif < 0)
+          dif += 24*60;
+      this.setState({durationMinutes: dif});
+    }
+  }
+}
+
+// Functions to add minutes to a Date or get the difference between two dates
+function addMinutes(date: Date, minutes: number) {
+  return new Date(date.valueOf() + minutes * 60000);
+}
+function diffMinutes(high: Date, low: Date) {
+  return (high.valueOf() - low.valueOf()) / 60000;
+}
+
+ReactDOM.render(<EditCalendarEntry/>, document.getElementById("app"));
+~~~
+
+Now that the `TimeSelector` talks to its parent, the start time, end time and number-of-minutes synchronize with each other automatically. Hooray!
+
+That's all for now
+------------------
+
+I plan to add more material later but I hope this is enough to get you started. I also recommend reading [Thinking in React](https://reactjs.org/docs/thinking-in-react.html). For more complex user interfaces, I recommend [MobX](https://mobx.js.org/intro/overview.html).
 
 Picky typing in JSX
 -------------------
@@ -703,7 +859,7 @@ TypeScript will just say "`Cannot find name 'TextAlignProperty'`.
 
 When you have an error like this that refers to an external symbol, you can use the "Go to Symbol in Workspace" (Ctrl+T) command in VS Code to find the symbol. It turns out that `TextAlignProperty` is defined as `Globals | "center" | "end" | "justify" | "left" | "match-parent" | "right" | "start"` - essentially a list of possible strings. TypeScript only knows that `right` is a string, it doesn't keep track of _which_ string it is, hence the error.
 
-There are two workarounds. The easy one is "as any":
+There are two workarounds. The easy one is to say "as any":
 
 ~~~ts
 let right = 'right';

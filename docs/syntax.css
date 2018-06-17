@@ -8,8 +8,12 @@ pre.highlight {
     -webkit-border-radius: 7px;
     border-radius: 7px
 }
-code {
+pre {
     font-family: 'Verdana','DejaVu Sans Mono','Bitstream Vera Sans Mono',Monaco,monospace;
+    font-size: 93%;
+}
+code {
+    color: #830;
 }
 
 .highlight {
