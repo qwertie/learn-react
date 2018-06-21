@@ -5,20 +5,20 @@ This is a summary of the four ways you can set up your TypeScript project; see [
 
 ### One-time installations ###
 
-(1) [Install Node.js](https://nodejs.org/en/download/)
-(2) [Install Visual Studio Code](https://code.visualstudio.com/download)
-(3) (Optional) In a terminal: `npm --global typescript`
-(4a) (For The Easy Way) In a terminal: `npm install --global parcel-bundler`
-(4b) (For The Webpack Way) In a terminal: `npm install --global webpack`
-(4c) (For The Gulp Way) In a terminal: `npm install --global gulp`
+1. [Install Node.js](https://nodejs.org/en/download/)
+2. [Install Visual Studio Code](https://code.visualstudio.com/download)
+3. (Optional) In a terminal: `npm --global typescript`
+4. (For The Easy Way) In a terminal: `npm install --global parcel-bundler`
+4. (For The Webpack Way) In a terminal: `npm install --global webpack`
+4. (For The Gulp Way) In a terminal: `npm install --global gulp`
 
 ### How to start a new project ###
 
-(1) Create a folder for your project
-(2) In a terminal: `npm init`
-(3) (If TypeScript is not yet installed) In a terminal: `npm install --save-dev typescript`
-(4) Decide where to store your source code (e.g. In the project root folder? in an `app` subfolder? Or perhaps in a `src` subfolder? It's up to you, but these instructions assume you will use the `app` folder.)
-(5) Create a tsx file and write some code in it (if you are not using JSX/React/Preact, make a ts file instead). Here is a simple React example:
+1. Create a folder for your project
+2. In a terminal: `npm init`
+3. (If TypeScript is not yet installed) In a terminal: `npm install --save-dev typescript`
+4. Decide where to store your source code (e.g. In the project root folder? in an `app` subfolder? Or perhaps in a `src` subfolder? It's up to you, but these instructions assume you will use the `app` folder.)
+5. Create a tsx file and write some code in it (if you are not using JSX/React/Preact, make a ts file instead). Here is a simple React example:
 
 ~~~tsx
 import * as React from 'react';
@@ -133,14 +133,14 @@ app.listen(1234, () => console.log('Express server running at http://127.0.0.1:1
 </html>
 ~~~
 
-(5) In a terminal: `npm run build`
-(6) In a terminal: `npm start`
-(7) Visit http://127.0.0.1:1234 in a browser if the last two steps worked.
+(5) In a terminal: `npm run build`<br/>
+(6) In a terminal: `npm start`<br/>
+(7) Visit http://127.0.0.1:1234 in a browser if the last two steps worked.<br/>
 (8) To recompile your code automatically in VS Code: press Ctrl+Shift+B and choose "tsc: watch"
 
 ### Approach C, additional steps ###
 
-(3) In a terminal: `npm install awesome-typescript-loader --save-dev`
+(3) In a terminal: `npm install awesome-typescript-loader --save-dev`<br/>
 (4) Add `"build"` and `"start"` scripts to `package.json`:
 
 ~~~json
@@ -153,7 +153,7 @@ app.listen(1234, () => console.log('Express server running at http://127.0.0.1:1
   },
 ~~~
 
-(5) (Optional): use `webpack.config.js` file instead (see [Part 2](tutorial-2.md) step C7)
+(5) (Optional): use `webpack.config.js` file instead (see [Part 2](tutorial-2.md) step C7)<br/>
 (6) Create `index.html` file:
 
 ~~~html
@@ -171,15 +171,15 @@ app.listen(1234, () => console.log('Express server running at http://127.0.0.1:1
 </html>
 ~~~
 
-(7) In a terminal: `npm run watch`
-(8) In a second terminal: `npm start`
+(7) In a terminal: `npm run watch`<br/>
+(8) In a second terminal: `npm start`<br/>
 (9) Visit http://127.0.0.1:1234 in a browser if the last two steps worked.
 
 To run TypeScript scripts directly from the command prompt
 -----------------------------------------------------------
 
-(1). In a terminal: `npm install --global ts-node`
-(2). In a terminal: `ts-node script.ts` (where _script.ts_ is a script's name).
+1. In a terminal: `npm install --global ts-node`
+2. In a terminal: `ts-node script.ts` (where _script.ts_ is a script's name).
 
 Optional: Separating the js files from the ts files, in Approach B
 ------------------------------------------------------------------
