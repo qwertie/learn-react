@@ -80,21 +80,21 @@ header, .header {
 }
 	
 .note, .warning, .tip {
-    padding: 0.5em;
-    border-radius: 0.4em;
-    /* GitHub supports markdown=1, but that's reportedly the default for `span` and
-       `<span class=note></span>` is shorter than `<p class=note markdown=1></p>` */
-    display: inline-block;
+  padding: 0.5em;
+  border-radius: 0.4em;
+  /* GitHub supports markdown=1, but that's reportedly the default for `span` and
+     `<span class=note></span>` is shorter than `<p class=note markdown=1></p>` */
+  display: inline-block;
 }
 .note {
-    background-color: #dcf;
-    border: 1px solid #96c;
+  background-color: #dcf;
+  border: 1px solid #96c;
 }
 .warning { 
-    background-color: #fcc;
-    border: 1px solid #f88;
+  background-color: #fcc;
+  border: 1px solid #f88;
 }
 .tip {
-    background-color: #cfc;
-    border: 1px solid #6c6;
+  background-color: #cfc;
+  border: 1px solid #6c6;
 }

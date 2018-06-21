@@ -602,7 +602,7 @@ class TimeSelector extends React.Component<{},{time?:Date}> {
 }
 ~~~
 
-<span class=note>
+<span class="note">
 **Note**: There are two time fields, so the `datalist` will be duplicated in the DOM, but it still works. Also, we must set the initial `state` (or it will be `null` and cause a runtime error), but in doing so we need to set the `time` variable with a type annotation, `undefined as (Date|undefined)`, otherwise TypeScript will mistakenly believe that `time` has type `undefined` instead of `Date|undefined`. Interestingly this problem does not occur if you set `this.state` in the constructor (i.e. if your component has a constructor you can simply write `this.state = {}` inside it; in that case, `state` is inherited from `React.Component` with the correct type.)
 </span>
 
