@@ -106,10 +106,10 @@ Alternately you can use Preact, which is [almost the same](https://preactjs.com/
 
     npm install preact
 
-<p class="tip" markdown=1>
+<p class="tip" markdown="1">
 **Tip:** `npm i` is a shortcut for `npm install`.</p>
 
-<p class=note markdown=1>
+<p class=note markdown="1">
 **Note:** do not to install `preact` and `@types/react` in the same project, or `tsc` will go insane and give you about 150 errors (see [preact issue #639](https://github.com/developit/preact/issues/639)). If this happens, uninstall the React types with `npm uninstall @types/react @types/react-dom`</p>
 
 ### Step 6: Write some React code ###
@@ -157,10 +157,12 @@ import * as React from 'preact';
 import * as ReactDOM from 'preact';
 ~~~
 
+<span class="note">
 Some notes about Preact:
 
-- There is a [preact-compat library](https://github.com/developit/preact-compat) which allows you to use preact with zero changes to your React code, but usage instructions exist only for users of Webpack/Browserify/Babel/Brunch.
-- There are rumors that in Preact you should write `/** @jsx h */` at the top of the file, which tells TypeScript to call `h()` instead of the default `React.createElement`. Here you **must not** do that or you'll get a error in your browser that `h` is not defined (`React.h`, however, is defined). In fact Preact defines `createElement` as an alias for `h`, and since our `import` statement assigns `'preact'` to `React`, `React.createElement` exists and works just fine.
+- There is a [preact-compat library](https://github.com/developit/preact-compat) which allows you to use preact with zero changes to your React code. Usage instructions exist only for users of Webpack/Browserify/Babel/Brunch, but [this page](https://github.com/parcel-bundler/parcel/pull/850) shows how to use preact-compat with Parcel.
+- There are rumors that in Preact you should write `/** @jsx h */` at the top of the file, which tells TypeScript to call `h()` instead of the default `React.createElement`. In this case you **must not** do that or you'll get a error in your browser that `h` is not defined (`React.h`, however, is defined). In fact Preact defines `createElement` as an alias for `h`, and since our `import` statement assigns `'preact'` to `React`, `React.createElement` exists and works just fine.
+</span>
 
 ### Optional: running TypeScript scripts ###
 

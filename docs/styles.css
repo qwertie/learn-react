@@ -82,8 +82,8 @@ header, .header {
 .note, .warning, .tip {
   padding: 0.5em;
   border-radius: 0.4em;
-  /* GitHub supports markdown=1, but that's reportedly the default for `span` and
-     `<span class="note"></span>` is shorter than `<p class="note" markdown=1></p>` */
+  /* GitHub supports markdown="1", but that's reportedly the default for `span` and
+     `<span class="note"></span>` is shorter than `<p class="note" markdown="1"></p>` */
   display: inline-block;
   font-size: 95%;
 }
