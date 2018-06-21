@@ -12,12 +12,13 @@ pre {
     font-family: 'Verdana','DejaVu Sans Mono','Bitstream Vera Sans Mono',Monaco,monospace;
     font-size: 93%;
 }
-code {
-    color: #830;
+
+pre, pre code {
+    color: #f8f8f2
 }
 
-.highlight {
-    color: #f8f8f2
+code {
+    color: #830;
 }
 
 .highlight .c {

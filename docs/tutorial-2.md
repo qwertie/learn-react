@@ -109,7 +109,7 @@ Alternately you can use Preact, which is [almost the same](https://preactjs.com/
 <p class="tip" markdown="1">
 **Tip:** `npm i` is a shortcut for `npm install`.</p>
 
-<p class=note markdown="1">
+<p class="note" markdown="1">
 **Note:** do not to install `preact` and `@types/react` in the same project, or `tsc` will go insane and give you about 150 errors (see [preact issue #639](https://github.com/developit/preact/issues/639)). If this happens, uninstall the React types with `npm uninstall @types/react @types/react-dom`</p>
 
 ### Step 6: Write some React code ###
