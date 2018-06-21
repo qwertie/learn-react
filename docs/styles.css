@@ -78,3 +78,20 @@ header, .header {
      3px 3px 3px #000;
   /*-webkit-text-stroke: 1px black;*/
 }
+
+.note, .warning, .tip {
+    padding: 0.5em;
+    border-radius: 0.4em;
+}
+.note {
+    background-color: #ffc;
+    border: 1px solid #cc4;
+}
+.warning { 
+    background-color: #fcc;
+    border: 1px solid #f88;
+}
+.tip { 
+    background-color: #cfc;
+    border: 1px solid #6c6;
+}

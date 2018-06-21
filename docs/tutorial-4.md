@@ -279,6 +279,10 @@ Technically we can set `zed` to `null` and `undefined` but luckily with `"strict
 
 Confused? Well, never mind, hopefully you'll get it later. Honestly, it doesn't matter right now.
 
+Here's another puzzle for you: what's the difference between the types `number[]` and `[number]`? The first is an array of numbers; the second is an array that contains only one element, which is a number. 
+
+Similarly `[string,number]` denotes an array of length 2 with the first element being a string and the second being a number. In addition, the array has a property `length: 2`, i.e. its _type_ is `2`, not just `number`. These fixed-length arrays are called tuple types. To learn about more interesting features of TypeScript's type system, see [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html).
+
 JSX
 ---
 

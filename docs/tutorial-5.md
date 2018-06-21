@@ -157,9 +157,10 @@ We'll need some CSS to style it, so we'll use an `app.css` file with this style 
 
 ~~~css
 .fact, .warning, .tip {
-    padding: 0.3em;
+    padding: 0.4em;
+    border-radius: 0.3em;
 }
-.fact { 
+.fact {
     background-color: #eee;
     border: 1px solid #ccc;
 }
@@ -564,7 +565,8 @@ class TimeSelector extends React.Component<{},{time?:Date}> {
   state = {time: undefined as (Date|undefined)};
   render() {
     let time = this.state.time;
-    return (<span>
+    return (
+      <span>
         <input type="text" list="times" style={ {width:75} }
                onChange={ e => this.setState({time: parseTime(e.target.value)}) }value={(time ? timeToStringUTC(time, false) : "")}/>
         <datalist id="times">
@@ -598,7 +600,7 @@ class TimeSelector extends React.Component<{},{time?:Date}> {
 }
 ~~~
 
-**Note**: There are two time fields, so the `datalist` will be duplicated in the DOM, but it still works. Also, we must set the initial `state` (or it will be `null` and cause a runtime error), but in doing so we need to set the `time` variable with a type annotation, `undefined as (Date|undefined)`, otherwise TypeScript will mistakenly believe that `time` has type `undefined` instead of `Date|undefined`. Interestingly this problem does not occur if you set `this.state` in the constructor (i.e. if your component has a constructor you can simply write `this.state = {}` inside it; in that case, `state` is inherited from `React.Component` with the correct type.)
+<p class="note">**Note**: There are two time fields, so the `datalist` will be duplicated in the DOM, but it still works. Also, we must set the initial `state` (or it will be `null` and cause a runtime error), but in doing so we need to set the `time` variable with a type annotation, `undefined as (Date|undefined)`, otherwise TypeScript will mistakenly believe that `time` has type `undefined` instead of `Date|undefined`. Interestingly this problem does not occur if you set `this.state` in the constructor (i.e. if your component has a constructor you can simply write `this.state = {}` inside it; in that case, `state` is inherited from `React.Component` with the correct type.)</p>
 
 **Sadly this code malfunctions**: it will not allow you to type a time such as `9:15` because the first character `9` is immediately interpreted (as `9:00 am`) which causes `render()` to be called again, so the text box is updated which screws up user input.
 
@@ -625,7 +627,8 @@ class TimeSelector extends React.Component<{},{time?:Date,timeInput?:string}> {
     else if (this.state.time !== undefined)
         timeString = timeToStringUTC(this.state.time, false);
 
-    return (<span>
+    return (
+      <span>
         <input type="text" list="times" style={ {width:75} }
                value={timeString}
                onBlur={ e => this.setState({timeInput: undefined, 
@@ -639,7 +642,7 @@ class TimeSelector extends React.Component<{},{time?:Date,timeInput?:string}> {
 }
 ~~~
 
-Just 8 additional lines of code... no biggie, right?
+Just 8 additional lines of code... no biggie, right? If you ask me, one of the main purposes of a UI library (or any library) is to make your code simple, but I guess React's designers have different ideas.
 
 Here is another component for the rest of the interface (note: the state management is incomplete here):
 
@@ -653,7 +656,7 @@ interface CalendarEntry {
   alarmMinutes: number;
 }
 
-class EditCalendarEntry extends React.Component<{}, CalendarEntry> {
+class CalendarEntryEditor extends React.Component<{}, CalendarEntry> {
   state = {
     eventName: 'Daily run',
     allDay: false, 
@@ -696,16 +699,21 @@ class EditCalendarEntry extends React.Component<{}, CalendarEntry> {
   }
 }
 
-ReactDOM.render(<EditCalendarEntry/>, document.getElementById("app"));
+ReactDOM.render(<CalendarEntryEditor/>, document.getElementById("app"));
 ~~~
 
-As you can see, the time range controls appear only if the `allDay` flag is not set, and editing the `alarmMinutes` box will caused the `alarmOn` checkbox to be checked. However, editing `durationMinutes` does not affect the end time or vice versa, because there is no mechanism in place to communicate between `TimeSelector` and `EditCalendarEntry`. So, how should we set up this communication?
+As you can see, the time range controls appear only if the `allDay` flag is not set, and editing the `alarmMinutes` box will caused the `alarmOn` checkbox to be checked. However, editing `durationMinutes` does not affect the end time or vice versa, because there is no mechanism in place to communicate between `TimeSelector` and `CalendarEntryEditor`. So, how should we set up this communication?
 
 The classic way to do this is to "push" the state out of the child component to the parent, using two props: one to pass state from parent to child, and one to receive new state from the child. So `state.time` becomes `props.time` in order to receive a time from the parent, and `props.onTimeChange` is added in order to send a new time to the parent. Here's the new code:
 
 ~~~tsx
-class TimeSelector extends React.Component<
-      {time?:Date, onTimeChange:(time?:Date)=>void}, {timeInput?:string}>
+interface TimeSelectorProps {
+  time?: Date;
+  onTimeChange: (time?:Date) => void;
+}
+
+class TimeSelector extends React.Component<TimeSelectorProps, 
+                                           {timeInput?:string}>
 {
   state = { timeInput: undefined as (string|undefined) };
   render() {
@@ -715,7 +723,8 @@ class TimeSelector extends React.Component<
     else if (this.props.time !== undefined)
         timeString = timeToStringUTC(this.props.time, false);
 
-    return (<span>
+    return (
+      <span>
         <input type="text" list="times" style={ {width:75} }
                value={timeString}
                onChange={ e => this.setState({timeInput: e.target.value}) }
@@ -739,7 +748,7 @@ interface CalendarEntry {
   alarmMinutes: number;
 }
 
-class EditCalendarEntry extends React.Component<{}, CalendarEntry> {
+class CalendarEntryEditor extends React.Component<{}, CalendarEntry> {
   state = {
     eventName: 'Daily run',
     allDay: false, 
@@ -811,10 +820,21 @@ function diffMinutes(high: Date, low: Date) {
   return (high.valueOf() - low.valueOf()) / 60000;
 }
 
-ReactDOM.render(<EditCalendarEntry/>, document.getElementById("app"));
+ReactDOM.render(<CalendarEntryEditor/>, document.getElementById("app"));
 ~~~
 
 Now that the `TimeSelector` talks to its parent, the start time, end time and number-of-minutes synchronize with each other automatically. Hooray!
+
+But imagine, now, that this `CalendarEntryEditor` is embedded within a larger Calendar application. In that case, the editor will need to share the current `CalendarEntry` with an outer `CalendarApp` component that can save the `CalendarEntry` within the calendar and switch to a different `CalendarEntry` as the user clicks different parts of the calendar.
+
+Once again, the `state` needs to become part of `props`, something like this:
+
+~~~tsx
+interface CalendarEntryEditorProps {
+  entry: CalendarEntry;
+  onEntryChange: (entry: CalendarEntry) => void;
+}
+~~~
 
 That's all for now
 ------------------

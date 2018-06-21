@@ -106,7 +106,9 @@ Alternately you can use Preact, which is [almost the same](https://preactjs.com/
 
     npm install preact
 
-**Note**: do not to install `preact` and `@types/react` in the same project, or `tsc` will go insane and give you about 150 errors (see [preact issue #639](https://github.com/developit/preact/issues/639)). If this happens, uninstall the React types with `npm uninstall @types/react @types/react-dom`
+<p class="tip">**Tip:** `npm i` is a shortcut for `npm install`.</p>
+
+<p class="note">**Note:** do not to install `preact` and `@types/react` in the same project, or `tsc` will go insane and give you about 150 errors (see [preact issue #639](https://github.com/developit/preact/issues/639)). If this happens, uninstall the React types with `npm uninstall @types/react @types/react-dom`</p>
 
 ### Step 6: Write some React code ###
 
@@ -135,7 +137,7 @@ ReactDOM.render(
 );
 ~~~
 
-**Note:** in order for the embedded JSX (HTML/XML) to work, the file extension must be `tsx`, not `ts`. If you have any trouble making your code work, try this code instead, it's the simplest possible React program:
+<p class="note">**Note:** in order for the embedded JSX (HTML/XML) to work, the file extension must be `tsx`, not `ts`. If you have any trouble making your code work, try this code instead, it's the simplest possible React program:</p>
 
 ~~~tsx
 import * as ReactDOM from 'react-dom';
@@ -157,6 +159,18 @@ Some notes about Preact:
 
 - There is a [preact-compat library](https://github.com/developit/preact-compat) which allows you to use preact with zero changes to your React code, but usage instructions exist only for users of Webpack/Browserify/Babel/Brunch.
 - There are rumors that in Preact you should write `/** @jsx h */` at the top of the file, which tells TypeScript to call `h()` instead of the default `React.createElement`. Here you **must not** do that or you'll get a error in your browser that `h` is not defined (`React.h`, however, is defined). In fact Preact defines `createElement` as an alias for `h`, and since our `import` statement assigns `'preact'` to `React`, `React.createElement` exists and works just fine.
+
+### Optional: running TypeScript scripts ###
+
+This tutorial is focused on making _web pages_ that run TypeScript code. If you would like to run a TypeScript file directly from the command prompt, the easiest way is to use `ts-node`:
+
+    npm install --global ts-node
+
+After installing `ts-node`, run `ts-node X.ts` where `X.ts` is the name of a script you want to run. On Linux systems you can put a "shebang" at the top of the script if you would like to be able to run `./X.ts` directly (without mentioning `ts-node`):
+
+    #!/usr/bin/env ts-node
+
+<p class="note">**Note:** if you don't need to run ts files from a terminal then you don't need to install `ts-node`.</p>
 
 Running your project, Approach A: The Easy Way
 ----------------------------------------------
@@ -209,6 +223,8 @@ It is challenging to set up a conventional build that does all of these things; 
 
 To learn about more features of Parcel, have a look at the [Parcel documentation](https://parceljs.org/getting_started.html). 
 
+One limitation of Parcel is that it doesn't perform type checking (your code is translated to JavaScript but type errors are not detected). For small projects, this is not a big problem because Visual Studio Code performs its own type checking. It gives you red squiggly underlines to indicate errors and all errors are listed in the "Problems" pane (press Ctrl+Shift+M to show it). But if you want, you can `npm install parcel-plugin-typescript` for [enhanced TypeScript support](https://www.npmjs.com/package/parcel-plugin-typescript#features) including type checking.
+
 Other approaches
 ----------------
 
@@ -237,24 +253,26 @@ It seems like everybody's JavaScript project uses a dozen tools plus the kitchen
 Create a text file called `tsconfig.json` (in your root folder) and put this code in it:
 
 ~~~js
-{   // TypeScript configuration file: provides options to the TypeScript 
-    // compiler (tsc) and makes VSCode recognize this folder as a TS project,
-    // enabling the VSCode build tasks "tsc: build" and "tsc: watch".
-    "compilerOptions": {
-        "target": "es5",            // Compatible with older browsers
-        "module": "umd",            // Compatible with both Node.js and browser
-        "moduleResolution": "node", // Tell tsc to look in node_modules for modules
-        "sourceMap": true,          // Creates *.js.map files
-        "jsx": "react",             // Causes inline XML (JSX code) to be expanded
-    },
-    "include": ["**/*.ts", "**/*.tsx"],
-    "exclude": ["node_modules"]
+{ // TypeScript configuration file: provides options to the TypeScript 
+  // compiler (tsc) and makes VSCode recognize this folder as a TS project,
+  // enabling the VSCode build tasks "tsc: build" and "tsc: watch".
+  "compilerOptions": {
+    "target": "es5",            // Compatible with older browsers
+    "module": "umd",            // Compatible with both Node.js and browser
+    "moduleResolution": "node", // Tell tsc to look in node_modules for modules
+    "sourceMap": true,          // Creates *.js.map files
+    "jsx": "react",             // Causes inline XML (JSX code) to be expanded
+    "strict": true,             // Strict types, eg. prohibits `var x=0; x=null`
+    "alwaysStrict": true        // Enable JavaScript's "use strict" mode
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
 ~~~
 
 This file marks the folder as a TypeScript project and enables build commands in VSCode with Ctrl+Shift+B (the "tsc: watch" command is useful - it will automatically recompile your code whenever you save it.) **Silly fact**: `tsc` allows comments in json files but `npm` does not. 
 
-This file is very important because if the settings aren't right, something will go wrong and mysterious errors will punch you in the face. Here is the [documentation of tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html), but compiler options are [documented separately](https://www.typescriptlang.org/docs/handbook/compiler-options.html).).
+This file is very important because if the settings aren't right, something may go wrong and mysterious errors may punch you in the face. Here is the [documentation of tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html), but compiler options are [documented separately](https://www.typescriptlang.org/docs/handbook/compiler-options.html).).
 
 ### Step B2: Add a build script ###
 
@@ -273,7 +291,7 @@ The `build` script simply runs `tsc` which compiles your code according to the o
 1. If you installed TypeScript with `--save-dev` but not `--global`, you can't run `tsc` directly from the command line because it's not in the PATH.
 2. There's a good chance your build process will become more complicated later. By creating a build script you can easily add other commands to the build process later.
 
-**Note:** `npm` runs the `prestart` script automatically whenever someone runs the `start` script, so you *could* add this additional an additional script:
+<p class="note">**Note:** `npm` runs the `prestart` script automatically whenever someone runs the `start` script, so you *could* add this additional an additional script:</p>
 
       "prestart": "npm run build",
 
@@ -435,7 +453,7 @@ At this point you should be able to build your code (`npm run build`), start you
 
 Remember, you can recompile your code automatically in VS Code: press Ctrl+Shift+B and choose "tsc: watch".
 
-**Note**: It's important to load `app.js` at the end of the `body`, or React will say `Error: Target container is not a DOM element` because `app.js` would be calling `document.getElementById('app')` before the app element exists.
+<p class="note">**Note**: It's important to load `app.js` at the end of the `body`, or React will say `Error: Target container is not a DOM element` because `app.js` would be calling `document.getElementById('app')` before the app element exists.</p>
 
 At this point it's worth noting that this code is a little hacky. Especially this part:
 
