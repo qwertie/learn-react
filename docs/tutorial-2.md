@@ -106,9 +106,11 @@ Alternately you can use Preact, which is [almost the same](https://preactjs.com/
 
     npm install preact
 
-<p class="tip" markdown=1>**Tip:** `npm i` is a shortcut for `npm install`.</p>
+<p class="tip" markdown=1>
+**Tip:** `npm i` is a shortcut for `npm install`.</p>
 
-<p class="note" markdown=1>**Note:** do not to install `preact` and `@types/react` in the same project, or `tsc` will go insane and give you about 150 errors (see [preact issue #639](https://github.com/developit/preact/issues/639)). If this happens, uninstall the React types with `npm uninstall @types/react @types/react-dom`</p>
+<p class=note markdown=1>
+**Note:** do not to install `preact` and `@types/react` in the same project, or `tsc` will go insane and give you about 150 errors (see [preact issue #639](https://github.com/developit/preact/issues/639)). If this happens, uninstall the React types with `npm uninstall @types/react @types/react-dom`</p>
 
 ### Step 6: Write some React code ###
 
@@ -137,7 +139,7 @@ ReactDOM.render(
 );
 ~~~
 
-<p class="note" markdown=1>**Note:** in order for the embedded JSX (HTML/XML) to work, the file extension must be `tsx`, not `ts`. If you have any trouble making your code work, try this code instead, it's the simplest possible React program:</p>
+<p class="note" markdown="1">**Note:** in order for the embedded JSX (HTML/XML) to work, the file extension must be `tsx`, not `ts`. If you have any trouble making your code work, try this code instead, it's the simplest possible React program:</p>
 
 ~~~tsx
 import * as ReactDOM from 'react-dom';
@@ -170,7 +172,7 @@ After installing `ts-node`, run `ts-node X.ts` where `X.ts` is the name of a scr
 
     #!/usr/bin/env ts-node
 
-<p class="note" markdown=1>**Note:** if you don't need to run ts files from a terminal then you don't need to install `ts-node`.</p>
+<p class="note" markdown="1">**Note:** if you don't need to run ts files from a terminal then you don't need to install `ts-node`.</p>
 
 Running your project, Approach A: The Easy Way
 ----------------------------------------------
@@ -291,7 +293,7 @@ The `build` script simply runs `tsc` which compiles your code according to the o
 1. If you installed TypeScript with `--save-dev` but not `--global`, you can't run `tsc` directly from the command line because it's not in the PATH.
 2. There's a good chance your build process will become more complicated later. By creating a build script you can easily add other commands to the build process later.
 
-<p class="note" markdown=1>**Note:** `npm` runs the `prestart` script automatically whenever someone runs the `start` script, so you *could* add this additional an additional script:</p>
+<p class="note" markdown="1">**Note:** `npm` runs the `prestart` script automatically whenever someone runs the `start` script, so you *could* add this additional an additional script:</p>
 
       "prestart": "npm run build",
 
@@ -453,7 +455,7 @@ At this point you should be able to build your code (`npm run build`), start you
 
 Remember, you can recompile your code automatically in VS Code: press Ctrl+Shift+B and choose "tsc: watch".
 
-<p class="note" markdown=1>**Note**: It's important to load `app.js` at the end of the `body`, or React will say `Error: Target container is not a DOM element` because `app.js` would be calling `document.getElementById('app')` before the app element exists.</p>
+<p class="note" markdown="1">**Note**: It's important to load `app.js` at the end of the `body`, or React will say `Error: Target container is not a DOM element` because `app.js` would be calling `document.getElementById('app')` before the app element exists.</p>
 
 At this point it's worth noting that this code is a little hacky. Especially this part:
 
