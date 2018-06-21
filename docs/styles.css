@@ -1,4 +1,4 @@
-*, *:before, *:after {
+﻿*, *:before, *:after {
   /* https://css-tricks.com/international-box-sizing-awareness-day/ */
   box-sizing: border-box; 
 }
@@ -98,4 +98,10 @@ header, .header {
 .tip {
   background-color: #cfc;
   border: 1px solid #6c6;
+}
+.note:before {
+    content: "🛈 ";
+}
+.warning:before {
+    content: "⚠ ";
 }
