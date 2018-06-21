@@ -602,9 +602,9 @@ class TimeSelector extends React.Component<{},{time?:Date}> {
 }
 ~~~
 
-<p class="note" markdown="1">
+<span class=note>
 **Note**: There are two time fields, so the `datalist` will be duplicated in the DOM, but it still works. Also, we must set the initial `state` (or it will be `null` and cause a runtime error), but in doing so we need to set the `time` variable with a type annotation, `undefined as (Date|undefined)`, otherwise TypeScript will mistakenly believe that `time` has type `undefined` instead of `Date|undefined`. Interestingly this problem does not occur if you set `this.state` in the constructor (i.e. if your component has a constructor you can simply write `this.state = {}` inside it; in that case, `state` is inherited from `React.Component` with the correct type.)
-</p>
+</span>
 
 **Sadly this code malfunctions**: it will not allow you to type a time such as `9:15` because the first character `9` is immediately interpreted (as `9:00 am`) which causes `render()` to be called again, so the text box is updated which screws up user input.
 
