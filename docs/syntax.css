@@ -1,5 +1,8 @@
+pre {
+    font-family: 'Verdana','DejaVu Sans Mono','Bitstream Vera Sans Mono',Monaco,monospace;
+    font-size: 93%;
+}
 pre.highlight {
-    background: #111;
     padding: 0.4em;
     margin: 0.4em 0 0.4em 0;
     overflow: auto;
@@ -8,12 +11,8 @@ pre.highlight {
     -webkit-border-radius: 7px;
     border-radius: 7px
 }
-pre {
-    font-family: 'Verdana','DejaVu Sans Mono','Bitstream Vera Sans Mono',Monaco,monospace;
-    font-size: 93%;
-}
-
-pre, pre code {
+pre.highlight, pre code {
+    background: #111;
     color: #f8f8f2
 }
 
