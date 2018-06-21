@@ -157,12 +157,10 @@ import * as React from 'preact';
 import * as ReactDOM from 'preact';
 ~~~
 
-<p class="note" markdown="1">
 Some notes about Preact:
 
 - There is a [preact-compat library](https://github.com/developit/preact-compat) which allows you to use preact with zero changes to your React code. Usage instructions exist only for users of Webpack/Browserify/Babel/Brunch, but [this page](https://github.com/parcel-bundler/parcel/pull/850) shows how to use preact-compat with Parcel.
 - There are rumors that in Preact you should write `/** @jsx h */` at the top of the file, which tells TypeScript to call `h()` instead of the default `React.createElement`. In this case you **must not** do that or you'll get a error in your browser that `h` is not defined (`React.h`, however, is defined). In fact Preact defines `createElement` as an alias for `h`, and since our `import` statement assigns `'preact'` to `React`, `React.createElement` exists and works just fine.
-</p>
 
 ### Optional: running TypeScript scripts ###
 
