@@ -2,8 +2,13 @@ import * as ReactDOM from 'react-dom';
 import * as React from 'react';
 import {parseTime, timeToStringUTC} from './time';
 
-class TimeSelector extends React.Component<
-      {time?:Date, onTimeChange:(time?:Date)=>void}, {timeInput?:string}>
+interface TimeSelectorProps {
+  time?: Date;
+  onTimeChange: (time?:Date) => void;
+}
+
+class TimeSelector extends React.Component<TimeSelectorProps,
+                                           {timeInput?:string}>
 {
   state = { timeInput: undefined as (string|undefined) };
   render() {
@@ -60,7 +65,7 @@ interface CalendarEntry {
   alarmMinutes: number;
 }
 
-class EditCalendarEntry extends React.Component<{}, CalendarEntry> {
+class CalendarEntryEditor extends React.Component<{}, CalendarEntry> {
   state = {
     eventName: 'Daily run',
     allDay: false, 
@@ -128,4 +133,4 @@ function diffMinutes(high: Date, low: Date) {
   return (high.valueOf() - low.valueOf()) / 60000;
 }
 
-ReactDOM.render(<EditCalendarEntry/>, document.getElementById("app"));
+ReactDOM.render(<CalendarEntryEditor/>, document.getElementById("app"));
