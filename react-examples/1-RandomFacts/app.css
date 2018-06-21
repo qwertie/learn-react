@@ -1,5 +1,6 @@
 .fact, .warning, .tip {
-    padding: 0.3em;
+    padding: 0.5em;
+    border-radius: 0.4em;
 }
 .fact { 
     background-color: #eee;
