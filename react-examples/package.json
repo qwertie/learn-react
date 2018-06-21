@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Collection of react examples",
   "scripts": {
-    "test": "echo \"Error: no tests installed\" && exit 1",
+    "test": "ts-node ./4b-Calendar/tests.ts",
     "start": "parcel index.html"
   },
   "author": "David Piepgrass",
@@ -11,6 +11,7 @@
   "devDependencies": {
     "@types/react": "^16.3.13",
     "@types/react-dom": "^16.0.5",
+    "ts-node": "^6.1.1",
     "typescript": "^2.8.3"
   },
   "dependencies": {
