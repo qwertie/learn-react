@@ -66,6 +66,13 @@ header, .header {
   background: -ms-linear-gradient(269deg, #91B8FF 0%, #DAB5FF 31%, #FF8080 69%, #FFBFBF 79%, #ffffff 87%, #ffffff 100%); /* ie10+ */
   background: linear-gradient(181deg, #91B8FF 0%, #DAB5FF 31%, #FF8080 69%, #FFBFBF 79%, #ffffff 87%, #ffffff 100%); /* w3c */
 }
+header a {	
+  color: #000;
+  text-decoration-color: #0004;
+}
+header a:hover {
+  text-decoration-color: #000;
+}
 
 .site-title {
   font-family: verdana, sans-serif;
