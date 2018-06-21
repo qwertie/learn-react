@@ -20,7 +20,7 @@ export function separateTags(tags: Tag[], min: number, max: number) {
         if (tag.x < min)
             tag.x = min;
         runs.push(tag);
-        let left: Tag, last: Tag, ;
+        let left: Tag, last: Tag;
         while (runs.length >= 2 && x2of(left = runs[runs.length-2]) >
                                        (last = runs[runs.length-1]).x) {
             runs.pop();
