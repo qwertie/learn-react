@@ -293,13 +293,13 @@ The `build` script simply runs `tsc` which compiles your code according to the o
 1. If you installed TypeScript with `--save-dev` but not `--global`, you can't run `tsc` directly from the command line because it's not in the PATH.
 2. There's a good chance your build process will become more complicated later. By creating a build script you can easily add other commands to the build process later.
 
-<p class="note" markdown="1">**Note:** `npm` runs the `prestart` script automatically whenever someone runs the `start` script, so you *could* add this additional an additional script:</p>
+**Note:** `npm` runs the `prestart` script automatically whenever someone runs the `start` script, so you *could* add this additional an additional script:
 
       "prestart": "npm run build",
 
 This would build your project whenever you start your server with `npm start` or `npm run start`. But this has two disadvantages: one, `tsc` is a bit slow; two, if tsc finds type errors then your server won't start. When TypeScript detects type errors, that doesn't stop it from writing JavaScript output files, and you may find it is occasionally useful to run your code even with type errors.
 
-The default behavior of `npm start` is to run `node server.js`, so it seems redundant to include `"start": "node server.js"`. However, if your server is written in TypeScript you'll need this line because `server.js` doesn't exist until `server.ts` is compiled, and if `server.js` doesn't exist, `npm start` will give the error `missing script: start` unless you include this line.
+<span class="note">The default behavior of `npm start` is to run `node server.js`, so it seems redundant to include `"start": "node server.js"`. However, if your server is written in TypeScript you'll need this line because `server.js` doesn't exist until `server.ts` is compiled, and if `server.js` doesn't exist, `npm start` will give the error `missing script: start` unless you include this line.</span>
 
 ### Step B3: Make a simple server ###
 
