@@ -49,6 +49,8 @@ This tutorial uses TypeScript, a superset of JavaScript with a comprehensive typ
 2. Types allow IDEs to provide code-completion popups, also known as IntelliSense, which makes programming much easier because you don't have to memorize all the names and expected arguments of the functions you call.
 3. You can get refactoring features. For example, in Visual Studio Code, press F2 to rename a function or variable across multiple files, without affecting other things that have the same name.
 
+<span class="tip">To play with TypeScript without installing anything, [visit its playground](http://www.typescriptlang.org/play/).</span>
+
 ### Client versus server ###
 
 Your can run code in a client (front-end browser), a server (Node.js back-end), or both. The client is not under your control; the user might use Firefox, Chrome, Safari, Opera, Edge, or in the worst case, Internet Explorer. For security reasons, keep in mind that the user can modify a browser's behavior using browser extensions or the F12 developer tools. You can't even be sure that your code is running in a real browser.

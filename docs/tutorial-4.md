@@ -50,13 +50,17 @@ console.log(y); // print [25,25] or ["Why?","Why?"] in browser's console
 
 This is allowed in TypeScript also, because `var y` (by itself) gives `y` a type of `any`, meaning anything. So we can assign any value or object or whatever to `y`. So we can certainly set it to a string or a number or an array of two things. `any` is a special type; it means "this value or variable should act like a JavaScript value or variable and, therefore, not give me any type errors."
 
+<span class="warning">I recommend the `"strict": true` compiler option, but in that mode TypeScript doesn't allow `var y`; it requires `var y: any` instead.</span>
+
 However, TypeScript allows us to be more specific by saying
 
     var y: string | number;
 
 This means "variable y is a string or a number". If `y` is created this way, then the `if-else` part is allowed but the other part that says `y = [y, y]` is not allowed, because `[y, y]` is not a string and not a number either (it's an array of type `number[] | string[]`). This feature, in which a variable can have one of two (or more) types is called **union types** and it's often useful.
 
-**Tip:** To help you learn about **JavaScript**, press F12 in Chrome or Firefox and look for the Console. In the console you can write JavaScript code, to find out what a small piece of JavaScript does and whether you are writing code correctly:
+<span class="tip">**Tip:** To help you learn more about TypeScript, [visit the playground](http://www.typescriptlang.org/play/).</span>
+
+<span class="tip">To help you learn more about **JavaScript**, press F12 in Chrome or Firefox and look for the Console. In the console you can write JavaScript code, to find out what a small piece of JavaScript does and whether you are writing it correctly:</span>
 
 ![](chrome-console.png)
 
@@ -88,20 +92,20 @@ console.log(`The big box is ${big.area/small.area} times larger than the small o
 console.log(`The area of the zero-size box is ${Box.ZeroSize().area}.`);
 ~~~
 
-JavaScript is a little picky: when you create a function outside a class it has the word `function` in front of it, but when you create a function inside a `class`, it is _not allowed_ to have the word `function` in front of it. I don't know, maybe that's because functions inside classes are called "methods" instead of functions. They are really the same thing except that functions inside classes have access to `this` - a reference to the current object.
+JavaScript is a little picky: when you create a function outside a class it has the word `function` in front of it, but when you create a function inside a `class`, it is _not allowed_ to have the word `function` in front of it. I don't know, maybe that's because functions inside classes are called "methods" instead of functions. Functions and methods are the same thing, except that methods in classes have access to `this` - a reference to the current object. Except for `static` methods. `static` methods are called on the `class` (e.g. `Box.ZeroSize` in this example) so they do not have "current object".
 
 The console output is
 
     The big box is 10000 times larger than the small one
     The zero-size box has an area of 0.
 
-TypeScript is the same except that you can declare variables in addition to functions and getters:
+Unlike JavaScript, TypeScript classes allow variable declarations, such as `width` and `height` in this example:
 
 ~~~ts
 class Box {
   width: number;
   height: number;
-  constructor(width, height) {
+  constructor(width: number, height: number) {
     this.width = width;
     this.height = height;
   }
@@ -113,12 +117,12 @@ class Box {
 }
 ~~~
 
-For convenience, TypeScript allows you to define a constructor and the variables it initializes at the same time. So instead of 
+For convenience, TypeScript lets you define a constructor and the variables it initializes at the same time. So instead of 
 
 ~~~ts
   width: number;
   height: number;
-  constructor(width, height) {
+  constructor(width: number, height: number) {
     this.width = width;
     this.height = height;
   }
@@ -141,14 +145,15 @@ class PrivateBox {
 }
 let x = new PrivateBox(4, 5);
 console.log(x.area()); // OK
-console.log(x.width); // ERROR: 'width' is private and only accessible within class 'PrivateBox'.
+console.log(x.width); // ERROR: 'width' is private and only 
+                      // accessible within class 'PrivateBox'.
 ~~~
 
 `private` variables allow you to clearly mark parts of a class as "internal", things that users of the class should not modify, read, or even think about.
 
 ### Interfaces ###
 
-Interfaces are a way of referring to "shapes" of objects. Interfaces in TypeScript work like interfaces in the Go programming language, not like interfaces in Java and C# - and that's a good thing. Here's an example:
+Interfaces are a way of describing "shapes" of objects. Interfaces in TypeScript work like interfaces in the Go programming language, not like interfaces in Java and C# - and that's a good thing. Here's an example:
 
 ~~~ts
 interface IBox {
@@ -174,7 +179,7 @@ console.log(`The box is ${a.width} by ${a.height}.`); // OK
 a.width = 2; // ERR: Cannot assign to 'width' because it is a constant or a read-only property.
 ~~~
 
-Strangely, TypeScript doesn't require `readonly` for interface compatibility. For example, TypeScript accepts this code even though it doesn't work:
+Strangely, TypeScript does not require `readonly` for interface compatibility. For example, TypeScript accepts this code even though it doesn't work:
 
 ~~~ts
 interface IArea {
