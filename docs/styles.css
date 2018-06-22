@@ -9,16 +9,16 @@ html {
   line-height: 1.5;
   color: #24292e;
   background-color: #fff;
-  padding: 0.5em;
+  padding: 0.3em;
 }
 
 @media (max-width: 650px) {
   html { font-size: 16px; }
 }
-@media (max-width: 500px) {
+@media (max-width: 450px) {
   html { font-size: 15px; }
 }
-@media (max-width: 400px) {
+@media (max-width: 360px) {
   html { font-size: 14px; }
 }
 
@@ -34,6 +34,7 @@ img { /* auto-resize to fit container */
 }
 
 h1 {
+  font-size: 1.7em;
   color: #888;
   padding: 0.2em 0 0.2em 0;
   margin: 0.5em 0 0.5em 0;
@@ -43,11 +44,11 @@ h1.site-title {
   border-bottom: 0px;
 }
 h2 {
+  font-size: 1.5em;
   color: #448;
   padding: 0.2em 0 0.2em 0;
   margin: 1em 0 0.5em 0;
   margin-bottom: 0.2em;
-  font-size: 1.5em;
   border-bottom: 1px solid #eaecef;
 }
 
