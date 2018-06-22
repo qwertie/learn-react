@@ -12,6 +12,16 @@ html {
   padding: 0.5em;
 }
 
+@media (max-width: 850px) {
+  html { font-size: 16px; }
+}
+@media (max-width: 650px) {
+  html { font-size: 15px; }
+}
+@media (max-width: 450px) {
+  html { font-size: 14px; }
+}
+
 main {
   max-width: 800px;
   margin-right: auto;
@@ -69,6 +79,7 @@ header, .header {
 .header a {	
   color: #000;
   text-decoration-color: #0004;
+  display: inline-block; /* prevent line breaks */
 }
 .header a:hover {
   text-decoration-color: #000;
