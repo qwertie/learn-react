@@ -1,5 +1,5 @@
-Setting up your TypeScript Project: 4 Different Approaches
-==========================================================
+Setting up a TypeScript Project: 4 Approaches
+=============================================
 
 Welcome to Part 2 of this series! Here we will go on a tour of the JavaScript tools ecosystem. This part is not about React (we'll get to that in [Part 5](tutorial-5.md)) but it does include a simple React component.
 
@@ -10,7 +10,7 @@ Actually this is a **grand** tour, and we'll talk about writing your app in four
 - C. The Webpack way
 - D. The Gulp way
 
-Afterward there will be a summary to remind you of the key points.
+Afterward there will be a [summary](tutorial-3.md) to remind you of the key points.
 
 Common Steps
 ------------
@@ -39,7 +39,7 @@ The `package.json` file will represent your project configuration (including its
 
 If you haven't done so yet, create an empty folder for your app and open a terminal window in that folder.
 
-In the terminal, run `npm init`. `npm init` will ask you some questions in order to produce `package.json`.
+In the terminal, run `npm init`. `npm init` will ask you some questions in order to produce `package.json`. Leave a field blank to accept the default suggestion.
 
 I wanted to make a small educational app to draw some graphs demonstrating how climate science explains the 20th century temperature record. So I called my app climate-app:
 
@@ -75,7 +75,7 @@ About to write to C:\Dev\climate-app\package.json:
 Is this ok? (yes)
 ~~~
 
-Notice the reference to `index.js`. Oddly, this file does not need to exist and we won't be using it. I assume it has to do with sharing libraries via `npm`, but we're writing an app, not a library.
+Notice the reference to `index.js`. Oddly, this file does not need to exist and we won't be using it. It is used only [if you share your code via npm](https://stackoverflow.com/a/27971810/22820).
 
 ### Step 4: Install Typescript ###
 
@@ -93,7 +93,7 @@ If you use the `--global` option then the TypeScript compiler `tsc` will be avai
 
 If you use `--save-dev`, TypeScript will be added to `package.json` and installed in your project's `node_modules` folder (current size: 34.2 MB), but it will **not** be available directly as a terminal command, although you can still run it from the terminal as `./node_modules/.bin/tsc`, and you can still use `tsc` inside the `npm` `"scripts"` section of `package.json`.
 
-**Fun fact**: the TypeScript compiler is multiplatform because it is written in TypeScript (and compiled to JavaScript).
+<span class="tip">**Fun fact**: the TypeScript compiler is multiplatform because it is written in TypeScript (and compiled to JavaScript).</span>
 
 ### Step 5: Install React or Preact ###
 
@@ -472,7 +472,7 @@ What's this for? The short answer is that if your code contains `import`, TypeSc
 
 The long answer? First of all, remember that the JavaScript ecosystem has multiple module systems. Right now, your `tsconfig.json` file uses the `"module": "umd"` option, because `"module": "umd"` and `"module": "commonjs"` are the only modes that can be used in both Node.js and a web browser. I asked you to make a server.js (not server.ts) file, but by using `"module": "umd"` you could write your server code in TypeScript if you want to.
 
-UMD is the natural choice since it's supposed to make a "universal" module definition, but TypeScript doesn't really try to be universal - it simply won't attempt to work in a web browser unaided. Instead, it expects to find predefined symbols either for an AMD module system or a CommonJS (i.e. Node.js) module system; if neither of these is defined, the module exits without so much as printing an error.
+UMD is the natural choice since it's supposed to make a "universal" module definition, but TypeScript doesn't really try to be universal - it simply won't attempt to work in a web browser unaided. Instead, it expects to find predefined symbols either for an AMD module system or a CommonJS (i.e. Node.js) module system; if neither of these is defined, the module exits without even logging an error message.
 
 Even if we *could* use the `"module": "es6"` option, which keeps `import` commands unchanged in the output file, it wouldn't work because Chrome somehow *still* doesn't support `import` in 2018. (another issue here is our modules' URLs have little in common with the string in our `import` statements, but I believe this issue can be solved with options in tsconfig.json including `baseUrl` and "Path mapping", as [documented here](https://www.typescriptlang.org/docs/handbook/module-resolution.html#base-url).)
 

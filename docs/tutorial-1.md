@@ -75,7 +75,7 @@ In this article we'll use plain CSS, but if you're going to have a compile step 
 
 ### Unit testing ###
 
-The popular unit testing libraries are Mocha and Jasmine. [See here for more](https://stateofjs.com/2017/testing/results). `npm` has a special command for testing, `npm test`,which is short for `npm run test`.
+The popular unit testing libraries are Mocha and Jasmine. [See here for more](https://stateofjs.com/2017/testing/results). `npm` has a special command for testing, `npm test` (which is short for `npm run test`).
 
 ### Other libraries ###
 
@@ -103,7 +103,7 @@ I won't say anything more about this, but TypeScript and JavaScript can be used 
 
 ### Module types ###
 
-For the longest time all JavaScript code ran in a single global namespace. This sucked, so various kinds of "module definitions" were invented to *simulate* what other languages call packages or modules. Node.js uses "CommonJS" modules, which involves a magic function called `require('module-name')` to import modules and a magic variable called `module.exports` to create modules. To write modules that work in both browsers and Node.js, one can use UMD modules. Modules that can be asynchronously loaded use AMD.
+For the longest time all JavaScript code ran in a single global namespace. This caused conflicts between unrelated code libraries, so various kinds of "module definitions" were invented to *simulate* what other languages call packages or modules. Node.js uses "CommonJS" modules, which involves a magic function called `require('module-name')` to import modules and a magic variable called `module.exports` to create modules. To write modules that work in both browsers and Node.js, one can use UMD modules. Modules that can be asynchronously loaded use AMD.
 
 ES6 introduced a module system involving `import` and `export` keywords, but Node.js and some browsers still don't support it. Here's a [primer on the various module types](https://www.jvandemo.com/a-10-minute-primer-to-javascript-modules-module-formats-module-loaders-and-module-bundlers/).
 
@@ -115,7 +115,7 @@ Polyfills are backward-compatibility helpers. They are pieces of code written in
 
 ~~~js
 String.prototype.startsWith = String.prototype.startsWith || function(search, pos) {
-	return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
+  return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
 };
 ~~~
 
@@ -123,7 +123,7 @@ This code has the form `X = X || function(...) {...}`, which means "if X is defi
 
 Even some advanced browser features have polyfills. Have you heard of WebAssembly, which lets you run C/C++ code in a browser? There's a [JavaScript polyfill](https://github.com/lukewagner/polyfill-prototype-1) for it!
 
-This code refers to one of the other unique things about JavaScript, the idea of prototypes. Prototypes correspond *very roughly* to classes in other languages, so what this code is doing is actually changing the definition of the *String* data type. Afterward when you write `'string'.startsWith()` it will call this polyfill (if  `String.prototype.startsWith` was not already defined). There are various articles out there to teach you about prototypes and prototypical inheritance, e.g. [this one](https://hackernoon.com/understanding-javascript-prototype-and-inheritance-d55a9a23bde2).
+This code refers to one of the other unique things about JavaScript, the idea of prototypes. Prototypes correspond *roughly* to classes in other languages, so what this code is doing is actually changing the definition of the *String* data type. Afterward when you write `'string'.startsWith()` it will call this polyfill (if  `String.prototype.startsWith` was not already defined). There are various articles out there to teach you about prototypes and prototypical inheritance, e.g. [this one](https://hackernoon.com/understanding-javascript-prototype-and-inheritance-d55a9a23bde2).
 
 ### Credit ###
 

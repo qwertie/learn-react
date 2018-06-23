@@ -1,5 +1,5 @@
 Part 4: A brief introduction to TypeScript
-------------------------------------------
+==========================================
 
 I said this tutorial was designed for people who had used JavaScript but not TypeScript so I'll mostly just talk about the main differences between the two.
 
@@ -58,9 +58,9 @@ However, TypeScript allows us to be more specific by saying
 
 This means "variable y is a string or a number". If `y` is created this way, then the `if-else` part is allowed but the other part that says `y = [y, y]` is not allowed, because `[y, y]` is not a string and not a number either (it's an array of type `number[] | string[]`). This feature, in which a variable can have one of two (or more) types is called **union types** and it's often useful.
 
-<span class="tip">**Tip:** To help you learn more about TypeScript, [visit the playground](http://www.typescriptlang.org/play/).</span>
-
-<span class="tip">To help you learn more about **JavaScript**, press F12 in Chrome or Firefox and look for the Console. In the console you can write JavaScript code, to find out what a small piece of JavaScript does and whether you are writing it correctly:</span>
+<span class="tip">**Tip:** To help you learn TypeScript, it may help to [do experiments in the playground](http://www.typescriptlang.org/play/).<br/>
+<br/>
+To help you learn more about **JavaScript**, press F12 in Chrome, Firefox or Edge and look for the Console. In the console you can write JavaScript code, to find out what a small piece of JavaScript does and whether you are writing it correctly:</span>
 
 ![](chrome-console.png)
 

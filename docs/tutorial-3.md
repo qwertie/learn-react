@@ -70,21 +70,24 @@ ReactDOM.render(
 (1) Create a text file called `tsconfig.json` with this code in it:
 
 ~~~js
-{   // TypeScript configuration file: provides options to the TypeScript 
-    // compiler (tsc) and makes VSCode recognize this folder as a TS project.
-    "compilerOptions": {
-        "target": "es5",            // Compatible with older browsers
-        "module": "umd",            // Compatible with both Node.js and browser
-        "moduleResolution": "node", // Tell tsc to look in node_modules for modules
-        "sourceMap": true,          // Creates *.js.map files
-        "jsx": "react",             // Causes inline XML (JSX code) to be expanded
-    },
-    "include": ["**/*.ts", "**/*.tsx"],
-    "exclude": ["node_modules"]
+{ // TypeScript configuration file: provides options to the TypeScript 
+  // compiler (tsc) and makes VSCode recognize this folder as a TS project,
+  // enabling the VSCode build tasks "tsc: build" and "tsc: watch".
+  "compilerOptions": {
+    "target": "es5",            // Compatible with older browsers
+    "module": "umd",            // Compatible with both Node.js and browser
+    "moduleResolution": "node", // Tell tsc to look in node_modules for modules
+    "sourceMap": true,          // Whether to create *.js.map files
+    "jsx": "react",             // Causes inline XML (JSX code) to be expanded
+    "strict": true,             // Strict types, eg. prohibits `var x=0; x=null`
+    "alwaysStrict": true        // Enable JavaScript's "use strict" mode
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
 ~~~
 
-(2) Create a `server.js` file to serve files to your web browser. You could use the file server code from step B3 in [Part 2](tutorial-2.md), but if you install [Express](https://expressjs.com/) with `npm install express` then you can use short and simple server code, like this:
+(2) Create a `server.js` file to serve files to your web browser. You could use the file server code from step B3 in [Part 2](tutorial-2.md#step-b3-make-a-simple-server), but if you install [Express](https://expressjs.com/) with `npm install express` then you can use short and simple server code, like this:
 
 ~~~js
 const express = require('express');
@@ -180,6 +183,14 @@ To run TypeScript scripts directly from the command prompt
 
 1. In a terminal: `npm install --global ts-node`
 2. In a terminal: `ts-node script.ts` (where _script.ts_ is a script's name).
+
+To run JS or TypeScript source code from GitHub/Git
+---------------------------------------------------
+
+- [Fork](https://help.github.com/articles/fork-a-repo/) or [clone](https://help.github.com/articles/cloning-a-repository/) the Git project. You can also download the source code as a zip file if you aren't using Git yet. If you're looking for a nice user interface for Git, I suggest [GitKraken](https://www.gitkraken.com) or [Git Extensions](https://gitextensions.github.io/). For Git Extensions, you'll need to [install Git](https://git-scm.com/downloads) first ([and Mono](https://github.com/gitextensions/gitextensions/wiki/How-To%3A-run-Git-Extensions-on-Linux) if you have a Mac or Linux). Oh and there is a [GitHub app](https://desktop.github.com/) which has probably improved since the last time I tried it.
+- In a terminal: `npm install` (downloads all dependencies)
+- In a terminal: `npm start` (or `npm test` to run the project's tests)
+- If that doesn't work, look for instructions in the project's README or CONTRIBUTING file.
 
 Optional: Separating the js files from the ts files, in Approach B
 ------------------------------------------------------------------
