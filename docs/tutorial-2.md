@@ -29,7 +29,7 @@ To enjoy this benefit, you'll need to edit your TypeScript `.ts` files in a comp
 
 Visual Studio Code is folder-oriented: you open a folder in VS Code and that folder will be treated like the current "project". During installation (on Windows, anyway) it will offer a checkbox to add an "Open with Code" action for folders (directories). I recommend using that option as an easy way to start VS Code from any folder:
 
-![](screenshot-vscode-setup.png)
+![](img/screenshot-vscode-setup.png)
 
 Create an empty folder for your app, then open that folder in VS Code. Notice that VS Code has a built-in terminal so you won't need a separate terminal window.
 
@@ -204,7 +204,7 @@ So all we have to do now is to create an `index.html` file that refers to our `a
 
 Then, simply open a terminal in the same folder and run the command `parcel index.html`.
 
-![](parcel.png)
+![](img/parcel.png)
 
 This can't run directly in a browser, of course, so Parcel
 
@@ -327,7 +327,7 @@ To get IntelliSense for Node.js, you need to install type information for it wit
 
 Then in VS Code, type `http.` to make sure it works:
 
-![](intellisense-2.png)
+![](img/intellisense-2.png)
 
 Behind the scenes, VS Code uses the TypeScript engine for this. However, if you rename your file to `server.ts`, **IntelliSense doesn't work**! Is TypeScript broken in Node.js? Not really. TypeScript can still compile it, it just doesn't grok `require` in a .ts context. So in TypeScript files, you should use `import` instead of `require`:
 
@@ -451,7 +451,7 @@ This page includes both React (react.development.js and react-dom.development.js
 
 At this point you should be able to build your code (`npm run build`), start your server (`npm start`) and visit http://127.0.0.1:1234 to view your app!
 
-![](mini-react-app.png)
+![](img/mini-react-app.png)
 
 Remember, you can recompile your code automatically in VS Code: press Ctrl+Shift+B and choose "tsc: watch".
 
@@ -560,7 +560,7 @@ You'll need two separate terminals, one for your build system (`npm run watch`) 
 
 It's worth noting that VS Code can keep track of multiple terminals. You can create two terminals and run one command in each, like this:
 
-![Two terminals in Visual Studio Code](node-and-webpack-watch.png)
+![Two terminals in Visual Studio Code](img/node-and-webpack-watch.png)
 
 ### Step C6: Create index.html and load it ###
 

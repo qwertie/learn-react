@@ -1,7 +1,7 @@
 Setting up your TypeScript Project: Summary and Extra Tips
 ==========================================================
 
-This is a summary of the four ways you can set up your TypeScript project; see [Setting up your TypeScript Project](react-typescript-tutorial-2.md) for full details.
+This is a summary of the four ways you can set up your TypeScript project; see [Setting up your TypeScript Project](tutorial-2.md) for full details.
 
 ### One-time installations ###
 

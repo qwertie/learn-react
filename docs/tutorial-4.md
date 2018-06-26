@@ -62,11 +62,11 @@ This means "variable y is a string or a number". If `y` is created this way, the
 <br/>
 To help you learn more about **JavaScript**, press F12 in Chrome, Firefox or Edge and look for the Console. In the console you can write JavaScript code, to find out what a small piece of JavaScript does and whether you are writing it correctly:</span>
 
-![](chrome-console.png)
+![](img/chrome-console.png)
 
 Since TypeScript is just JavaScript with types, you can use the console to help you learn the part of TypeScript that doesn't have types. In your TypeScript file you can call `console.log(something)` to print things in the browser's console. In some browsers, `log` can display complex objects, for example, try writing `console.log({name:"Steve", age:37, favoriteNumbers:[7, 666, -1]})`:
 
-![](chrome-console-2.png)
+![](img/chrome-console-2.png)
 
 ### Classes ###
 

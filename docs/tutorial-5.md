@@ -8,7 +8,7 @@ Many ways have been invented to synchronize an internal collection of off-screen
 
 This wasn't too difficult, but it became harder as the user interface got more sophisticated. If GUI widgets (i.e. "elements" in HTML, "controls" in Windows, "views" in Android) depend on each other in complicated ways, or if multiple parts of the user interface showed the same, changing, information (which had to stay synchronized), it became challenging to handle every situation that could possibly arise. As complexity rose, bugs tended to appear in the user interface, and the code tended to be be messy and non-modular.
 
-![](list-ui.png)
+![](img/list-ui.png)
 
 The difficulty comes from the variety of update operations that must be done as the model and view change over time. Imagine an on-screen listbox: when first created, the list is empty and needs code that will fill it based on the model. If an item is added or removed in the model, the item needs to be added or removed in the view also. Clearing the list and refilling it is the easiest approach, but it's inefficient, and perhaps the user interface won't have the correct scroll bar position afterward, or it might forget which item is currently selected. Now imagine there is a textbox showing a field from the currently selected list item. When you select a different item in the listbox, that textbox must be updated. If the user changes the text, the new text needs to be stored in the model and perhaps also in the listbox. Likewise if the text changes in the model, that new text needs to be shown in the textbox and perhaps also in the listbox. When no item is selected, the textbox should be hidden; when an item is selected, the textbox should be shown.
 
@@ -26,7 +26,7 @@ So in immediate mode, if there is a text box with the word "Hello" in it, it's d
 
 Let's consider another example: a user interface for a calendar entry in a Calendar app. 
 
-![Calendar entry UI](calendar-ui.png)
+![Calendar entry UI](img/calendar-ui.png)
 
 We want a user interface for defining both all-day events and normal short events, so
 
@@ -153,7 +153,7 @@ Example #1: Random facts
 
 Now let's make a bigger page, something with not one but **two** props! It will look like this:
 
-![](1-random-facts.png)
+![](img/1-random-facts.png)
 
 We'll need some CSS to style it, so we'll use an `app.css` file with this style code:
 
@@ -230,11 +230,11 @@ The `Para` component has some relatively complicated logic. The `type` property 
 
 In normal JavaScript you would simply write `React.Component` (without type parameters) because the entire concept of type parameters does not exist in JavaScript. We receive benefits from this longer code, because VS Code will tell us with a red underline when we have used a component incorrectly...
 
-![](intellisense-3a.png)
+![](img/intellisense-3a.png)
 
 ...and it can also tell us what properties are available on any component (although unfortunately it incorrectly shows a lot of extra things on the list... hopefully that will be fixed in the future):
 
-![](intellisense-3b.png)
+![](img/intellisense-3b.png)
 
 The other type annotation appears on the `children` variable; TypeScript needs me to write this:
 
@@ -265,13 +265,13 @@ Since TypeScript is based on JavaScript, it inherits all the strange names that 
 
 Knowing this, I typed `React.createElement(` in VS Code, which causes it to tell me the types of the three arguments:
 
-![](intellisense-4.png)
+![](img/intellisense-4.png)
 
 Surprisingly there seem to be 8 different versions of `createElement`, but all of them have the same type for their third argument: `React.ReactNode[]`. So that's the type I used for our `children` variable. I don't know why it says `...` in the pop-up box, but apparently those dots aren't important right now.
 
 **Fun fact:** we're asking React to create two plain-text nodes in a row: one is `": "`, the other is `"React is popular"`. We can see them both in the Chrome debugger:
 
-![](1-two-text-nodes.png)
+![](img/1-two-text-nodes.png)
 
 I find that interesting because in normal HTML, it's impossible to write two separate text nodes side-by-side like this. The DOM allows it but HTML does not, and so if you convert the DOM to HTML, the two text nodes are merged into one.
 
@@ -282,7 +282,7 @@ This is another "simple" component. Rewrite it as a function.
 Example #2: The button thing from Part 2
 ----------------------------------------
 
-![](mini-react-app.png)
+![](img/mini-react-app.png)
 
 ~~~tsx
 class App extends React.Component<{greeting: string}, {count:number}> {
@@ -332,7 +332,7 @@ This example introduces two new things:
 1. Defining multiple components in one page. React programs usually contain many components so it's important to learn to break up your user interface into parts.
 2. The representation of CSS styles in React.
 
-![](bar-graph.png)
+![](img/bar-graph.png)
 
 First let's define a component that decides how to draw a single bar in the bar chart, including the label on the left-hand side. To make sure the left-hand side of each bar lines up with every other bar in the chart, we will draw the bar chart as a two-column table (left column: labels, right column: bars). Each label has an asterisk on it which is actually a link to the source of the data for that bar (I guess that's an unintuitive way to link to my sources, but a better idea didn't come to mind.) The size and color of each bar will be controlled by inline styles.
 
@@ -527,7 +527,7 @@ Let's create a React-based editor for the `CalendarEntry` model above. Let's sta
   </div>
 ~~~
 
-![Calendar entry UI](calendar-ui.png)
+![Calendar entry UI](img/calendar-ui.png)
 
 Unfortunately the `datalist` element doesn't behave in a useful way (the dropdown list becomes useless once a time is selected) but it's a reasonable starting point.
 
@@ -535,7 +535,7 @@ Since there are two time-of-day selectors, it's natural to put the code for that
 
 JavaScript `Date`s are actually based on Unix Epoch time, storing the amount of time in milliseconds since midnight January 1, 1970 UTC. So it seems reasonable to represent the time as a time on January 1, 1970 UTC. But can we parse a user-provided `time` string with code like `new Date("1970-01-01 "+time)`? Unfortunately this may not work, because the date parsing behavior is [reportedly](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/parse) browser-specific unless it has a very specific format. A browser may not recognize "unofficial" formats at all, or it may choose UTC or local time arbitrarily. Chrome, for instance, recognizes `01 Jan 1970 0:00:00 UTC` as time zero, and `01 Jan 1970 12:00 am UTC` works too, but `01 Jan 1970 12:00am UTC` is not understood, and `01 Jan 1970 12:00 am` is interpreted as local time (and so in general is not time zero). Most importantly, this is browser-specific and therefore unreliable.
 
-We could fix this with a third-party library, but I'm not happy with [Moment.js](https://momentjs.com/) or [Datejs](http://www.datejs.com/) as they are not small libraries but they _still_ don't understand time-of-day as a different concept from a date. So instead I wrote a function to parse time values (you can also find a "test suite" [here](https://stackoverflow.com/a/50769298/22820)):
+We could fix this with a third-party library, but I'm not happy with [Moment.js](https://momentjs.com/) or [Datejs](http://www.datejs.com/) as they are not small libraries but they _still_ don't understand time-of-day as a different concept from a date. So instead I wrote a function to parse time values (later I put it in its own [repo with tests](https://github.com/qwertie/simplertime)):
 
 ~~~tsx
 function parseTime(t: string, localDate?: Date): Date|undefined {

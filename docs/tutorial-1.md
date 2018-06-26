@@ -19,7 +19,7 @@ For many programming languages, there's a certain way of doing things that every
 
 In JavaScript, on the other hand, there are so many competing libraries and tools for almost every aspect of the development process, the barrage of tools can become overwhelming before you write your first line of code! When you go Googling "how to write a web app", every web site you visit seems to give different advice.
 
-![](js-compile-run-process.svg)
+![](img/js-compile-run-process.svg)
 
 *Thanks [draw.io](https://draw.io) for the diagramming tool!*
 
