@@ -38,7 +38,7 @@ If you don't need to support old browsers and your code isn't very large, runnin
 - If you need to support old browsers, you'll want a "transpiler" so you can use new features of JavaScript in old browsers (a transpiler is a compiler whose output code is a high-level language, in this case JavaScript). I would guess the most popular transpiler is [Babel](https://babeljs.io/), with [TypeScript](https://www.typescriptlang.org/) in second place.
 - If you want to use the popular React framework (but without TypeScript), you'll probably be writing "JSX" code - fragments of XML inside JavaScript code. JSX is not supported by browsers and so requires a preprocessor (typically Babel).
 - If you want to "minify" your code so it uses less bandwidth (or is obfuscated), you'll need a "minifier" preprocessor. [Popular minifiers](minification.md) include UglifyJS, JSMin and the Closure Compiler.
-- If you want type checking or high-quality code completion (also known as IntelliSense), you'll want to use TypeScript, a superset of JavaScript (meaning every JavaScript file is also a TypeScript file). TypeScript supports both ES7 features and JSX, and its output is ES5 or ES6 code. When TypeScript and JSX code are used together, the file extension must be `.tsx`. Some people are using a different language, similar in concept to TypeScript, called Flow. TypeScript is not a minifier, but it can strip out comments.
+- If you want type checking or high-quality code completion (also known as IntelliSense), you'll want to use TypeScript, a superset of JavaScript (meaning every JavaScript file is also a TypeScript file... ostensibly). TypeScript supports both ES7 features and JSX, and its output is ES5 or ES6 code. When TypeScript and JSX code are used together, the file extension must be `.tsx`. Some people are using a different language, similar in concept to TypeScript, called Flow.
 - If you don't like JavaScript, you could try a totally different language that transpiles to JavaScript, such as Elm, ClojureScript or Dart.
 
 It's possible to automate compiling so that your code is compiled whenever you save a file.
@@ -46,7 +46,7 @@ It's possible to automate compiling so that your code is compiled whenever you s
 This tutorial uses TypeScript, a superset of JavaScript with a comprehensive type system. The benefits of TypeScript are that 
 
 1. You get compiler error messages when you make type-related mistakes (instead of discovering mistakes indirectly when your program misbehaves). In IDEs such as Visual Studio Code your mistakes are underlined in red.
-2. Types allow IDEs to provide code-completion popups, also known as IntelliSense, which makes programming much easier because you don't have to memorize all the names and expected arguments of the functions you call.
+2. Types allow IDEs to provide code-completion popups, also known as IntelliSense, which makes programming much easier because you don't have to memorize all the names and expected arguments of the functions you call. <br/> ![](img/intellisense-2.png)
 3. You can get refactoring features. For example, in Visual Studio Code, press F2 to rename a function or variable across multiple files, without affecting other things that have the same name.
 
 <span class="tip">To play with TypeScript without installing anything, [visit its playground](http://www.typescriptlang.org/play/).</span>
