@@ -78,6 +78,19 @@ h2 {
      display: run-in only works in IE so I'll nest tagline in post-date */
 }
 
+.sidebox { /* A note floating on the right side */
+  border: 1px dotted rgb(127, 127, 127);
+  padding: 0.2em 0.15em 0.2em 0.3em; /* top right bottom left */
+  min-width: 100px ! important;
+  float: right ! important;
+  font-size: 90%;
+  margin: 0.1em 0 0.1em 0.3em;
+  visibility: visible;
+  max-width: 50%;
+  width: 35%;
+}
+.sidebox ul { padding:0em 0em 0em 1.3em; margin:0em; } /* compact, used for TOC */
+
 header, .header {
   margin: -1em -1em 0 -1em; /* counteract body's margin/padding */
   padding: 2em 1em 2.5em 1em;

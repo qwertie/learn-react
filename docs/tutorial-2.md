@@ -1,3 +1,8 @@
+---
+layout: page
+toc: true
+---
+
 Setting up a TypeScript Project: 4 Approaches
 =============================================
 
