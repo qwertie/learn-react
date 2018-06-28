@@ -1,3 +1,7 @@
+---
+toc: true
+---
+
 Part 4: A brief introduction to TypeScript
 ==========================================
 

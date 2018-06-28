@@ -1,3 +1,7 @@
+---
+toc: true
+---
+
 Part 5: React Basics
 ====================
 

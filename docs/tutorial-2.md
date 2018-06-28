@@ -8,12 +8,11 @@ Setting up a TypeScript Project: 4 Approaches
 
 Welcome to Part 2 of this series! Here we will go on a tour of the JavaScript tools ecosystem. This part is not about React (we'll get to that in [Part 5](tutorial-5.md)) but it does include a simple React component.
 
-Actually this is a **grand** tour, and we'll talk about writing your app in four different ways:
+Actually this is a **grand** tour, and we'll talk about writing your app in three different ways:
 
 - A. The Easiest Way (with Parcel)
 - B. The Way of Fewest Tools (i.e. the do-it-yourself way)
 - C. The Webpack way
-- D. The Gulp way
 
 Afterward there will be a [summary](tutorial-3.md) to remind you of the key points.
 
@@ -22,11 +21,11 @@ Common Steps
 
 The first six steps are the same in all four approaches, so let's get started!
 
-### Step 1: Install Node.js (with npm) ###
+### Step 1: Install Node.js/npm ###
 
 If you haven't yet, go [install Node.js](https://nodejs.org/en/download/) which will also install the command-line package manager, `npm`. (If you want to deploy your app on some other web server, I recommend worrying about how to do that later.)
 
-### Step 2: Install Visual Studio Code or other editor (optional) ###
+### Step 2: Install Visual Studio Code or other editor ###
 
 One of the main reasons to use TypeScript instead of JavaScript is that it supports code completion features (also known as IntelliSense).
 
@@ -38,7 +37,7 @@ Visual Studio Code is folder-oriented: you open a folder in VS Code and that fol
 
 Create an empty folder for your app, then open that folder in VS Code. Notice that VS Code has a built-in terminal so you won't need a separate terminal window.
 
-### Step 3: Set up your package.json ###
+### Step 3: Set up package.json ###
 
 The `package.json` file will represent your project configuration (including its name, build commands, the list of npm modules used by your project, and more).
 
@@ -184,7 +183,7 @@ Running your project, Approach A: The Easy Way
 
 I discovered Parcel when I was about two-thirds done writing this article. Honestly, if I knew about Parcel from the beginning I might not have bothered writing about the other approaches. Don't get me started on how easy Parcel is! It deserves a damn medal!
 
-It's big though (81.9 MB), so you should install it as a global:
+It's very large though (81.9 MB), so you should install it as a global:
 
     npm install --global parcel-bundler
 
@@ -622,17 +621,6 @@ After you create this file, change your scripts in package.json as follows:
     "start": "node server.js"
   },
 ~~~
-
-Running your project, Approach D: The Gulp Way
-----------------------------------------------
-
-That webpack configuration file was strange, wasn't it? You're basically using JavaScript as a substitute for JSON. I must say, [Gulp](https://gulpjs.com/) makes a lot more sense to me; with Gulp you use a JavaScript file to configure your build process, so that your code actually looks like code, not data.
-
-But of course, setting up a TypeScript build in Gulp (e.g. with [tsproject](https://www.npmjs.com/package/tsproject)) is completely different than setting up a build in webpack. Unless, that is, you use Gulp as a front-end for webpack, and I have no doubt some people are doing exactly that.
-
-### TODO ###
-
-This part not written.
 
 Next
 ----
