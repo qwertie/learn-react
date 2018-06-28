@@ -1,11 +1,10 @@
 ---
 layout: "default"
-note: "The default markdown layout (when there is no front matter) is 'page' but it BOTH sets page.title AND outputs its own h1 for that title. So h1 is removed here to avoid having two headings."
+note: "The default markdown layout (when there is no front matter) is 'page'."
 ---
 
 <main>
-<!--<h1 class="page-title">{{ page.title }}</h1>-->
 {% if page.date %}<span class="post-date">{{ page.date }} </span>{% endif %}
-{% if page.tagline %}<div class="tagline">{{ page.tagline }} </div>{% endif %}
+{% if page.tagline %}<div class="tagline">{{ page.tagline }}</div>{% endif %}
 {{ content }}
 </main>

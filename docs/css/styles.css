@@ -1,5 +1,5 @@
 ﻿*, *:before, *:after {
-  /* https://css-tricks.com/international-box-sizing-awareness-day/ */
+  /* See https://css-tricks.com/international-box-sizing-awareness-day/ */
   box-sizing: border-box; 
 }
 
