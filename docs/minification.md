@@ -62,12 +62,11 @@ Usage:
 
 <span class="note">Uglify shortens variable names if you use the `--mangle` option, and `--compress` uses different tricks to shorten code, such as replacing `undefined` with [`void 0`](https://stackoverflow.com/questions/7452341/what-does-void-0-mean). With neither option, Uglify simply removes spaces like JSMin. `--mangle` also obfuscates the code somewhat; for example, if the input is `function fruit(apple, banana, x, y) {}`, it produces `function fruit(n,f,o,t){}` instead of using more readable names like `function fruit(a,b,x,y){}`. The developers apparently [intend to keep it that way](https://github.com/mishoo/UglifyJS2/issues/3201). Uglify also renames inner functions, which can be avoided with the `--keep-fnames` option.</span>
 
-<div class="warning" markdown="1">UglifyJS can minify multiple files by concatenating them, but it can only produce a single output file. As with JSMin, you can uglify two or more files with two or more separate commands, e.g. <pre>
-    uglifyjs --compress -o name1.min.js -- name1.js && uglifyjs --compress -o name2.min.js -- name2.js
-</pre>
-Any Windows users trying this on the command prompt should be aware that `&&` doesn't work in Powershell, though it does work in the old command prompt, `cmd`. Yet, `./node_modules/.bin/uglifyjs` works in Powershell but not `cmd` (`cmd` requires `.\node_modules\.bin\uglifyjs`).</div>
+<div class="warning" markdown="1">UglifyJS can minify multiple files by concatenating them, but it can only produce a single output file. As with JSMin, you can uglify two or more files with two or more separate commands, e.g.</div>
 
-<span class="warning"></span>
+    uglifyjs -mc -o name1.min.js name1.js && uglifyjs -mc -o name2.min.js name2.js
+
+<span class="note">`-mc` is short for `--mangle --compress`. Any Windows users trying this on the command prompt should be aware that `&&` doesn't work in Powershell, though it does work in the old command prompt, `cmd`. Yet, `./node_modules/.bin/uglifyjs` works in Powershell but not `cmd` (`cmd` requires `.\node_modules\.bin\uglifyjs`).</span>
 
 - Add `minify` to your build script. For example if your build script looked like this before...
 
