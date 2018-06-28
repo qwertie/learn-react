@@ -10,7 +10,7 @@ Welcome! Ready to start learning?
 ### Topics: ###
 
 - [Part 1: Overview of the JavaScript Ecosystem](tutorial-1.md)
-- [Part 2: Installing tools; four different ways you could set up your React/Preact project; how to make the computer recompile your code automatically.](tutorial-2.md)
+- [Part 2: Ways you can set up your project](tutorial-2.md)
 - [Part 3: Summary of Part 2](tutorial-3.md)
 - [Part 4: A brief introduction to TypeScript](tutorial-4.md)
 - [Part 5: React basics](tutorial-5.md)

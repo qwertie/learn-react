@@ -9,7 +9,7 @@ I said this tutorial was designed for people who had used JavaScript but not Typ
 
 ### Types in TypeScript ###
 
-TypeScript code is translated into normal JavaScript (which has no static type system), and in the process type checking is performed, in order to discover *type errors* - mistakes you've made that have something to do with types. (Of course, occasionally, it also complains about things you did intentionally that nevertheless broke the rules of TypeScript).
+TypeScript code is translated into normal JavaScript (which has no static type system), and alongside that process, type checking is performed in order to discover *type errors* - mistakes you've made that have something to do with types. (Of course, occasionally, it also complains about things you did intentionally that nevertheless broke the rules of TypeScript).
 
 Types can be attached to variables with a colon (:) in their definition, like so:
 

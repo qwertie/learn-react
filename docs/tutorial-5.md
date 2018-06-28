@@ -36,7 +36,8 @@ We want a user interface for defining both all-day events and normal short event
 
 - When "All day" is checked or unchecked, all the other "time range" widgets need to be hidden or shown.
 - We want the user to be able to tell us either an end time or the length of the event, so the two parts of the third row must stay in sync somehow.
-- Finally, if the user chooses a time from the fourth row then the "Alarm" checkbox should be checked automatically.
+- When the Start time is changed, the End time should change so that the length of the event stays the same.
+- Finally, if the user chooses a number on the last row, the "Alarm" checkbox should be checked automatically.
 
 We might have a model with these data members:
 
@@ -53,18 +54,17 @@ class CalendarEntry {
 
 In traditional user interface code, you would respond to a change in the "All day" checkbox or the `allDay` flag by somehow causing the "time range" widgets to be shown or hidden. The code that causes this change might be an event handler in the view, or, if you are using the MVVM pattern, the model would generate an event, and then view would either have a binding from that flag to the visibility of the widgets, or a manual subscription to that event.
 
-By contrast, in immediate mode, we simply write code to create the view (associated somehow with a model). When the user changes the view, the view changes the model, but it doesn't synchronize different parts of **itself**: there is no code to show or hide things, no code to copy text from a textbox into a listbox. The UI is regenerated with the same code that generated it the first time. Similarly, in the model, no code to generate "events" is needed. The view code is simple because it is declarative - it describes how the screen should look, not how to update it.
+By contrast, in immediate mode, we simply write code to create the view (associated somehow with a model). When the user changes the view, the view has code to change the model, but it doesn't synchronize different parts of **itself**: there is no code to show or hide things, no code to copy text from one widget to another. The UI is regenerated with the same code that generated it the first time. Similarly, in the model, no code to generate "events" is needed. The view code is simple because it is declarative - it describes how the screen should look, not how to update it.
 
 However, a web browser is inherently not an immediate-mode system (but rather a _retained-mode_ system), because the web browser (not the application) owns (retains) all the user interface elements on the screen and is responsible for drawing them.
 
-Enter React
------------
+### Enter React ###
 
 React isn't designed to simulate an immediate-mode UI. It wouldn't surprise me if React was invented by someone who had never even heard of an immediate mode UI.
 
-But intentionally or not, React shares a major advantage with immediate mode: a _declarative approach_ to describing UIs. That is, you _declare_ how your UI should look based on the current state associated with it, instead of explaining how the UI should _change_ in response to _changes_ in state. Declarative programming requires less careful thought, is less prone to bugs, and if you're doing it correctly, should also require less code.
+But intentionally or not, React shares a major advantage with immediate mode: a _declarative approach_ to describing UIs. That is, you _declare_ how your UI should look based on the data currently associated with it, instead of explaining how the UI should _change_ in response to _changes_ in data. Declarative programming requires less careful thought, is less prone to bugs, and if you're doing a good job, it should also require less code.
 
-It doesn't actually work like an immediate-mode UI though. For one thing, in React a parent component can be updated without affecting its children (or siblings), and a child component can be updated without affecting its parent (or siblings). This makes React more scalable, but it means you are responsible for designing your UI in such a way that when something changes in one part of the UI, those changes propagate to related components. Another difference (and this is something I don't like), React is designed to embed state within the UI instead of storing it in a separate model. It is possible to store your model separately, though, and many developers do.
+React doesn't actually work like an immediate-mode UI though. For one thing, in React a parent component can be updated without affecting its children (or siblings), and a child component can be updated without affecting its parent (or siblings). This makes React more scalable, but it means you are responsible for designing your UI in such a way that when something changes in one part of the UI, those changes propagate to related components. Another difference (and this is something I don't like), React is designed to embed state within the UI instead of storing it in a separate model. It is possible to store your model separately, though, and many developers do.
 
 Example #0: Hello, world!
 -------------------------
@@ -476,7 +476,7 @@ a       { text-decoration: none; }
 a:hover { text-decoration: underline; }
 ~~~
 
-#### Exercise for the reader: ####
+### Exercise for the reader: ###
 
 - Edit the style: add a dividing line between the bars and their labels using a style of `border-left: 1px solid #888` in the second column. Remember how `border-left` becomes `borderLeft` in React?
 - Change the bar chart to support negative numbers. You can do this by adding a third column dedicated to negative numbers between the two existing columns; you'll need to set the padding to zero between the second and third columns.
