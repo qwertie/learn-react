@@ -132,8 +132,11 @@ header, .header {
   border: 1px solid #6c6;
 }
 .note:before {
-    content: "🛈 ";
+  content: "🛈 ";
 }
 .warning:before {
-    content: "⚠ ";
+  content: "⚠ ";
+}
+.tip:before {
+  content: "💡 ";
 }

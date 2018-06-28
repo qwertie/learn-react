@@ -95,24 +95,25 @@ class CalendarEntryEditor extends React.Component<{}, CalendarEntry> {
         </p>
       ];
     }
-    return (<div style={ {width: 300} }>
-      <p><input type="text" style={ {width:280} } 
-                onChange={e=>this.setState({eventName: e.target.value})}
-                value={this.state.eventName}/></p>
-      <p style={ {float: 'right', margin: '0 40px 0 0'} }>
-        <input type="checkbox" checked={this.state.allDay}
-          onChange={e => this.setState({allDay: e.target.checked})}/>All day
-      </p>
-      {timeRangeElements}
-      <p style={ {clear: 'both'} }>
-        <input type="checkbox" checked={this.state.alarmOn}
-          onChange={e => this.setState({alarmOn: e.target.checked})}/>Alarm&nbsp;
-        <input type="number" style={ {width:40} } min={0} max={720} 
-          onChange={e => this.setState({alarmMinutes: 
-              e.target.valueAsNumber || this.state.alarmMinutes, alarmOn: true})}
-            value={this.state.alarmMinutes}/> minutes before
-      </p>
-    </div>);
+    return (
+      <div style={ {width: 300} }>
+        <p><input type="text" style={ {width:280} } 
+                  onChange={e=>this.setState({eventName: e.target.value})}
+                  value={this.state.eventName}/></p>
+        <p style={ {float: 'right', margin: '0 40px 0 0'} }>
+          <input type="checkbox" checked={this.state.allDay}
+            onChange={e => this.setState({allDay: e.target.checked})}/>All day
+        </p>
+        {timeRangeElements}
+        <p style={ {clear: 'both'} }>
+          <input type="checkbox" checked={this.state.alarmOn}
+            onChange={e => this.setState({alarmOn: e.target.checked})}/>Alarm&nbsp;
+          <input type="number" style={ {width:40} } min={0} max={720} 
+            onChange={e => this.setState({alarmMinutes: 
+                e.target.valueAsNumber || this.state.alarmMinutes, alarmOn: true})}
+              value={this.state.alarmMinutes}/> minutes before
+        </p>
+      </div>);
   }
   setEndTime(time?: Date) {
     if (this.state.startTime && time) {

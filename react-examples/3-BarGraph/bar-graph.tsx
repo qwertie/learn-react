@@ -72,9 +72,9 @@ class BarChart extends React.Component<BarChartProps,{}> {
         </tr></thead>
         <tbody>
           {this.props.data.map(item => 
-            <Bar item={item} maxValue={maxValue} 
-                 maxWidth={this.props.maxBarWidth} 
-                 formatter={this.props.formatter}/>)}
+            <Bar item={item} maxValue={maxValue} key={item.name}
+                 maxWidth={this.props.maxBarWidth}
+                 formatter={this.props.formatter} />)}
         </tbody>
       </table>);
   }
