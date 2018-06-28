@@ -1,0 +1,142 @@
+﻿*, *:before, *:after {
+  /* https://css-tricks.com/international-box-sizing-awareness-day/ */
+  box-sizing: border-box; 
+}
+
+html {
+  font-family: "Segoe UI",Helvetica,Arial,sans-serif;
+  font-size: 19px;
+  line-height: 1.5;
+}
+body {
+  color: #112;
+  background-color: #fff;
+  margin: 0;
+  padding: 0.6em;
+}
+
+@media (max-width: 750px) { /* tablet or small window */
+  html { font-size: 18px; line-height: 1.4; }
+}
+@media (max-width: 470px) { /* phablet */
+  html { font-size: 16px; line-height: 1.3; }
+  body { padding: 0.4em; }
+}
+@media (max-width: 340px) { /* small phone */
+  html { font-size: 15px; }
+  body { padding: 0.2em; }
+}
+@media (max-height: 400px) { /* phone, landscape */
+  html { line-height: 1.2; }
+}
+
+main {
+  max-width: 820px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+img { /* auto-resize to fit container */
+    max-width: 100%;
+    height: auto;
+}
+
+h1 {
+  font-size: 1.7em;
+  color: #888;
+  padding: 0.2em 0 0.2em 0;
+  margin: 0.5em 0 0.5em 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+h1.site-title {
+  border-bottom: 0px;
+}
+h2 {
+  font-size: 1.5em;
+  color: #448;
+  padding: 0.2em 0 0.2em 0;
+  margin: 1em 0 0.5em 0;
+  margin-bottom: 0.2em;
+  border-bottom: 1px solid #eaecef;
+}
+
+.post-date {
+  display: block;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+  color: #9a9a9a;
+}
+
+.tagline {
+  margin-top: -0.7rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+  font-style: italic;
+  font-family: serif;
+  color: #888;
+  /* I wanted the tagline and date to be shown on the same line, but 
+     display: run-in only works in IE so I'll nest tagline in post-date */
+}
+
+header, .header {
+  margin: -1em -1em 0 -1em; /* counteract body's margin/padding */
+  padding: 2em 1em 2.5em 1em;
+  text-align: center;
+  
+  background: -moz-linear-gradient(269deg, #91B8FF 0%, #DAB5FF 31%, #FF8080 69%, #FFBFBF 79%, #ffffff 87%, #ffffff 100%); /* ff3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #91B8FF), color-stop(31%, #DAB5FF), color-stop(69%, #FF8080), color-stop(79%, #FFBFBF), color-stop(87%, #ffffff), color-stop(100%, #ffffff)); /* safari4+,chrome */
+  background: -webkit-linear-gradient(269deg, #91B8FF 0%, #DAB5FF 31%, #FF8080 69%, #FFBFBF 79%, #ffffff 87%, #ffffff 100%); /* safari5.1+,chrome10+ */
+  background: -o-linear-gradient(269deg, #91B8FF 0%, #DAB5FF 31%, #FF8080 69%, #FFBFBF 79%, #ffffff 87%, #ffffff 100%); /* opera 11.10+ */
+  background: -ms-linear-gradient(269deg, #91B8FF 0%, #DAB5FF 31%, #FF8080 69%, #FFBFBF 79%, #ffffff 87%, #ffffff 100%); /* ie10+ */
+  background: linear-gradient(181deg, #91B8FF 0%, #DAB5FF 31%, #FF8080 69%, #FFBFBF 79%, #ffffff 87%, #ffffff 100%); /* w3c */
+}
+.header a {	
+  color: #000;
+  text-decoration-color: #0004;
+  display: inline-block; /* prevent line breaks */
+}
+.header a:hover {
+  text-decoration-color: #000;
+}
+
+.site-title {
+  font-family: verdana, sans-serif;
+  color: black;
+  text-shadow:
+    -1px -1px 0 #FFF8, 
+     1px -1px 0 #FFF8,
+    -1px 1px 0 #FFF8,
+     1px 1px 0 #FFF8,
+     3px 3px 3px #000;
+  /*-webkit-text-stroke: 1px black;*/
+}
+	
+.note, .warning, .tip {
+  padding: 0.5em;
+  border-radius: 0.4em;
+  /* GitHub supports markdown="1", but that's reportedly the default for `span` and
+     `<span class="note"></span>` is shorter than `<p class="note" markdown="1"></p>` */
+  display: block;
+  font-size: 95%;
+}
+.note {
+  background-color: #ddf;
+  border: 1px solid #99c;
+}
+.warning { 
+  background-color: #fcc;
+  border: 1px solid #f88;
+}
+.tip {
+  background-color: #cfc;
+  border: 1px solid #6c6;
+}
+.note:before {
+  content: "🛈 ";
+}
+.warning:before {
+  content: "⚠ ";
+}
+.tip:before {
+  content: "💡 ";
+}

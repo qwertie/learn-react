@@ -3,4 +3,6 @@ title: TypeScript+React Primer
 description: "Hello & Welcome"
 google_analytics: UA-52532512-4
 show_downloads: false
-
+# Root folder of the site, without slash (empty when using custom domain)
+# Other pages and includes can refer to this as {{ site.baseurl }}
+baseurl: ""

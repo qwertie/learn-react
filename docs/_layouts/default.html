@@ -2,74 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 {% include head.html %}
 <body>
-
 {% include navbar.html %}
 {{ content }}
-
-  {% if page.paragraphLinks %}
-	<script type="text/javascript">// Add # link to every paragraph
-		$(".post p").each( function(index) {
-			if (index > 0 && $.trim($(this).text()).length > 0) {
-				$(this).attr("id", "para" + index.toString());
-				var html = $(this).html();
-				$(this).html(html + " <a href='#para" + index.toString() + "' style='color:#BBB'>#</a>");
-			}
-		});
-	</script>
-  {% endif %} 
-	
-	<script>// Google Analytics
-	(function(w,d,s,u,ga,e,ss){w['GoogleAnalyticsObject']=ga;w[ga]=w[ga]||function(){
-	(w[ga].q=w[ga].q||[]).push(arguments)},w[ga].l=1*new Date();e=d.createElement(s),
-	ss=d.getElementsByTagName(s)[0];e.async=1;e.src=u;ss.parentNode.insertBefore(e,ss)
-	})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-	ga('create', '{{ site.google_analytics }}', 'auto');
-	ga('send', 'pageview');
-	</script>
-	
-  {% if page.toc %}
-	<script>// Add table of contents! <![CDATA[
-	function $get(selector) { return document.querySelector(selector); };
-	function $all(selector) {
-		return Array.prototype.slice.call(document.querySelectorAll(selector));
-	}
-
-	function buildTOC_ul(selector) {
-		var levels=[document.createElement("ul"),null,null];
-		levels[0].style
-		var lvl=0, c=0;
-		if (!selector) selector = "h2, h3, h4";
-		$all(selector).forEach(function(el) {
-			if (!el.id) el.id='section_'+ ++c;
-			var newLvl=(el.tagName=="H2"?0:el.tagName=="H3"?1:2);
-			for (;lvl<newLvl;lvl++)
-				 levels[lvl].appendChild(levels[lvl+1]=document.createElement("ul"));
-			lvl=newLvl;
-			
-			var li=document.createElement('li');
-			li.innerHTML="<a href='#"+el.id+"'></a>";
-			li.firstChild.innerHTML=el.innerHTML;
-			levels[lvl].appendChild(li);
-		});
-		return levels[0];
-	}
-	function addTOC(contentElement, before, tocClass) {
-		if (before===undefined) before=contentElement.firstChild;
-		var prefix="";
-		var cec=contentElement.className;
-		if (cec && cec.length>0) prefix="."+cec.split(" ")[0]+" ";
-		var selector = prefix+"h2, "+prefix+"h3, "+prefix+"h4";
-		var toc=document.createElement("div");
-		toc.className=tocClass||"sidebox";
-		toc.appendChild(document.createTextNode("Contents"));
-		toc.appendChild(buildTOC_ul(selector));
-		contentElement.insertBefore(toc, before);
-	}
-	var _post_ = $get("#post")||$get("#content")||$get("main")||$get("section");
-	addTOC(_post_, _post_.firstChild.nextSibling.nextSibling);
-	//]]>
-	</script>
-  {% endif %}
+{% if page.toc %}
+{% include table-of-contents.html %}
+{% endif %}
+{% include google-analytics.html %}
 </body>
 </html>
