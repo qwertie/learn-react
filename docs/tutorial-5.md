@@ -429,7 +429,9 @@ class BarChart extends React.Component<BarChartProps,{}> {
         </tr></thead>
         <tbody>
           {this.props.data.map(item => 
-            <Bar item={item} maxValue={maxValue} maxWidth={this.props.maxBarWidth} formatter={this.props.formatter} key={item.name}/>)}
+            <Bar item={item} maxValue={maxValue} key={item.name}
+                 maxWidth={this.props.maxBarWidth}
+                 formatter={this.props.formatter} />)}
         </tbody>
       </table>);
   }
@@ -709,7 +711,7 @@ ReactDOM.render(<CalendarEntryEditor/>, document.getElementById("app"));
 
 As you can see, the time range controls appear only if the `allDay` flag is not set, and editing the `alarmMinutes` box will caused the `alarmOn` checkbox to be checked. However, editing `durationMinutes` does not affect the end time or vice versa, because there is no mechanism in place to communicate between `TimeSelector` and `CalendarEntryEditor`. So, how should we set up this communication?
 
-The classic way to do this is to "push" the state out of the child component to the parent, using two props: one to pass state from parent to child, and one to receive new state from the child. So `state.time` becomes `props.time` in order to receive a time from the parent, and `props.onTimeChange` is added in order to send a new time to the parent. Here's the new code:
+The classic way to do this is to "push" the state out of the child component to the parent, using two props: one to pass state from parent to child, and one to receive new state from the child. So `state.time` becomes `props.time` in order to receive a time from the parent, and `props.onTimeChange` is added in order to send a new time to the parent. Here is the code using this technique:
 
 ~~~tsx
 interface TimeSelectorProps {
@@ -832,7 +834,7 @@ Now that the `TimeSelector` talks to its parent, the start time, end time and nu
 
 But imagine, now, that this `CalendarEntryEditor` is embedded within a larger Calendar application. In that case, the editor will need to share the current `CalendarEntry` with an outer `CalendarApp` component that can save the `CalendarEntry` within the calendar and switch to a different `CalendarEntry` as the user clicks different parts of the calendar.
 
-Once again, the `state` needs to become part of `props`, something like this:
+Once again, the `state` will need to become part of `props`, something like this:
 
 ~~~tsx
 interface CalendarEntryEditorProps {

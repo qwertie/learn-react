@@ -177,7 +177,7 @@ After installing `ts-node`, run `ts-node X.ts` where `X.ts` is the name of a scr
 Running your project, Approach A: The Easy Way
 ----------------------------------------------
 
-I discovered Parcel when I was about two-thirds done writing this article. Honestly, if I knew about Parcel from the beginning I might not have bothered writing about Approaches #2, #3 and #4. Don't get me started on how easy Parcel is! It deserves a damn medal!
+I discovered Parcel when I was about two-thirds done writing this article. Honestly, if I knew about Parcel from the beginning I might not have bothered writing about the other approaches. Don't get me started on how easy Parcel is! It deserves a damn medal!
 
 It's big though (81.9 MB), so you should install it as a global:
 
@@ -334,6 +334,8 @@ Behind the scenes, VS Code uses the TypeScript engine for this. However, if you 
 ~~~ts
 import * as http from 'http';
 ~~~
+
+<span class="note">Note: this is confusingly different from Node's .mjs files, which require `import http from 'http';` ([Details](https://stackoverflow.com/questions/50661510/why-doesnt-fs-work-when-imported-as-an-es6-module))</span>
 
 TypeScript then converts `import` to `require` in its output (because of the `"module": "commonjs"` option in `tsconfig.json`.)
 
@@ -511,7 +513,7 @@ You *could* install it like this:
 
     npm install --save-dev webpack webpack-cli
 
-Unfortunately, webpack is oversized: these two packages have 735 dependencies weighing in at 50.9 MB (13,198 files in 1868 folders - even more than Parcel). And for some reason, `webpack-cli` requires the webpack package but doesn't mark it as a dependency, hence you must install both of them explicitly. And although `webpack-cli` is ostensibly "just" the command-line interface for webpack's APIs, it is disproportionately large for some reason (webpack alone is only 13.6 MB).
+Unfortunately, webpack is oversized: these two packages have 735 dependencies weighing in at 50.9 MB (13,198 files in 1868 folders). And for some reason, `webpack-cli` requires the webpack package but doesn't mark it as a dependency, hence you must install both of them explicitly. And although `webpack-cli` is ostensibly "just" the command-line interface for webpack's APIs, it is disproportionately large for some reason (webpack alone is only 13.6 MB).
 
 Due to its size, it probably makes more sense to install it as a global:
 
