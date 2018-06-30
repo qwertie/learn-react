@@ -118,9 +118,7 @@ header, .header {
   text-shadow:
     -1px -1px 0 #FFF8, 
      1px -1px 0 #FFF8,
-    -1px 1px 0 #FFF8,
-     1px 1px 0 #FFF8,
-     3px 3px 3px #000;
+     3px 3px 3px #0008;
   /*-webkit-text-stroke: 1px black;*/
 }
 	
