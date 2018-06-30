@@ -46,8 +46,8 @@ It's possible to automate compiling so that your code is compiled whenever you s
 This tutorial uses TypeScript, a superset of JavaScript with a comprehensive type system. The benefits of TypeScript are that 
 
 1. You get compiler error messages when you make type-related mistakes (instead of discovering mistakes indirectly when your program misbehaves). In IDEs such as Visual Studio Code your mistakes are underlined in red.
-2. Types allow IDEs to provide code-completion popups, also known as IntelliSense, which makes programming much easier because you don't have to memorize all the names and expected arguments of the functions you call. <br/> ![](img/intellisense-2.png)
-3. You can get refactoring features. For example, in Visual Studio Code, press F2 to rename a function or variable across multiple files, without affecting other things that have the same name.
+2. You can get refactoring features. For example, in Visual Studio Code, press F2 to rename a function or variable across multiple files, without affecting other things that have the same name.
+3. Types allow IDEs to provide code-completion popups, also known as IntelliSense, which makes programming much easier because you don't have to memorize all the names and expected arguments of the functions you call. <br/> ![](img/intellisense-2.png)
 
 <span class="tip">To play with TypeScript without installing anything, [visit its playground](http://www.typescriptlang.org/play/).</span>
 
@@ -63,7 +63,7 @@ In this tutorial we'll run all the important code in the browser, but we'll also
 
 HTML and CSS alone are great for plain-old articles with images, or simple forms. If that's all you're doing, there's probably no need for JavaScript at all. CSS can even do some things that once required JavaScript, such as [pull-down menus](https://www.cssscript.com/pure-css-mobile-compatible-responsive-dropdown-menu/), pages that [completely reformat themselves for small/mobile browsers or printing](https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries/Using_media_queries), and [animations](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Animations/Using_CSS_animations).
 
-If you need something more complex than that, or if your pages are generated dynamically from raw data, you'll probably want to use JavaScript with an optional user-interface library or framework. This article will cover React, which has rightly earned its position as the most popular UI framework, and its little cousin Preact. The "large" [popular alternatives](https://stateofjs.com/2017/front-end/results) include Angular 2 and Vue.js, while the "small" ones include D3, Mithril and an old classic called jQuery. If your web server runs JavaScript (Node.js), you can run React on the server to pre-generate the initial appearance of the page (but this tutorial won't cover that).
+If you need something more complex than that, or if your pages are generated dynamically from raw data, you'll probably want to use JavaScript with an optional user-interface library or framework. This article will cover React, which has earned a position as the most popular UI framework, and its little cousin Preact. The "large" [popular alternatives](https://stateofjs.com/2017/front-end/results) include Angular 2 and Vue.js, while the "small" ones include D3, Mithril and an old classic called jQuery. If your web server runs JavaScript (Node.js), you can run React on the server to pre-generate the initial appearance of the page.
 
 ### Build tools ###
 
@@ -71,7 +71,7 @@ Several [tools for "building" and "packaging" your code](https://stateofjs.com/2
 
 ### CSS Flavors ###
 
-In this article we'll use plain CSS, but if you're going to have a compile step anyway, you might want to try SCSS, an "improved" derivative of CSS with extra features. Or you could use SASS, which is conceptually identical to SCSS but has a more concise syntax. Either way you'll need the [Sass preprocessor](https://sass-lang.com/). And as always in the JavaScript World, there are [a bunch of alternatives](https://stateofjs.com/2017/css/results/), notably [LESS](http://lesscss.org/).
+In this series we'll use plain CSS, but if you're going to have a compile step anyway, you might want to try SCSS, an "improved" derivative of CSS with extra features. Or you could use SASS, which is conceptually identical to SCSS but has a more concise syntax. Either way you'll need the [Sass preprocessor](https://sass-lang.com/). And as always in the JavaScript World, there are [a bunch of alternatives](https://stateofjs.com/2017/css/results/), notably [LESS](http://lesscss.org/).
 
 ### Unit testing ###
 
@@ -103,7 +103,7 @@ I won't say anything more about this, but TypeScript and JavaScript can be used 
 
 ### Module types ###
 
-For the longest time all JavaScript code ran in a single global namespace. This caused conflicts between unrelated code libraries, so various kinds of "module definitions" were invented to *simulate* what other languages call packages or modules. Node.js uses "CommonJS" modules, which involves a magic function called `require('module-name')` to import modules and a magic variable called `module.exports` to create modules. To write modules that work in both browsers and Node.js, one can use UMD modules. Modules that can be asynchronously loaded use AMD.
+For the longest time all JavaScript code ran in a single global namespace. This caused conflicts between unrelated code libraries, so various kinds of "module definitions" were invented to *simulate* what other languages call packages or modules. Node.js uses "CommonJS" modules, which involves a magic function called `require('module-name')` to import modules and a magic variable called `module.exports` to define modules. To write modules that work in both browsers and Node.js, one can use UMD modules. Modules that can be asynchronously loaded use AMD.
 
 ES6 introduced a module system involving `import` and `export` keywords, but Node.js and some browsers still don't support it. Here's a [primer on the various module types](https://www.jvandemo.com/a-10-minute-primer-to-javascript-modules-module-formats-module-loaders-and-module-bundlers/).
 
