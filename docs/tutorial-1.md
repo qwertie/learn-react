@@ -67,7 +67,7 @@ If you need something more complex than that, or if your pages are generated dyn
 
 ### Build tools ###
 
-Several [tools for "building" and "packaging" your code](https://stateofjs.com/2017/build-tools/results) are available - Grunt, Browserify, Gulp, Webpack - but we'll keep it simple here and only require the built-in features of `npm`.
+Several [tools for "building" and "packaging" your code](https://stateofjs.com/2017/build-tools/results) are available - webpack, Grunt, Browserify, Gulp, Parcel - but all these things are optional and I'll show you how make do with `npm` and, if you want, Parcel or webpack.
 
 ### CSS Flavors ###
 
@@ -83,19 +83,7 @@ Other popular JavaScript libraries include [lodash, Ramda, underscore](https://s
 
 When you see `$` in JavaScript code, it typically refers to jQuery; when you see `_` it typically refers to either lodash or underscore.
 
-### Templating libraries ###
-
-There are libraries that let you write JavaScript (or other code-like things) embedded in HTML (or other files), usually for generating text output, often with a syntax like this:
-
-{% raw %}
-~~~html
-<html>
-  <body>{{content}}</body>
-</html>
-~~~
-{% endraw %}
-
-Popular Javascript templating libraries include [Jade](http://jade-lang.com), [Pug](https://pugjs.org/), [Mustache](https://mustache.github.io/) and [Handlebars](https://handlebarsjs.com/).
+And perhaps it's worth mentioning popular templating libraries: [Jade](http://jade-lang.com), [Pug](https://pugjs.org/), [Mustache](https://mustache.github.io/) and [Handlebars](https://handlebarsjs.com/).
 
 ### Non-web apps ###
 
@@ -114,16 +102,18 @@ As an experienced developer, I can think of only two words (other than the names
 Polyfills are backward-compatibility helpers. They are pieces of code written in JavaScript that allow you to use new features in old browsers. For example, the expression `'food'.startsWith('F')` tests whether the String `'food'` starts with F (for the record, that's `false` - it starts with `f`, not `F`.) But `startsWith` is a new feature of JavaScript that is not available in older browsers. You can "polyfill it" with this code:
 
 ~~~js
-String.prototype.startsWith = String.prototype.startsWith || function(search, pos) {
-  return this.substr(!pos || pos < 0 ? 0 : +pos, search.length) === search;
-};
+String.prototype.startsWith = String.prototype.startsWith ||
+  function(search, pos) {
+    return search === 
+      this.substr(!pos || pos < 0 ? 0 : +pos, search.length);
+  };
 ~~~
 
 This code has the form `X = X || function(...) {...}`, which means "if X is defined, set X to itself (i.e. don't change it), otherwise set X to be this function." The function shown here behaves the way `startsWith` is supposed to.
 
-Even some advanced browser features have polyfills. Have you heard of WebAssembly, which lets you run C/C++ code in a browser? There's a [JavaScript polyfill](https://github.com/lukewagner/polyfill-prototype-1) for it!
+Even some advanced browser features have polyfills. Have you heard of WebAssembly, which lets you run C and C++ code in a browser? There's a [JavaScript polyfill](https://github.com/lukewagner/polyfill-prototype-1) for it!
 
-This code refers to one of the other unique things about JavaScript, the idea of prototypes. Prototypes correspond *roughly* to classes in other languages, so what this code is doing is actually changing the definition of the *String* data type. Afterward when you write `'string'.startsWith()` it will call this polyfill (if  `String.prototype.startsWith` was not already defined). There are various articles out there to teach you about prototypes and prototypical inheritance, e.g. [this one](https://hackernoon.com/understanding-javascript-prototype-and-inheritance-d55a9a23bde2).
+This code refers to one of the other unique things about JavaScript, the idea of prototypes. Prototypes correspond *roughly* to classes in other languages, so what this code is doing is actually changing the definition of the built-in `String` data type. Afterward when you write `'string'.startsWith()` it will call this polyfill (if  `String.prototype.startsWith` was not already defined). There are various articles out there to teach you about prototypes and prototypical inheritance, e.g. [this one](https://hackernoon.com/understanding-javascript-prototype-and-inheritance-d55a9a23bde2).
 
 ### Credit ###
 
