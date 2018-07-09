@@ -5,8 +5,8 @@ toc: true
 Part 5: React Basics
 ====================
 
-The pain of UI design
----------------------
+The pain of UI implementation
+-----------------------------
 
 Many ways have been invented to synchronize an internal collection of off-screen data (the Model) with the graphical user interface (GUI or UI) that a user sees (also known as the View). In my early days as a programmer, I would often synchronize manually. Often if I had a textbox (which, in HTML, is called `<input type="text">`) I would have to install an event handler to find out when the textbox changed, and I would write some code to copy its value into an internal variable. When the internal variable changed, I would have to manually call a function to copy the model into the view. (In simple cases, I could skip this work and do nothing until the user clicks "OK" or "Submit".)
 
@@ -652,7 +652,7 @@ class TimeSelector extends React.Component<{},{time?:Date,timeInput?:string}> {
 }
 ~~~
 
-Just 8 additional lines of code... no biggie, right? If you ask me, one of the main purposes of a UI library (or any library) is to make your code simple, but I guess React's designers have different ideas.
+Just 8 additional lines of code... no biggie, right? If you ask me, the main purpose of a UI library (or any library) is to make your own code shorter and simpler, but I guess React's designers have different ideas.
 
 Here is another component for the rest of the interface (note: the state management is incomplete here):
 

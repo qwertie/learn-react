@@ -8,22 +8,20 @@ Setting up a TypeScript Project: 3 Approaches
 
 Welcome to Part 2 of this series! Here we will go on a tour of the JavaScript tools ecosystem. This part is not about React (we'll get to that in [Part 5](tutorial-5.md)) but it does include a simple React component.
 
-This is somewhat of a **grand** tour, so we'll talk about writing your app in three different ways:
+This is somewhat of a **grand** tour, so we'll talk about writing your app in three different ways (with a [summary](tutorial-3.md) afterward):
 
 - A. The Easiest Way (with Parcel)
 - B. The Way of Fewest Tools (i.e. the do-it-yourself way)
 - C. The Webpack way
 
-Afterward there will be a [summary](tutorial-3.md) to remind you of the key points.
-
 Common Steps
 ------------
 
-The first six steps are the same in all four approaches, so let's get started!
+The first six steps are the same in all approaches, so let's get started!
 
 ### Step 1: Install Node.js/npm ###
 
-If you haven't yet, go [install Node.js](https://nodejs.org/en/download/) which will also install the command-line package manager, `npm`. (If you want to deploy your app on some other web server, I recommend worrying about how to do that later.)
+If you haven't yet, go [install Node.js](https://nodejs.org/en/download/) which includes the command-line package manager, `npm`. (If you want to deploy your app on some other web server, I recommend worrying about how to do that later.)
 
 ### Step 2: Install Visual Studio Code or other editor ###
 
@@ -106,7 +104,9 @@ To add React to your project:
     npm install react react-dom
     npm install --save-dev @types/react @types/react-dom
 
-Alternately you can use Preact, which is [almost the same](https://preactjs.com/guide/differences-to-react) and more than 10 times smaller than React. Preact includes its own TypeScript type definitions, so you only need a single command to install it:
+<span class="tip">Note: as you can see, you can install multiple packages with one command. `--save-dev` marks things as "used for development" while `--save` (which is the default, and therefore optional) means "used by your code when it is deployed". `@types` packages provide type information to TypeScript, but they are not used when your code is running/deployed. If you forget `--save-dev` or if you use it on the wrong package, **your project will still work**; the distinction is only important if you share your project as an npm package.</span>
+
+Alternately you can use Preact, which is [almost the same](https://preactjs.com/guide/differences-to-react) as React but more than 10 times smaller. Preact has TypeScript type definitions built-in, so you only need a single command to install it:
 
     npm install preact
 
@@ -172,7 +172,7 @@ This tutorial is focused on making _web pages_ that run TypeScript code. If you 
 
     npm install --global ts-node
 
-After installing `ts-node`, run `ts-node X.ts` where `X.ts` is the name of a script you want to run. On Linux systems you can put a "shebang" at the top of the script if you would like to be able to run `./X.ts` directly (without mentioning `ts-node`):
+After installing `ts-node`, run `ts-node X.ts` where `X.ts` is the name of a script you want to run. In the script you can call `console.log("Hello")` to write text to the terminal (reading text from a user is [more complicated](https://nodejs.org/api/readline.html#apicontent)). On Linux systems you can put a "shebang" at the top of the script if you would like to be able to run `./X.ts` directly (without mentioning `ts-node`):
 
     #!/usr/bin/env ts-node
 
@@ -220,12 +220,12 @@ This can't run directly in a browser, of course, so Parcel
 
 And then it does everything else for you:
 
-1. It runs your app on a mini web server at [http://127.0.0.1:1234](http://127.0.0.1:1234).
+1. It runs your app on a mini web server at [http://127.0.0.1:1234](http://127.0.0.1:1234) (viewable on a web browser on the same machine).
 2. It watches for changes to your code (app.tsx and index.html) and recompiles when you change them.
-3. As if that wasn't enough, when your files change, it will send a command to your web browser to **automatically refresh it!** 
+3. As if that wasn't enough, when your files change, it will send a command to your web browser to **automatically refresh!** 
 4. Even better, it updates the page without fully reloading it using its [Hot Module Replacement](https://parceljs.org/hmr.html) feature.
 
-It is challenging to set up a conventional build that does all of these things; in this tutorial I will only cover how to do #1 and #2 in a conventional build.
+It can be challenging to set up a conventional build that does all of these things; this tutorial only covers how to do #1 and #2 in a conventional build, with only code recompilation (not HTML).
 
 To learn about more features of Parcel, have a look at the [Parcel documentation](https://parceljs.org/getting_started.html). 
 
@@ -410,6 +410,8 @@ console.log(`Server running: http://127.0.0.1:${port}`);
 
 You'll notice that this code has some funny... nesting. That's because Node.js functions are normally asynchronous. When you call functions in `fs`, instead of *returning* a result, they pause your program until they are done and then they *call* a function provided by you, sending that function either an error (`err`) or some information (`fileInfo`). For example, instead of *returning* information about a file, `fs.stat` *sends* information to a callback.
 
+A fishy thing about this web server is that it ignores `request.method`, treating every request as if it were a `get`. But it works well  enough to get started.
+
 ### Step B4 (optional): Use Express ###
 
 If you want your server side to do any "routing" that is more complicated than serving a few files, you should probably learn about the most popular Node.js server framework: [Express](https://expressjs.com/).
@@ -480,11 +482,11 @@ The long answer? First of all, remember that the JavaScript ecosystem has multip
 
 UMD is the natural choice since it's supposed to make a "universal" module definition, but TypeScript doesn't really try to be universal - it simply won't attempt to work in a web browser unaided. Instead, it expects to find predefined symbols either for an AMD module system or a CommonJS (i.e. Node.js) module system; if neither of these is defined, the module exits without even logging an error message.
 
-Even if we *could* use the `"module": "es6"` option, which keeps `import` commands unchanged in the output file, it wouldn't work because Chrome somehow *still* doesn't support `import` in 2018. (another issue here is our modules' URLs have little in common with the string in our `import` statements, but I believe this issue can be solved with options in tsconfig.json including `baseUrl` and "Path mapping", as [documented here](https://www.typescriptlang.org/docs/handbook/module-resolution.html#base-url).)
+Even if we *could* use the `"module": "es6"` option, which keeps `import` commands unchanged in the output file, it wouldn't work because Chrome somehow *still* doesn't support `import` in 2018. (another issue here is our modules' URLs have little in common with the string in our `import` statements, but I believe this issue can be solved by setting up aliases in tsconfig.json via `baseUrl` and "Path mapping", as [documented here](https://www.typescriptlang.org/docs/handbook/module-resolution.html#base-url).)
 
 TypeScript's CommonJS implementation requires `require` to be defined, of course (it's used to import modules), but it also looks for `exports` and `module.exports`, even though our module doesn't export anything. So our little hack must define all three.
 
-The UMD versions of react React, ReactDOM, and Preact set global variables called `React`, `ReactDOM` and `preact` respectively. But "global" variables in a browser are actually members of a special object called `window`. And in JavaScript, `window.something` means exactly the same thing as `window['something']` except that the latter does not cause an error if `something` doesn't exist. Therefore, `window['preact']` and/or `window['React']` already exist. So by defining a `require` function that simply returns `window[name]`, it allows React or Preact to be imported. However, we also need to create lowercase aliases `'react'` and `'react-dom'` because those are the proper names of the React modules.
+The UMD versions of react React, ReactDOM, and Preact set global variables called `React`, `ReactDOM` and `preact` respectively. But "global" variables in a browser are actually members of a special object called `window`. And in JavaScript, `window.something` means exactly the same thing as `window['something']` except that you can use special characters, such as dashes, in the latter form. Therefore, `window['preact']` and/or `window['React']` already exist. So by defining a `require` function that simply returns `window[name]`, it allows React or Preact to be imported. However, we also need to create lowercase aliases `'react'` and `'react-dom'` because those are the names we must use in our TypeScript code (those names are recognized by the TypeScript compiler because those are the names of the folders in *node_modules*).
 
 There's another thing in our index.html that is a bit... unfortunate:
 
@@ -540,7 +542,7 @@ You **could** modify that section so it looks like this:
   },
 ~~~
 
-With these scripts, you would use either `npm run build` to build a minified production version, or `npm run build:dev` to build a development version with full symbols and comments. However, this is inconvenient, because when you change your code, you have to manually repeat the `npm run build:dev` command. In Approach B we could use `tsc: watch` in VS Code, but that won't work this time because we also need to run webpack.
+With these scripts, you would use either `npm run build` to build a minified production version, or `npm run build:dev` to build a development version with full symbols and comments. However, this is inconvenient, because when you change your code, you have to manually repeat the `npm run build:dev` command. In Approach B we could use `tsc: watch` in VS Code, but that won't work this time because we *also* need to run webpack (and tsc doesn't know that).
 
 Can we set it up to rebuild automatically when our code changes? Yes, but we will need a webpack plugin to accomplish this. One of the plugins that can do the job is called  `awesome-typescript-loader`. Install it like this:
 
@@ -621,6 +623,8 @@ After you create this file, change your scripts in package.json as follows:
     "start": "node server.js"
   },
 ~~~
+
+As before you can build and watch for changes with `npm run watch`, or use `npm run build` for a minified production build.
 
 Next
 ----

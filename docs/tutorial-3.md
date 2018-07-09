@@ -232,6 +232,7 @@ List of common npm commands
 - `npm uninstall name-of-package`: remove a package from `node_modules` and from `package.json`
 - `npm start`: short for `npm run start`, this command starts your web server locally. By default it runs `node server.js`, but its behavior can be overridden by adding a `"start"` key under `"scripts"` in `package.json`.
 - `npm run name-of-script`: runs a terminal command stored in `"scripts"` in `package.json`. If your script name is `X`, `npm` also looks for `preX` and runs that first if it exists. It also runs `postX` afterward.
+- `npm pack` and `npm publish`: see my [npm publishing guide](publish-npm-package.md).
 
 `npm` commands also have short forms, such as `npm i -D` for `npm install --save-dev`.
 

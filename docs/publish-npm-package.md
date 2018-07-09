@@ -18,6 +18,7 @@ Remember the simple time parser/formatter from [Part 5](tutorial-5.html#example-
 - (optional) A popular convention in npm packages is to place the code in a folder called *dist*. In tsconfig.json you can send output there using `"outDir": "dist"`. If you get the error "Cannot write file '.../dist/....d.ts' because it would overwrite input file", then outside the compiler options, you must add `"dist"` to the `"exclude"` list ([see example](https://github.com/qwertie/simplertime/blob/master/tsconfig.json)). And don't forget to add `dist/` to your `"main"` option.
 - Create a *readme.md* file with documentation for your package. This file will be rendered on npmjs.com.
 - It is also recommended to create documentation to describe the functions and classes in your code, in [JSDoc format](http://usejsdoc.org/).
+- If your package can be invoked from the command line, then in *package.json*, create a section called `"bin"` for it. For example, if you have a command called `foo` implemented in `dist/foo.js`, you'll need a section like this: `"bin": { "foo": "dist/foo.js" }`
 - If you're a perfectionist, review all the [package.json fields](https://docs.npmjs.com/files/package.json)
 - Check [npmjs.com](https://www.npmjs.com) to find out if the package name you want is already in use.
 

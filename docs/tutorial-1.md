@@ -47,7 +47,7 @@ This tutorial uses TypeScript, a superset of JavaScript with a comprehensive typ
 
 1. You get compiler error messages when you make type-related mistakes (instead of discovering mistakes indirectly when your program misbehaves). In IDEs such as Visual Studio Code your mistakes are underlined in red.
 2. You can get refactoring features. For example, in Visual Studio Code, press F2 to rename a function or variable across multiple files, without affecting other things that have the same name.
-3. Types allow IDEs to provide code-completion popups, also known as IntelliSense, which makes programming much easier because you don't have to memorize all the names and expected arguments of the functions you call. <br/> ![](img/intellisense-2.png)
+3. Types allow IDEs to provide code-completion popups, also known as IntelliSense, which makes programming much easier because you don't have to memorize all the names and expected arguments of the functions you call. <br/> ![](img/intellisense-1.png)
 
 <span class="tip">To play with TypeScript without installing anything, [visit its playground](http://www.typescriptlang.org/play/).</span>
 
