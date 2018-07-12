@@ -91,7 +91,7 @@ or
 
     npm install --save-dev typescript
 
-If you use the `--global` option then the TypeScript compiler `tsc` will be available in all projects on the same machine and it will be available as a terminal command, but it will not be added to your package.json file. Therefore, if you share your code with others, TypeScript will **not** be installed when another person gets your code and runs `npm install`.
+If you use the `--global` option then the TypeScript compiler `tsc` will be available in all projects on the same machine and it will be available as a terminal command, but it will not be added to your package.json file. Therefore, if you share your code with others, TypeScript will **not** be installed automatically when another person gets your code and runs `npm install`.
 
 If you use `--save-dev`, TypeScript will be added to `package.json` and installed in your project's `node_modules` folder (current size: 34.2 MB), but it will **not** be available directly as a terminal command, although you can still run it from the terminal as `./node_modules/.bin/tsc`, and you can still use `tsc` inside the `npm` `"scripts"` section of `package.json`.
 
@@ -269,7 +269,8 @@ Create a text file called `tsconfig.json` (in your root folder) and put this cod
     "sourceMap": true,          // Creates *.js.map files
     "jsx": "react",             // Causes inline XML (JSX code) to be expanded
     "strict": true,             // Strict types, eg. prohibits `var x=0; x=null`
-    "alwaysStrict": true        // Enable JavaScript's "use strict" mode
+    "alwaysStrict": true,       // Enable JavaScript's "use strict" mode
+    "esModuleInterop": true     // CommonJS import behavior similar to Babel/mjs
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

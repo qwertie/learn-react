@@ -80,7 +80,8 @@ ReactDOM.render(
     "sourceMap": true,          // Whether to create *.js.map files
     "jsx": "react",             // Causes inline XML (JSX code) to be expanded
     "strict": true,             // Strict types, eg. prohibits `var x=0; x=null`
-    "alwaysStrict": true        // Enable JavaScript's "use strict" mode
+    "alwaysStrict": true,       // Enable JavaScript's "use strict" mode
+    "esModuleInterop": true     // CommonJS import behavior similar to Babel/mjs
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
@@ -233,6 +234,7 @@ List of common npm commands
 - `npm start`: short for `npm run start`, this command starts your web server locally. By default it runs `node server.js`, but its behavior can be overridden by adding a `"start"` key under `"scripts"` in `package.json`.
 - `npm run name-of-script`: runs a terminal command stored in `"scripts"` in `package.json`. If your script name is `X`, `npm` also looks for `preX` and runs that first if it exists. It also runs `postX` afterward.
 - `npm pack` and `npm publish`: see my [npm publishing guide](publish-npm-package.md).
+- `npm list`: shows a tree of npm dependencies, to help you understand why your node_modules folder is so enormous. See also [PackagePhobia](https://packagephobia.now.sh/) where you can type the name of a package to learn its size (including dependencies).
 
 `npm` commands also have short forms, such as `npm i -D` for `npm install --save-dev`.
 
