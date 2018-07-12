@@ -208,6 +208,84 @@ interface Person {
 
 For example we can write `let p: Person = {name:'John Doe', age:37}`. Since `p` is a `Person`, we can later refer to `p.spouse`, which is equal to `undefined` in this case but could be a `Person` if a different object were assigned to it that has a `spouse`. However, you are not allowed to write `p = {name:'Chad', age:19, spouse:'Jennifer'}` with the wrong data type for `spouse` (TypeScript explains that *"Type `string` is not assignable to type `Person | undefined`."*)
 
+### Structural types ###
+
+In some other programming languages, every type has a name, such as `string` or `double` or `Component`. In TypeScript, many types do have names but, more fundamentally, most types are defined by their structure. In other words, the type's name, if it even has one, is not important to the type system. Here's an example where a variable has a structural type:
+
+~~~js
+var book1 = { title: "Adventures of Tom Sawyer",       year:1876 };
+var book2 = { title: "Adventures of Huckleberry Finn", year:1884 };
+~~~
+
+If you hover your mouse over `book1` in VS Code, its type is described as `{ title: string; year: number; }`. This is an example of a "structural" type: a type defined entirely by the fact that it has a property called `title` which is a `string`, and another property called `year` which is a `number`. Thus `book1` and `book2` have the same type and you can assign one to the other, or to a different book.
+
+~~~js
+book1 = book2; // allowed
+book2 = { year: 1995, title: "Vertical Run" }; // allowed
+~~~
+
+Generally speaking you can assign a value with "more stuff" to a variable whose type includes "less stuff", but not the other way around:
+
+~~~ts
+var book3 = { title: "The Duplicate", author: "William Sleator", year:1988 };
+var book4 = { title: "The Boy Who Reversed Himself" };
+book1 = book3; // allowed
+bool1 = bool4; /* NOT allowed. Here is the error message:
+  Type '{ title: string; }' is not assignable to type '{ title: string;
+  year: number; }'. Property 'year' is missing in type '{ title: string; }'.
+*/
+~~~
+
+In addition if we have an interface like this:
+
+~~~ts
+interface Book {
+    title: string;
+    author?: string;
+    year: number;
+}
+~~~
+
+Then we can assign any `Book` value to any of these book variables (except `book3`, because the `author` is required in `book3` and `Book` might not contain an author), and we can assign any of the book variables to a new variable of type `Book` (except `book4`, of course).
+
+Clearly, structural types are fantastic. This is obvious after you spend a few years using languages without them. For example, imagine if two people, Alfred and Barbara, write different modules `A` and `B`. They both deal with points using X-Y coordinates. So each module contains a `Point` interface:
+
+~~~js
+interface Point {
+    x: number;
+    y: number;
+}
+~~~
+
+Many languages use "nominal" types instead of structural types, and in these languages `A.Point` is considered to be a completely different type than `B.Point` even though they are identical. So any points produced by `A` cannot be used by `B` and vice versa. This is frustrating and stupid, so please take a moment to celebrate with me the wonder of TypeScript's structural typing.
+
+<span class="note">Structural types can be written either with semicolons or commas, e.g. `{ x: number, y: number }` and `{ x: number; y: number; }` are the same.</span>
+
+### Type aliases ###
+
+The `type` statement creates a new name for a type; for example after writing
+
+    type num = number;
+
+You can use `num` as a synonym for `number`. `type` similar to `interface` since you can write something like this...
+
+~~~ts
+type Point = {
+    x: number;
+    y: number;
+}
+~~~
+
+...instead of `interface Point {...}`. However, only interfaces support _inheritance_; for example I can create a new interface that is _like_ `Point` but also has a new member `z`, like this:
+
+~~~ts
+interface Point3D extends Point {
+    z: number;
+}
+~~~
+
+You can't do inheritance with `type` (however if `Point` was defined with `type`, you are still allowed to extend it with an `interface`).
+
 ### Function types ###
 
 In JavaScript you can pass functions to other functions, like this:
@@ -241,7 +319,7 @@ experimenter(doubler);
 experimenter(squarer);
 ~~~
 
-TypeScript requires you to give a _name_ to the parameter of `func`, but it doesn't matter what that name is. I could have called it `x`, or `Wednesday`, or `myFavoriteSwearWord` and it wouldn't have made any difference.
+TypeScript requires you to give a _name_ to the parameter of `func`, but it doesn't matter what that name is. I could have called it `x`, or `Wednesday`, or `myFavoriteSwearWord` and it would have made no difference whatsoever. But don't even think of calling it `asshat`. Don't you dare think about the hat and the.... no! Just don't. Stop.
 
 In JavaScript, everything inside an object is a "property" (a kind of variable), and that includes functions. As a consequence, these two interfaces mean the same thing:
 
@@ -262,6 +340,136 @@ class Thing {
 }
 let t1: Thing1 = new Thing();
 let t2: Thing2 = t1;
+~~~
+
+Does it seem weird to you that TypeScript requires `:` before the return type of a "normal" function but it requires `=>` before the return type of a function _variable_? Anyway, that's the way it is.
+
+### Generics (and Dates, and stuff) ###
+
+Let's say I write a function that ensures a value is an array, like this:
+
+~~~ts
+function asArray(v: any): any[] {
+  // return v if it is an array, otherwise return [v]
+  return (Array.isArray(v) ? v : [v]);
+}
+~~~
+
+The `asArray` function _works_, but it loses type information. For example what if this function calls it?
+
+~~~ts
+/** Prints one or more dates to the console */
+function printDates(dates: Date|[Date]) {
+  for (let date of asArray(dates)) {
+      // SUPER BUGGY!
+      var year = date.getYear();
+      var month = date.getMonth() + 1;
+      var day = date.getDay();
+      console.log(`${year}/${month}/${day}`);
+  }
+}
+~~~
+
+The TypeScript compiler accepts this code, but it has two bugs. The code correctly added `1` to the month (because `getMonth()` returns 0 for January and 11 for December), but the code for getting the Year and Day are both wrong. Since `asArray` returns `any[]`, however, type checking and IntelliSense, which could have caught these bugs, is disabled on `date`. These bugs could have been avoided if `asArray` were _generic_:
+
+~~~ts
+function asArray<T>(v: T | T[]): T[] {
+  return Array.isArray(v) ? v : [v];
+}
+~~~
+
+This version of `asArray` does the same thing, but it has a _type parameter_, which I have decided to call `T`, to enable enhanced type checking. The type parameter can be any type, so it is similar to `any`, but it enables the function to describe the _relationship_ between the parameter `v` and the return value. Specifically, it says that `v` and the return value have, well, similar types. When you call `asArray`, the TypeScript compiler finds a value of `T` that allows the call to make sense. For example, if you call `asArray(42)` then the compiler chooses `T=number` because it is possible to use 42 as an argument to `asArray(v: number|number[]): number[]`. After choosing `T=number`, TypeScript realizes that `asArray` returns an array of numbers.
+
+In `printDates` we called `asArray(dates)` and the compiler figures out that `T=Date` works best in that situation. After choosing `T=Date`, TypeScript realizes that `asArray` returns an array of `Date`. Therefore, the variable `date` has type `Date`, and then it finds the first bug: `date.getYear` does not exist! Well, actually it does exist, but it has been deprecated due to its strange behavior (it returns the number of years since 1900, i.e. 118 in 2018). Instead you should call `getFullYear`.
+
+TypeScript itself doesn't notice the second bug, but when you type `date.getDay`, VS Code will inform you in a little popup box that this function "Gets the day of the week, using local time". The day of the _week_? You have **got** to be kidding me!
+
+Thanks to generics and VS Code, we fix our code to call `date.getDate` instead, which of course does **not** return the date without a time attached to it (like any sensible person would think) but rather the _day of the current month_. Unlike the month, the day does **not** start counting from zero.
+
+~~~ts
+/** Prints one or more dates to the console */
+function printDates(dates: Date|[Date]) {
+  for (let date of asArray(dates)) {
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+      console.log(`${year}/${month}/${day}`);
+  }
+}
+~~~
+
+Meanwhile, you start to wonder whether `Date` has more pitfalls you should be aware of and which moron designed the `Date` class in the first place. The answers are "yes" and "Brendan Eich slavishly copied Date's horrible design from [Java 1.0](http://web.mit.edu/java_v1.0.2/www/javadoc/java.util.Date.html)".
+
+<span class="note">One good thing about `Date`s is that they are normally stored in UTC (universal time zone a.k.a. GMT). This means that if the user changes the time zone on their computer, the `Date` objects in your program continue to represent the same _point in time_, but the string returned by `.toString()` changes. Usually this is what you want, especially in JavaScript where you might have client and server code running in different time zones.</span>
+
+An advanced example of generics appears in my [simplertime module](https://www.npmjs.com/package/simplertime). In this case I had a `timeToString` function that accepted a list of formatting options like this:
+
+~~~ts
+export interface TimeFormatOptions {
+  /** If true, a 24-hour clock is used and AM/PM is hidden */
+  use24hourTime?: boolean;
+  /** Whether to include seconds in the output (null causes seconds
+   *  to be shown only if seconds or milliseconds are nonzero) */
+  showSeconds?: boolean|null;
+  ...
+}
+
+export function timeToString(time: Date|number, opt?: TimeFormatOptions): string {
+  ...
+}
+~~~
+
+<span class="tip">The `export` keyword is used for sharing code to other source files. For example you can import `timeToString` in your own code using `import {timeToString} from 'simplertime` (after installing with `npm i simplertime` of course). If you want to import things from a different file in the **same folder**, add a `./` prefix on the filename, e.g. `import * as stuff from './mystuff'`.</span>
+
+Generics can also be used on classes and interfaces. For example, JavaScript has a `Set` type for holding an unordered collection of values. We might use it like this:
+
+~~~js
+var primes = new Set([2, 3, 5, 7]);
+for (var i = 0; i < 10; i++)
+  console.log(`Is the number ${i} prime? ${primes.has(i)}`);
+~~~
+
+In TypeScript, though, `Set` has a type parameter, `Set<T>`, meaning that all items in the set have type `T`. In this code TypeScript infers that `T=number`, so if you write `primes.add("hello!")` you'll get a Type Error. If you actually want to create a set that can hold both strings and numbers, you can do it like this:
+
+~~~js
+var primes = new Set<string|number>([2, 3, 5, 7]);
+~~~
+
+You can also create your own generic types. For example, I created a [B+ Tree](https://en.wikipedia.org/wiki/B%2B_tree) data structure called [`BTree<K, V>`](https://github.com/qwertie/btree-typescript), which is a collection of key-value pairs, sorted by key, that supports fast cloning. It has two type parameters, `K` (a key) and `V` (a value) and its definition looks roughly like this (function bodies have been omitted because I just want to show you how a generic class looks):
+
+~~~js
+// Type parameters can have default values,
+// so `var t: BTree` means `BTree<any,any>`
+export class BTree<K=any, V=any>
+{
+  // Root node (key-value pairs are stored in here)
+  private _root: BNode<K, V>;
+  // Total number of items in the collection
+  _size: number = 0;
+  // Maximum number of items in a single node
+  _maxNodeSize: number;
+  // This function must return less-than-0 if a<b and above-zero if a>b
+  _compare: (a:K, b:K) => number;
+    
+  public constructor(entries?: [K,V][], 
+                     compare?: (a: K, b: K) => number, 
+                     maxNodeSize?: number) { ... }
+  
+  get size() { return this._size; }
+  clear() { ... }
+  get(key: K): V | undefined { ... }
+  set(key: K, value: V, overwrite?: boolean): boolean { ... }
+  has(key: K): boolean { ... }
+  delete(key: K) { ... }
+  /** Quickly clones the tree by marking the root node as shared. 
+   *  Both copies remain editable. When you modify either copy, any
+   *  nodes that are shared (or potentially shared) between the two
+   *  copies are cloned so that the changes do not affect other copies.
+   *  This is known as copy-on-write behavior, or "lazy copying". */
+  clone(): BTree<K,V> { ... }
+
+  ...
+}
 ~~~
 
 ### Footnote ###
@@ -291,6 +499,41 @@ Confused? Well, never mind, hopefully you'll get it later. Honestly, it doesn't 
 Here's another puzzle for you: what's the difference between the types `number[]` and `[number]`? The first is an array of numbers; the second is an array that contains only one element, which is a number. 
 
 Similarly `[string,number]` denotes an array of length 2 with the first element being a string and the second being a number. In addition, the array has a property `length: 2`, i.e. its _type_ is `2`, not just `number`. These fixed-length arrays are called tuple types. To learn about more interesting features of TypeScript's type system, see [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html).
+
+### Advanced generics ###
+
+So, remember the `simplertime` module I was talking about? It also exports a `defaultTimeFormat` object which holds default values for the `timeToString` formatting options. I wanted to define a special function which would allow me to write things like `get(options, 'use24hourTime')` to retrieve the value of `options.use24hourTime` if it exists and `defaultTimeFormat.use24hourTime` if it does not exist. In many languages it is impossible to write a function like that, but it is possible in "dynamic" languages such JavaScript. Here's how the `get` function would look like in JavaScript:
+
+~~~js
+function get(opt, name) {
+  if (opt === undefined || opt[name] === undefined)
+    return defaultTimeFormat[name]
+  return opt[name];
+}
+~~~
+
+<span clas="note">In JavaScript and TypeScript, `thing.property` can be written as `thing["property"]` instead and if the property does not exist, the result is `undefined`. But in the square-bracket version we can use a _variable_, so that the question "which property are we using?" can be answered by code located elsewhere.</span>
+
+Translating this to TypeScript is possible with a feature called `keyof`, but it's _very_ tricky. Here is the translation:
+
+~~~ts
+function get<K extends keyof TimeFormatOptions>(
+         opt: TimeFormatOptions|undefined, name: K): TimeFormatOptions[K] {
+  if (opt === undefined || opt[name] === undefined)
+    return defaultTimeFormat[name]
+  return opt[name];
+}
+~~~
+
+Here, the type variable `K` has a _constraint_ attached to it, `K extends keyof TimeFormatOptions`. Here's how it works:
+
+1. `keyof X` turns the properties of `X` into a union type of the names of the properties. For example, given the `Book` interface from earlier, `keyof Book` means `"title" | "author" | "age"`. Likewise `keyof TimeFormatOptions` is any of the strings in `TimeFormatOptions`.
+2. The "extends" constraint, `X extends Y`, means that "X must be Y, or a subtype of Y". For example `X extends Object` means that `X` must be some kind of `Object`, which means it can be an array or a `Date` or even a function, all of which are considered to be Objects, but it can't be a `string` or a `number` or a `boolean`. Similarly `X extends Point` means that `X` is `Point` or a _more specific_ type than `Point`, such as `Point3D`.
+3. What would `B extends keyof Book` mean? It would mean that `B` is a _subtype_ of `"title" | "author" | "age"`. And remember that we are talking about _types_ here, not _values_. The string literal `"title"` has the _value_ `"title"` but it also has the _type_ `"title"`, which is a different concept. The _type_ is handled by the TypeScript type system, the _value_ is handled by the JavaScript. The `"title"` _type_ no longer exists when the program is running but the `"title"` _value_ still does. Now, `B` can be assigned to types like `"title"` or `"title" | "age"`, because every value of type `"title" | "age"` (or "title") can be assigned to a variable of type `keyof Book`. However `B` cannot be `string`, because some strings are not "title", "author" or "age".
+3. Similarly, `K` is constrained to have a subtype of `keyof TimeFormatOptions`, such as `"use24hourTime"`.
+4. The type `X[Y]` means "the type of the Y property of X, where Y is a number or string literal". For example, the _type_ `Book["author"]` is `string | undefined`.
+
+Putting this all together, when I write `get(options, 'use24hourTime')`, the compiler decides that `K='use24hourTime'`. Therefore, the `name` parameter has type `"use24hourTime"` and the return type is `TimeFormatOptions["use24hourTime"]`, which means `boolean | undefined`.
 
 JSX
 ---
