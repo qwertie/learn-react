@@ -11,12 +11,15 @@ pre.highlight, pre code {
   background: #111;
   color: #f8f8f2;
   font-family: "DejaVu Sans Mono","Bitstream Vera Sans Mono",Monaco,"Lucida Console",monospace;
-  font-size: 93%;
+  font-size: 0.92rem;
 }
-@media (max-width: 470px) { /* phablet */
-  pre.highlight, pre code { font-family: Verdana,sans-serif; font-size: 95%; }
+@media (max-width: 470px) { /* large phone: use less wide font */
+  pre.highlight, pre code {
+    font-family: Verdana,sans-serif;
+    font-size: 0.94rem;
+  }
 }
-@media (max-width: 400px) { /* phablet */
+@media (max-width: 400px) {
   pre.highlight, pre code { font-size: 93%; }
 }
 
