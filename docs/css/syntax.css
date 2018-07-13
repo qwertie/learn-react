@@ -13,6 +13,9 @@ pre.highlight, pre code {
   font-family: "DejaVu Sans Mono","Bitstream Vera Sans Mono",Monaco,"Lucida Console",monospace;
   font-size: 93%;
 }
+@media (max-width: 400px) { /* phone/phablet */
+  pre.highlight, pre code { font-family: Verdana,sans-serif; }
+}
 
 code {
     color: #830;
