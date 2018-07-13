@@ -84,15 +84,15 @@ class Box {
   }
   get area() { return this.width*this.height; } // getter function
   setSquare(side) {                             // normal function
-    // set the Box's width and height both equal to side
+    // set the Box's width and height to side, representing a square
     this.width = this.height = side;
   }
   static ZeroSize() { return new Box(0, 0); }   // static (class-level) function
 }
 
 var big = new Box(1920, 1080);
-var small = new Box(19.2, 10.8);
-console.log(`The big box is ${big.area/small.area} times larger than the small one`);
+var mini = new Box(19.2, 10.8);
+console.log(`The big box is ${big.area/mini.area} times larger than the minibox`);
 console.log(`The area of the zero-size box is ${Box.ZeroSize().area}.`);
 ~~~
 
@@ -210,14 +210,14 @@ For example we can write `let p: Person = {name:'John Doe', age:37}`. Since `p` 
 
 ### Structural types ###
 
-In some other programming languages, every type has a name, such as `string` or `double` or `Component`. In TypeScript, many types do have names but, more fundamentally, most types are defined by their structure. In other words, the type's name, if it even has one, is not important to the type system. Here's an example where a variable has a structural type:
+In some other programming languages, every type has a name, such as `string` or `double` or `Component`. In TypeScript, many types do have names but, more fundamentally, most types are defined by their structure. In other words, the type's name, if it even has one, is not important to the type system. Here's an example where variables have a structural type:
 
 ~~~js
 var book1 = { title: "Adventures of Tom Sawyer",       year:1876 };
 var book2 = { title: "Adventures of Huckleberry Finn", year:1884 };
 ~~~
 
-If you hover your mouse over `book1` in VS Code, its type is described as `{ title: string; year: number; }`. This is an example of a "structural" type: a type defined entirely by the fact that it has a property called `title` which is a `string`, and another property called `year` which is a `number`. Thus `book1` and `book2` have the same type and you can assign one to the other, or to a different book.
+If you hover your mouse over `book1` in VS Code, its type is described as `{ title: string; year: number; }`. This is a "structural" type: a type defined entirely by the fact that it has a property called `title` which is a `string`, and another property called `year` which is a `number`. Thus `book1` and `book2` have the same type and you can assign one to the other, or to a different book.
 
 ~~~js
 book1 = book2; // allowed
@@ -359,7 +359,7 @@ The `asArray` function _works_, but it loses type information. For example what 
 
 ~~~ts
 /** Prints one or more dates to the console */
-function printDates(dates: Date|[Date]) {
+function printDates(dates: Date|Date[]) {
   for (let date of asArray(dates)) {
       // SUPER BUGGY!
       var year = date.getYear();
@@ -388,7 +388,7 @@ Thanks to generics and VS Code, we fix our code to call `date.getDate` instead, 
 
 ~~~ts
 /** Prints one or more dates to the console */
-function printDates(dates: Date|[Date]) {
+function printDates(dates: Date|Date[]) {
   for (let date of asArray(dates)) {
       var year = date.getFullYear();
       var month = date.getMonth() + 1;
@@ -419,7 +419,7 @@ export function timeToString(time: Date|number, opt?: TimeFormatOptions): string
 }
 ~~~
 
-<span class="tip">The `export` keyword is used for sharing code to other source files. For example you can import `timeToString` in your own code using `import {timeToString} from 'simplertime` (after installing with `npm i simplertime` of course). If you want to import things from a different file in the **same folder**, add a `./` prefix on the filename, e.g. `import * as stuff from './mystuff'`.</span>
+<span class="tip">The `export` keyword is used for sharing code to other source files. For example you can import `timeToString` in your own code using `import {timeToString} from 'simplertime'` (after installing with `npm i simplertime` of course). If you want to import things from a different file in the **same folder**, add a `./` prefix on the filename, e.g. `import * as stuff from './mystuff'`.</span>
 
 Generics can also be used on classes and interfaces. For example, JavaScript has a `Set` type for holding an unordered collection of values. We might use it like this:
 
@@ -429,7 +429,7 @@ for (var i = 0; i < 10; i++)
   console.log(`Is the number ${i} prime? ${primes.has(i)}`);
 ~~~
 
-In TypeScript, though, `Set` has a type parameter, `Set<T>`, meaning that all items in the set have type `T`. In this code TypeScript infers that `T=number`, so if you write `primes.add("hello!")` you'll get a Type Error. If you actually want to create a set that can hold both strings and numbers, you can do it like this:
+In TypeScript, though, `Set` has a type parameter, `Set<T>`, meaning that all items in the set have type `T`. In this code TypeScript infers that `T=number`, so if you write `primes.add("hello!")` you'll get a Type Error. If you actually **want** to create a set that can hold both strings and numbers, you can do it like this:
 
 ~~~js
 var primes = new Set<string|number>([2, 3, 5, 7]);
@@ -439,7 +439,7 @@ You can also create your own generic types. For example, I created a [B+ Tree](h
 
 ~~~js
 // Type parameters can have default values,
-// so `var t: BTree` means `BTree<any,any>`
+// so `var t: BTree` means `var t: BTree<any,any>`
 export class BTree<K=any, V=any>
 {
   // Root node (key-value pairs are stored in here)

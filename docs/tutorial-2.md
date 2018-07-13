@@ -483,7 +483,7 @@ The long answer? First of all, remember that the JavaScript ecosystem has multip
 
 UMD is the natural choice since it's supposed to make a "universal" module definition, but TypeScript doesn't really try to be universal - it simply won't attempt to work in a web browser unaided. Instead, it expects to find predefined symbols either for an AMD module system or a CommonJS (i.e. Node.js) module system; if neither of these is defined, the module exits without even logging an error message.
 
-Even if we *could* use the `"module": "es6"` option, which keeps `import` commands unchanged in the output file, it wouldn't work because Chrome somehow *still* doesn't support `import` in 2018. (another issue here is our modules' URLs have little in common with the string in our `import` statements, but I believe this issue can be solved by setting up aliases in tsconfig.json via `baseUrl` and "Path mapping", as [documented here](https://www.typescriptlang.org/docs/handbook/module-resolution.html#base-url).)
+Even if we *could* use the `"module": "es6"` option, which keeps `import` commands unchanged in the output file, it wouldn't work because Chrome somehow *still* doesn't support `import` in 2018. Also, the URLs of our modules have little in common with the string in our import statements, and I have learned that TypeScript [path mapping aliases](https://www.typescriptlang.org/docs/handbook/module-resolution.html#base-url) can't solve the problem because they don't change the compiler's output.
 
 TypeScript's CommonJS implementation requires `require` to be defined, of course (it's used to import modules), but it also looks for `exports` and `module.exports`, even though our module doesn't export anything. So our little hack must define all three.
 
