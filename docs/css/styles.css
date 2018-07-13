@@ -89,6 +89,9 @@ h2 {
   max-width: 50%;
   width: 35%;
 }
+@media (max-width: 470px) { /* don't float on phones */
+  .sidebox { float: none; max-width: initial; width: initial; }
+}
 .sidebox ul { padding:0em 0em 0em 1.3em; margin:0em; } /* compact, used for TOC */
 
 header, .header {
