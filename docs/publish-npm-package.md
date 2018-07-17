@@ -22,6 +22,9 @@ When publishing TypeScript packages on `npm`, it's polite to publish code that h
 - Create a *readme.md* file with documentation for your package. This file will be rendered on npmjs.com.
 - It is also recommended to create documentation to describe the functions and classes in your code, in [JSDoc format](http://usejsdoc.org/).
 - If your package can be invoked from the command line, then in *package.json*, create a section called `"bin"` for it. For example, if you have a command called `foo` implemented in `dist/foo.js`, you'll need a section like this: `"bin": { "foo": "dist/foo.js" }`
+
+    <span class="note">npm has a [shebang requirement](https://npm.community/t/making-a-command-for-a-package-bin/628): the first line of your JavaScript command file must be this: `#!/usr/bin/env node`</span>
+
 - Check [npmjs.com](https://www.npmjs.com) to find out if the package name you want is already in use.
 
     <span class="note">New package names very similar to existing package names are [not always allowed](https://gist.github.com/ashleygwilliams/e466c1e9fd3be42545da511239edd554).</span>
