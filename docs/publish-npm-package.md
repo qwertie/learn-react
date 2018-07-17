@@ -108,6 +108,8 @@ Therefore, if your package is called *pkg*, you should ideally create a single "
 
 By default, the test folder is created as a sibling: if your package name is `pkg` then the test folder is `../pkg-testpack`.
 
+If your package is a TypeScript project, make sure that your tests in the test folder are importing the compiled JavaScript version, because your end-users might not be using TypeScript. One way to guarantee this is to exclude all .ts files from your package (if you do that, be sure source maps are disabled in your tsconfig.json.) Your tests should still be written in TypeScript to make sure your d.ts files work; use `"declaration": true` in tsconfig.json so they can access type information.
+
 ### How to publish (finally!) ###
 
 - Create an account on [npmjs.com](https://npmjs.com). You'll be asked for your full name, username and email address.
