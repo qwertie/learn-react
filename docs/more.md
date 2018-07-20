@@ -1,6 +1,7 @@
-More TypeScript/JavaScript tips
--------------------------------
+More TypeScript/JavaScript stuff
+--------------------------------
 
+- [Repository](https://github.com/qwertie/learn-react) for this site with full examples
 - [How to publish an npm package](publish-npm-package.md)
 - [How to minify your code](minification.md)
 
