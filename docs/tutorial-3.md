@@ -67,7 +67,7 @@ ReactDOM.render(
 
 ### Approaches B and C ###
 
-(1) Create a text file called `tsconfig.json` with this code in it:
+(1) Create a text file called `tsconfig.json` with this code like this in it:
 
 ~~~js
 { // TypeScript configuration file: provides options to the TypeScript 
@@ -87,6 +87,8 @@ ReactDOM.render(
   "exclude": ["node_modules"]
 }
 ~~~
+
+A quicker way to create *tsconfig.json* is to run `tsc --init` in a terminal.
 
 (2) Create a `server.js` file to serve files to your web browser. You could use the file server code from step B3 in [Part 2](tutorial-2.md#step-b3-make-a-simple-server), but if you install [Express](https://expressjs.com/) with `npm install express` then you can use short and simple server code, like this:
 

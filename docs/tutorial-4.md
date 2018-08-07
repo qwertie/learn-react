@@ -33,7 +33,9 @@ z = null;      // Allowed!
 z = undefined; // Allowed!
 ~~~
 
-If you're new to JavaScript, you're probably wondering what `null` and `undefined` are (or why they are two different things) - that's a hard question that I can dodge because I promised to tell you about _TypeScript_ and null/undefined are _JavaScript_ things. Ha! Anyway, many people (including me) are of the opinion that allowing _any_ variable to be null/undefined was a terrible idea, so TypeScript 2.0 [allows you to take away that permission](https://blog.mariusschulz.com/2016/09/27/typescript-2-0-non-nullable-types) with the `"strictNullChecks": true` compiler option in tsconfig.json. Instead you would write
+If you're new to JavaScript, you're probably wondering what `null` and `undefined` are (or [why they are two different things](https://stackoverflow.com/questions/5076944/what-is-the-difference-between-null-and-undefined-in-javascript)) - well, I promised to tell you about _TypeScript_ and null/undefined are _JavaScript_ things. Ha! But I will say that personally I don't use `null` very much; I find convenient to use `undefined` consistently to avoid worrying about the distinction. `undefined` is the default value of new variables, and function parameters that were not provided by the caller, and it's the value you get if you read a property  that doesn't exist on an object. By contrast, JavaScript itself rarely uses `null` for any purpose, so it only appears if you use it in your code.)
+
+Anyway, many people (including me) are of the opinion that allowing _any_ variable to be null/undefined was a bad idea, so TypeScript 2.0 [allows you to take away that permission](https://blog.mariusschulz.com/2016/09/27/typescript-2-0-non-nullable-types) with the `"strictNullChecks": true` compiler option in tsconfig.json. Instead you would write
 
     let z: number | null = 26;
 
@@ -71,6 +73,8 @@ To help you learn more about **JavaScript**, press F12 in Chrome, Firefox or Edg
 Since TypeScript is just JavaScript with types, you can use the console to help you learn the part of TypeScript that doesn't have types. In your TypeScript file you can call `console.log(something)` to print things in the browser's console. In some browsers, `log` can display complex objects, for example, try writing `console.log({name:"Steve", age:37, favoriteNumbers:[7, 666, -1]})`:
 
 ![](img/chrome-console-2.png)
+
+The help button (F1) isn't able to look up API documentation, so I recommend searching [Mozilla Developer Network](https://developer.mozilla.org/en-US/docs/Web) for information about built-in JavaScript APIs and browser APIs. Meanwhile, Node.js APIs are documented on [nodejs.org](https://nodejs.org/api/).
 
 ### Classes ###
 
@@ -535,6 +539,146 @@ Here, the type variable `K` has a _constraint_ attached to it, `K extends keyof 
 
 Putting this all together, when I write `get(options, 'use24hourTime')`, the compiler decides that `K='use24hourTime'`. Therefore, the `name` parameter has type `"use24hourTime"` and the return type is `TimeFormatOptions["use24hourTime"]`, which means `boolean | undefined`.
 
+### Holes in the type system ###
+
+Since TypeScript is built on top of JavaScript, it accepts some flaws in its type system for various reasons. Earlier we saw one of these flaws, the fact that this code is legal:
+
+~~~ts
+class Box {
+  constructor(public width: number, public height: number) {}
+  get area() { return this.width*this.height; }
+}
+
+interface IArea {
+  area: number; // area is not readonly
+}
+
+let ia: IArea = new Box(10,100);
+ia.area = 5; // Accepted by TypeScript, but causes a runtime error
+~~~
+
+Here are some other interesting loopholes:
+
+### You can assign a derived class to a base class
+
+A `Date` is a kind of `Object` so naturally you can write
+
+    var d: Object = new Date();
+
+So it makes sense that we can also assign this `D` interface to this `O` interface, right? Well, no, not really:
+
+~~~js
+interface D { date: Date }
+interface O { date: Object }
+var de: D = { date: new Date() };    // okay...
+var oh: O = de;                      // makes sense...
+oh.date = { date: {wait:"what?"} }   // wait, what?
+~~~
+
+TypeScript now believes `de.date` is a `Date` when it is actually an `Object`.
+
+#### You can assign [A,B] to (A|B)[]
+
+It makes sense that an array of two items, an `A` followed by a `B`, is also a an array of `A|B`, right? Actually, no, not really:
+
+~~~js
+var array1: [number,string] = [5,"five"];
+var array2: (number|string)[] = array1;   // makes sense...
+array2[0] = "string!";                    // wait, what?
+~~~
+
+TypeScript now believes `array1[0]` is a `number` when it is actually a `string`. This is an example of a more general problem, that arrays are covariant but.
+
+### Arrays? There be dragons.
+
+In the recommended `strict` mode, you can't put `null` or `undefined` in arrays of numbers...
+
+~~~js
+var a = [1,2,3];
+a[3] = undefined; // Type 'undefined' is not assignable to type 'number'
+~~~
+
+So that means when we get a value from an array of numbers, it's a number, right? Actually, no, not really:
+
+~~~js
+var array = [1,2,3];
+var n = array[4];
+~~~
+
+TypeScript now believes `n` is a `number` when it is actually `undefined`.
+
+A more obvious hole is that you can allocate a sized array of numbers... with no numbers in it:
+
+~~~js
+var array = new Array<number>(2); // array of two "numbers"
+var n:number = array[0];
+~~~
+
+### Function parameters are bivariant when overriding
+
+Unlike other languages with static typing, TypeScript allows overriding with covariant parameters. "Covariant parameter" means that as the class gets more specific (A to B), the parameter also gets more specific (Object to Date):
+
+~~~js
+class A {
+    method(value: Object) { }
+}
+
+class B extends A {
+    method(value: Date) { console.log(value.getFullYear()); }
+}
+
+var a:A = new B();
+a.method({}); // Calls B.method, which has a runtime error
+~~~
+
+This is unsafe, but oddly it is allowed. In contrast, it is (relatively) safe to override with _contravariant_ parameters, like this:
+
+~~~js
+class A {
+    method(value: Date) { }
+}
+class B extends A {
+    method(value: Object) { console.log(value instanceof Date); }
+}
+~~~
+
+Covariant return types are also safe:
+
+~~~js
+class A {
+    method(): Object { return {} }
+}
+class B extends A {
+    method(): Date { return new Date(); }
+}
+~~~
+
+TypeScript rightly rejects contravariant return types:
+
+~~~js
+class A {
+    method(): Date { return new Date(); }
+}
+class B extends A {
+    // Property 'method' in type 'B' is not assignable to the same property in base type 'A'.
+    //   Type '() => Object' is not assignable to type '() => Date'
+    //     Type 'Object' is not assignable to type 'Date'
+    method(): Object { return {} }
+}
+~~~
+
+### Lessons
+
+To avoid these holes, you need to
+
+- Not treat an object as a "baser" type (e.g. don't treat `D` as an `O`) unless you are sure that the baser type won't be modified in a way that could violate the type system.
+- Don't cast an array to a "baser" type (e.g. don't treat `D[]` as `O[]`, or `[A,B]` as `(A|B)[]`) unless you are sure that the baser type won't be modified in a way that could violate the type system.
+- Be careful not to leave any "holes" with undefined values in your arrays.
+- Be careful not to use out-of-bounds array indexes.
+- Not override a base-class method with covariant parameters.
+
+TypeScript actually had [more](https://github.com/Microsoft/TypeScript/issues/9765) [holes](https://github.com/Microsoft/TypeScript/issues/3410#issuecomment-111646030) in the past, which are now fixed.
+
 JSX
 ---
 
@@ -568,6 +712,12 @@ Tips for using JSX:
 - In React/Preact, you can use an array of elements in any location where a list of children are expected. For example, instead of `return <p>Ann<br/>Bob<br/>Cam</p>`, you can write `let x = [<br/>, 'Bob', <br/>]; return <p>Ann{x}Cam</p>`. This has the same effect because React/Preact "flattens" arrays in the child list.
 
 At the top of the file, the `@jsx` pragma can control the "factory" function that is called to translate JSX elements. For example if you use `/** @jsx h */` then `<b>this</b>` translates to `h('b', null, "this")` instead of `React.createElement('b', null, "this")`. Some Preact apps use this pragma (`h` is the preact function to create elements), but you won't need to use it in this tutorial (`createElement` is a synonym for `h`). Also, in tsconfig.json you can get the same effect with `"jsxFactory": "h"` in the `compilerOptions`.
+
+See also
+--------
+
+- [TypeScript evolution](https://blog.mariusschulz.com/series/typescript-evolution): excellent documentation of the newer TypeScript features
+
 
 Next
 ----

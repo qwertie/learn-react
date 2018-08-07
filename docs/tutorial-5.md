@@ -369,7 +369,7 @@ class Bar extends React.Component<BarProps,{color:string}>
 {
   state = { color: this.randomColor() };
   render() {  
-    const width = this.props.item.value / this.props.maxValue * this.props.maxWidth;
+    const width = this.props.item.value/this.props.maxValue*this.props.maxWidth;
 
     const style = { display: 'inline-block', width: width,
                backgroundColor: this.state.color, color: '#ffffff', 

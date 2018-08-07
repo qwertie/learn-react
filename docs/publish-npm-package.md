@@ -3,7 +3,7 @@ How to publish a npm package (properly)
 
 To begin, set up an npm project [in the usual way](tutorial-3.md).
 
-Write a module that you want to publish, probably using the ES6 `export` command to export things from it. You should also write some tests to test it; you could use a unit test framework such as [jasmine](https://jasmine.github.io/), but the `simplertime` package doesn't.
+Write a module that you want to publish, probably using the ES6 `export` command to export things from it. You should also write some tests to test it; you could use a unit test framework such as [jasmine](https://jasmine.github.io/), but the `simplertime` example package doesn't.
 
 ### Example ###
 
@@ -16,6 +16,7 @@ When publishing TypeScript packages on `npm`, it's polite to publish code that h
 - For compatibility with both web servers and web browsers, use the `"module": "umd"` option in your tsconfig.json (see [Part 3](tutorial-3.md#approaches-b-and-c) for a sample tsconfig.json file)
 - In *package.json* in the `"scripts"` section, create a build command for creating the Javascript files from the TypeScript code, e.g. `"build": "tsc"`. Use `npm run build` to run it.
 - (optional) A popular convention in npm packages is to place the code in a folder called *dist*. In tsconfig.json you can send output there using `"outDir": "dist"`. If you get the error "Cannot write file '.../dist/....d.ts' because it would overwrite input file", then outside the compiler options, you must add `"dist"` to the `"exclude"` list ([see example](https://github.com/qwertie/simplertime/blob/master/tsconfig.json)). And don't forget to add `dist/` to your `"main"` option.
+- When end-users import the published module, I have found that VS Code will detect your typing files (e.g. if `"main"` is `dist/index.js` then VS Code finds `dist/index.d.ts`), [**but `tsc` will not**](https://stackoverflow.com/questions/41292559/could-not-find-a-declaration-file-for-module-module-name-path-to-module-nam). Therefore, before you publish, you need an extra option in package.json beside your `main` option, such as `"typings": "dist/index"` to tell `tsc` where the d.ts file is. Also, should not include the `.d.ts` extension in the `"typings"` option, or you might get a strange error: "Cannot write file '[your-module].d.ts' because it would overwrite input file".
 
 ### Main preparation steps (for JavaScript and TypeScript) ###
 

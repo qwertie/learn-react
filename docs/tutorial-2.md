@@ -245,7 +245,7 @@ The other approaches are more well-known and standard practise in the JavaScript
 
 As a matter of communicating to other people who look at your code later, it is useful to separate your program's *front-end code* from its *build configuration* and *app server*. The root folder of a project tends to become cluttered with extra files over time (e.g. `.gitignore` if you use git, `README` and `LICENSE` files, appveyor/travis files if you use [continuous integration](https://en.wikipedia.org/wiki/Continuous_integration), etc.) Therefore we should separate the code of our front end into a different folder.
 
-In addition to the files **we** create, TypeScript will compile `app.tsx` into `app.js` and `app.js.map`, while `npm` creates a folder called `node_modules` and a file called `package-lock.json` (I can't imagine why it's called "lock", but [this page explains why it exists](https://medium.com/@Quigley_Ja/everything-you-wanted-to-know-about-package-lock-json-b81911aa8ab8).)
+In addition to the files **we** create, TypeScript will compile `app.tsx` into `app.js` and `app.js.map`, while `npm` creates a folder called `node_modules` and a file called `package-lock.json` (The name "lock" seems strange to me, but [this page explains why it exists](https://medium.com/@Quigley_Ja/everything-you-wanted-to-know-about-package-lock-json-b81911aa8ab8).)
 
 So please begin by creating an `app` folder and putting your `app.tsx` there.
 
@@ -280,6 +280,8 @@ Create a text file called `tsconfig.json` (in your root folder) and put this cod
 This file marks the folder as a TypeScript project and enables build commands in VSCode with Ctrl+Shift+B (the "tsc: watch" command is useful - it will automatically recompile your code whenever you save it.) **Silly fact**: `tsc` allows comments in json files but `npm` does not. 
 
 This file is very important because if the settings aren't right, something may go wrong and mysterious errors may punch you in the face. Here is the [documentation of tsconfig.json](https://www.typescriptlang.org/docs/handbook/tsconfig-json.html), but compiler options are [documented separately](https://www.typescriptlang.org/docs/handbook/compiler-options.html).).
+
+<span class="tip">A quicker way to create *tsconfig.json* is to run `tsc --init` in a terminal.</span>
 
 ### Step B2: Add a build script ###
 
