@@ -5,7 +5,7 @@ toc: true
 Part 4: A brief introduction to TypeScript
 ==========================================
 
-I said this tutorial was designed for people who had used JavaScript but not TypeScript so I'll mostly just talk about the main differences between the two.
+I said this tutorial was designed for people who had used JavaScript but not TypeScript so I'll mostly just talk about the main differences between the two, but I will explain a few surprising facts about JavaScript too, in case you only studied a different language, like Java.
 
 ### Types in TypeScript ###
 
@@ -33,9 +33,9 @@ z = null;      // Allowed!
 z = undefined; // Allowed!
 ~~~
 
-If you're new to JavaScript, you're probably wondering what `null` and `undefined` are (or [why they are two different things](https://stackoverflow.com/questions/5076944/what-is-the-difference-between-null-and-undefined-in-javascript)) - well, I promised to tell you about _TypeScript_ and null/undefined are _JavaScript_ things. Ha! But I will say that personally I don't use `null` very much; I find convenient to use `undefined` consistently to avoid worrying about the distinction. `undefined` is the default value of new variables, and function parameters that were not provided by the caller, and it's the value you get if you read a property  that doesn't exist on an object. By contrast, JavaScript itself rarely uses `null` for any purpose, so it only appears if you use it in your code.)
+If you're new to JavaScript, you're probably wondering what `null` and `undefined` are (or [why they are two different things](https://stackoverflow.com/questions/5076944/what-is-the-difference-between-null-and-undefined-in-javascript)) - well, I promised to tell you about _TypeScript_ and null/undefined are _JavaScript_ things. Ha! But I will say that personally I don't use `null` very much; I find convenient to use `undefined` consistently to avoid worrying about the distinction. `undefined` is the default value of new variables, and function parameters that were not provided by the caller, and it's the value you get if you read a property  that doesn't exist on an object. By contrast, JavaScript itself only rarely uses `null`, so if you don't use it yourself, you won't encounter it very often. I'm sure some people do the opposite, and prefer `null`.
 
-Anyway, many people (including me) are of the opinion that allowing _any_ variable to be null/undefined was a bad idea, so TypeScript 2.0 [allows you to take away that permission](https://blog.mariusschulz.com/2016/09/27/typescript-2-0-non-nullable-types) with the `"strictNullChecks": true` compiler option in tsconfig.json. Instead you would write
+Anyway, many people (including me) are of the opinion that allowing _any_ variable to be null/undefined was a bad idea, so TypeScript 2.0 [allows you to take away that permission](https://blog.mariusschulz.com/2016/09/27/typescript-2-0-non-nullable-types) with the `"strictNullChecks": true` compiler option in tsconfig.json (or use `"strict": true` for Maximum Type Checking). Instead you would write
 
     let z: number | null = 26;
 
@@ -54,9 +54,9 @@ y = [y, y];
 console.log(y); // print [25,25] or ["Why?","Why?"] in browser's console
 ~~~
 
-This is allowed in TypeScript also, because `var y` (by itself) gives `y` a type of `any`, meaning anything. So we can assign any value or object or whatever to `y`. So we can certainly set it to a string or a number or an array of two things. `any` is a special type; it means "this value or variable should act like a JavaScript value or variable and, therefore, not give me any type errors."
+This is allowed in TypeScript by default, because `var y` (by itself) gives `y` a type of `any`, meaning anything. So we can assign any value or object or whatever to `y`. So we can certainly set it to a string or a number or an array of two things. `any` is a special type; it means "this value or variable should act like a JavaScript value or variable and, therefore, not give me any type errors."
 
-<span class="warning">I recommend the `"strict": true` compiler option, but in that mode TypeScript doesn't allow `var y`; it requires `var y: any` instead.</span>
+<span class="tip">I recommend the `"strict": true` compiler option, but in that mode TypeScript doesn't allow `var y`; it requires `var y: any` instead.</span>
 
 However, TypeScript allows us to be more specific by saying
 
@@ -70,7 +70,7 @@ To help you learn more about **JavaScript**, press F12 in Chrome, Firefox or Edg
 
 ![](img/chrome-console.png)
 
-Since TypeScript is just JavaScript with types, you can use the console to help you learn the part of TypeScript that doesn't have types. In your TypeScript file you can call `console.log(something)` to print things in the browser's console. In some browsers, `log` can display complex objects, for example, try writing `console.log({name:"Steve", age:37, favoriteNumbers:[7, 666, -1]})`:
+Since TypeScript is just JavaScript with static type checking, you can use the console to help you learn the part of TypeScript that doesn't have static types. In your TypeScript file you can call `console.log(something)` to print things in the browser's console. In some browsers, `log` can display complex objects, for example, try writing `console.log({name:"Steve", age:37, favoriteNumbers:[7, 666, -1]})`:
 
 ![](img/chrome-console-2.png)
 
@@ -142,7 +142,7 @@ you can simply write
   constructor(public width: number, public height: number) {}
 ~~~
 
-For any C# developers reading this, it works exactly like my [LeMP system](http://ecsharp.net/lemp/) for C#!
+(If any C# developers are reading this: it works exactly like my [LeMP system](http://ecsharp.net/lemp/) for C#!)
 
 Unlike JavaScript, TypeScript has `private` (and `protected`) variables and functions which are inaccessible outside the class:
 
@@ -212,6 +212,25 @@ interface Person {
 
 For example we can write `let p: Person = {name:'John Doe', age:37}`. Since `p` is a `Person`, we can later refer to `p.spouse`, which is equal to `undefined` in this case but could be a `Person` if a different object were assigned to it that has a `spouse`. However, you are not allowed to write `p = {name:'Chad', age:19, spouse:'Jennifer'}` with the wrong data type for `spouse` (TypeScript explains that *"Type `string` is not assignable to type `Person | undefined`."*)
 
+### Intersection types ###
+
+Intersection types are the lesser-known cousin of union types. A union type like `A | B` means that a value can be _either_ an A _or_ a B (but not both). An intersection type like `A & B` means that a value is both A and B at the same time. For instance, this `box` is both `IBox` and `IArea`, so it has all the properties from both interfaces:
+
+~~~ts
+let box: IBox & IArea = new Box(5, 7);
+~~~
+
+If you ever mix union and intersection types, you can use parentheses to change the meaning:
+
+~~~ts
+// either a Date&IArea or IBox&IArea
+let box1: (Date | IBox) & IArea = new Box(5, 7);
+// either a Date or an IBox&IArea
+let box2: Date | (IBox & IArea) = new Box(5, 7);
+~~~
+
+<span class="note">`&` has higher precedence than `|`, so `A & B | C` means `(A & B) | C`.</span>
+
 ### Structural types ###
 
 In some other programming languages, every type has a name, such as `string` or `double` or `Component`. In TypeScript, many types do have names but, more fundamentally, most types are defined by their structure. In other words, the type's name, if it even has one, is not important to the type system. Here's an example where variables have a structural type:
@@ -264,6 +283,76 @@ interface Point {
 Many languages use "nominal" types instead of structural types, and in these languages `A.Point` is considered to be a completely different type than `B.Point` even though they are identical. So any points produced by `A` cannot be used by `B` and vice versa. This is frustrating and stupid, so please take a moment to celebrate with me the wonder of TypeScript's structural typing.
 
 <span class="note">Structural types can be written either with semicolons or commas, e.g. `{ x: number, y: number }` and `{ x: number; y: number; }` are the same.</span>
+
+### Flow-based typing (and the exclamation mark) ###
+
+If `s` is a string, you could write `s.match(/[0-9]+/)` to find the first group of digits in that string. `/[0-9]+/` is a `RegExp` - an object that can be used to search strings using [Regular Expressions](https://en.wikipedia.org/wiki/Regular_expression). Regular expressions are a string-matching system supported by many programming languages including JavaScript.
+
+`match` returns an array of strings, or `null` if the `RegExp` did not match the string. For example, if `s = "I have 10 cats and 2 dogs"` then `s.match(/[0-9]+/)` returns `["10"]`, but if `s = "I have ten velociraptors and a weevil"` then `match` returns `null`.
+
+If you were looking for digits in a string, you'd want your code to behave differently depending on whether the string has digits or not, right? So you'd use an `if` statement:
+
+~~~ts
+var found: string[]|null = s.match(/[0-9]+/);
+if (found) {
+  console.log("The string has a number in it: " + found[0]);
+} else {
+  console.log("The string lacks digits.");
+}
+~~~
+
+As you probably know, `if (found)` means "if found is _truthy_". It basically means `if (found != null && found != 0 && found != false)`.
+
+If you don't check whether `found !== null`, TypeScript will give you an error:
+
+~~~ts
+var found = s.match(/[0-9]+/);
+console.log("The string has a number in it: " + found[0]);
+           // Error: Object is possibly 'null'  -----
+~~~
+
+So why _don't_ you get an error when you use the `if` statement? That's the magic of TypeScript's flow-based typing. In the first branch of the `if` statement, TypeScript knows that `found` _cannot_ be null, and so the type of `found` _changes within that block_ to exclude `null`. Thus, its type becomes `string[]`. Similarly, inside the `else {...}` block, TypeScript knows that `found` _cannot_ be `string[]`, so `string[]` is excluded and the type of `found` becomes `null` in that region.
+
+But TypeScript has a `!` exclamation-mark operator which is used to avoid certain error messages. It means "look, compiler, I know you _think_ this variable could be `null` or `undefined`, but I _promise you_ it isn't. So if `found` has type `string[]|null`, `found!` has type `string[]`. So if you're sure that `s` has digits in it, you can use `!` to avoid the error message:
+
+~~~ts
+var found = s.match(/[0-9]+/);
+console.log("The string has a number in it: " + found![0]);
+~~~
+
+TypeScript's flow-based typing system supports the `typeof` and `instanceof` operators, as well as ordinary comparison operators. So if you start with a variable that could have several types, you can use any of these operators to narrow down the type.
+
+~~~ts
+function whatAmI(thing: string|RegExp|null|number[]|Date) {
+  if (thing instanceof RegExp || typeof thing === "string") {
+    // Here, TypeScript knows that thing is RegExp|string
+    if (typeof thing !== "string")
+      console.log("Ahh, so it's a RegExp: " + thing.toString());
+    else
+      console.log("It's a string of length " + thing.length);
+  } else {
+    // Here, TypeScript knows that thing is null|number|Date
+    if (thing == null)
+      console.log("Aha! You just gave me a null.");
+    else if (Array.isArray(thing))
+      console.log("Oh, it's an array of numbers: " + 
+        thing.map(n => n.toPrecision(3)).join(", "));
+    else
+      console.log("So, it's a date in " + thing.getFullYear());
+  }
+}
+~~~
+
+**Note:** In case you haven't heard, JavaScript has a funky distinction between "primitive" and "boxed primitive" types (which are objects). For example, `"yarn"` is a primitive, and its type is `string`. However there is also a _boxed_ string type called `String` with a capital S, which is rarely used. You can create a `String` by writing `new String("yarn")`. The thing to keep in mind is that these are totally different types. `"yarn" instanceof String` is `false`: `"yarn"` is a `string`, not a `String`! `"yarn" instanceof string` is not _false_; instead it's a totally illegal expression (because the right-hand side of `instanceof` must be a _constructor function_ and `string` does not have a constructor).
+
+JavaScript provides two different operators for testing the types of primitives and objects (i.e. non-primitives). [`instanceof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof) checks the [prototype chain](https://medium.freecodecamp.org/prototype-in-js-busted-5547ec68872) to find out if a value is a certain kind of object; `typeof` checks whether something is a primitive and if so, what kind. As you can see in the code above, `instanceof` is a binary operator that returns a boolean, while `typeof` is a unary operator that returns a string. For example, `typeof "yarn"` returns `"string"` and `typeof 12345` returns `"number"`. The primitive types are `number`, `boolean`, `string`, `symbol`, `undefined`, and `null`. Everything that is not a primitive is an "object" `Object`. Symbols are new in ES6, and although `null` is a primitive, `typeof null === "object"` [by mistake](http://2ality.com/2013/10/typeof-null.html).
+
+As you can see in the example above, TypeScript also understands `Array.isArray` as a way to detect an array. However, other common methods of detecting types in JavaScript are not supported:
+
+- `if (thing.unshift)` is sometimes used to distinguish strings from other things, because almost nothing except strings have an `unshift` method. This is not supported in TypeScript because you are not allowed to read a property that may not exist.
+- `if (thing.hasOwnProperty("unshift"))` isn't recognized as a type test.
+- `if (thing.constructor === String)` isn't recognized as a type test (in JavaScript, reading a property such as `constructor` promotes `thing` to Boxed status, so even if `thing` is a _primitive string_, its `.constructor` will be _non-primitive_.)
+- `if ("unshift" in thing)` doesn't work. I don't know why, but "the right-hand side of an 'in' expression must be of type 'any', an object type or a type parameter." (`in` should be avoided anyway because it is slow.)
 
 ### Type aliases ###
 
@@ -323,7 +412,7 @@ experimenter(doubler);
 experimenter(squarer);
 ~~~
 
-TypeScript requires you to give a _name_ to the parameter of `func`, but it doesn't matter what that name is. I could have called it `x`, or `Wednesday`, or `myFavoriteSwearWord` and it would have made no difference whatsoever. But don't even think of calling it `asshat`. Don't you dare think about the hat and the.... no! Just don't. Stop.
+TypeScript requires you to give a _name_ to the parameter of `func`, but it doesn't matter what that name is. I could have called it `x`, or `Wednesday`, or `myFavoriteSwearWord` and it would have made no difference whatsoever. But don't even think of calling it `asshat`. The compiler won't care, but what about your boss? Better safe than sorry, that's all I can say.
 
 In JavaScript, everything inside an object is a "property" (a kind of variable), and that includes functions. As a consequence, these two interfaces mean the same thing:
 
@@ -476,7 +565,7 @@ export class BTree<K=any, V=any>
 }
 ~~~
 
-### Footnote ###
+### Literals as types ###
 
 Remember how there is an error when you write this?
 
@@ -487,22 +576,26 @@ The error message sounds a bit strange:
 
     Type '"Zed"' is not assignable to type 'number'
 
-In order to actually *understand* this error message, it is necessary to understand that TypeScript has an ability to treat values as types. `"Zed"` is a `string`, of course, but it's more than that; it has _another type at the same time_, a type called `"Zed"`. The concept of a value or variable having two different types simultaneously is called *intersection types*. We can even create a variable with this type:
+Why does it say that `"Zed"` is a "type", instead of a "value" or a "string"? In order to understand this, it is necessary to understand that TypeScript has an ability to treat values as types. `"Zed"` is a `string`, of course, but it's more than that; it has _another type at the same time_, a type called `"Zed"` which represents the value "Zed". We can even create a variable with this type:
 
-    let zed: string & "Zed" = "Zed";
+    let zed: "Zed" = "Zed";
 
-Now we have now created a completely useless variable called `zed` whose type is both `string` and `"Zed"` (`&` means "and"). We can set this variable to `"Zed"`, but nothing else:
+Now we have created a completely useless variable called zed. We can set this variable to "Zed", but nothing else:
 
     zed = "Zed"; // OK
     zed = "ZED"; // Error: Type '"ZED"' is not assignable to type '"Zed"'.
 
-Technically we can set `zed` to `null` and `undefined` but luckily with `"strictNullChecks": true` we can close that loophole so that this variable will never be anything except "Zed". Thank God for that, is all I can say.
+By default we can set `zed` to `null` and `undefined`, but luckily with `"strictNullChecks": true` we can close that loophole so that this variable will never be anything except "Zed". Thank God for that, is all I can say.
 
-Confused? Well, never mind, hopefully you'll get it later. Honestly, it doesn't matter right now.
+So what are these literal-types good for? Well, sometimes a function allows only certain particular strings. For example, imagine if you have a function that lets you `turn("left")` or `turn("right")` but nothing else. This function could be declared with a literal-type:
 
-Here's another puzzle for you: what's the difference between the types `number[]` and `[number]`? The first is an array of numbers; the second is an array that contains only one element, which is a number. 
+    function turn(direction: "left"|"right") { ... }
 
-Similarly `[string,number]` denotes an array of length 2 with the first element being a string and the second being a number. In addition, the array has a property `length: 2`, i.e. its _type_ is `2`, not just `number`. These fixed-length arrays are called tuple types. To learn about more interesting features of TypeScript's type system, see [Advanced Types](https://www.typescriptlang.org/docs/handbook/advanced-types.html).
+### Fixed-length arrays ###
+
+Here's another puzzle for you: what's the difference between the types `number[]` and `[number]`? The first one is an array of numbers; the second is an array that contains only one element, which is a number. 
+
+You see, TypeScript supports arrays of a specific length, in which each element of the array can have a different type. These fixed-length array types are called _tuples_. For example, `[string,number]` denotes an array of length 2 with the first element being a string and the second being a number. In addition, this array has a property `length: 2`, i.e. its _type_ is `2`, not just `number`. These fixed-length arrays are called tuple types.
 
 ### Advanced generics ###
 
