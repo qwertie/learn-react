@@ -1,3 +1,7 @@
-
-p { margin: 5px; font-size: 100%; font-family: sans-serif; }
-input, select { border: 1px solid #cde; }
+body                 { font-family: sans-serif; }
+.calendarEntryForm   { width: 24em; font-family: sans-serif; }
+.calendarEntryForm p { margin: 5px; }
+input, select        { border: 1px solid #cde; }
+.label               { width: 6em; display: inline-block; }
+.timeSelector        { width: 8em; }
+.minuteCount         { width: 3em; }
