@@ -1,23 +1,28 @@
 import * as React from 'react';
 import TimeSelector from './TimeSelector';
 
-interface CalendarEntry {
+export interface CalendarEntry {
   eventName: string;
   allDay: boolean;
-  startTime?: Date; // Allow undefined when no valid start time is given
+  // Includes date with local time zone. Undefined temporarily when no valid 
+  // start time is given. If allDay flag is set, should be noon GMT (so that 
+  // timezone changes won't change the assigned day)
+  startTime?: Date;
   durationMinutes: number;
   alarmOn: boolean;
   alarmMinutes: number;
+  location: string;
 }
 
-class CalendarEntryEditor extends React.Component<{}, CalendarEntry> {
+export default class CalendarEntryEditor extends React.Component<{}, CalendarEntry> {
   state = {
-    eventName: 'Daily run',
+    eventName: "Daily run",
     allDay: false, 
     startTime: undefined,
     durationMinutes: 60,
     alarmOn: false,
     alarmMinutes: 5,
+    location: "",
   }
   render() {
     var timeRangeElements: JSX.Element[] = [];
@@ -43,6 +48,9 @@ class CalendarEntryEditor extends React.Component<{}, CalendarEntry> {
       <p><input type="text" style={ {width:280} } 
                 onChange={e=>this.setState({eventName: e.target.value})}
                 value={this.state.eventName}/></p>
+      <p>Location: <input type="text" 
+                onChange={e=>this.setState({location: e.target.value})}
+                value={this.state.location}/></p>
       <p style={ {float: 'right', margin: '0 40px 0 0'} }>
         <input type="checkbox" checked={this.state.allDay}
           onChange={e => this.setState({allDay: e.target.checked})}/>All day

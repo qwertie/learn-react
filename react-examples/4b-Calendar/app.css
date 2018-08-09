@@ -1,3 +1,35 @@
 
 p { margin: 5px; font-size: 100%; font-family: sans-serif; }
 input, select { border: 1px solid #cde; }
+
+.calendar-hours {
+  display: grid;
+  grid-template-columns: calc(3em + 2%) auto;
+  grid-auto-rows: auto;
+  grid-auto-columns: auto;
+  max-width:350px;
+  grid-row-gap: 1px;
+}
+
+.calendar-hours .hour {
+  display: block;
+  border-top: 1px solid #8884;
+  grid-column: 1 / 4;
+  grid-row-end: span 4;
+  min-height: 2.1em;
+  z-index: -1; /* put border underneath entries */
+}
+
+.calendar-hours .entry {
+  grid-column: 2 / 3;
+  background-color: yellowgreen;
+  border-radius: 4px;
+  padding: 2px 0 2px 2px;
+  margin: 1px 1px 0 1px;
+  max-height: 4.4em;
+  overflow: hidden;
+}
+
+.allday-entries {
+  background-color: #bff; padding: 5px;
+}

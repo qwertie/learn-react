@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {parseTime, timeToStringUTC} from './time';
+import {parseTime, timeToStringUTC} from 'simplertime';
 
 export interface TimeSelectorProps {
   time?: Date;
@@ -15,7 +15,7 @@ export default class TimeSelector extends
     if (this.state.timeInput !== undefined)
       timeString = this.state.timeInput;
     else if (this.props.time !== undefined)
-      timeString = timeToStringUTC(this.props.time, false);
+      timeString = timeToStringUTC(this.props.time, {showSeconds:false});
 
     return (<span>
       <input type="text" list="times" style={ {width:75} }
@@ -23,7 +23,8 @@ export default class TimeSelector extends
              onChange={ e => this.setState({timeInput: e.target.value}) }
              onBlur={ e => {
                this.setState({timeInput: undefined});
-               this.props.onTimeChange(parseTime(e.target.value)); 
+               var time = parseTime(e.target.value);
+               this.props.onTimeChange(time ? new Date(time) : undefined);
              } }/>
       <datalist id="times">
         <option value="12:00am"/><option value="12:30am"/>
