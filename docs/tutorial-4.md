@@ -7,9 +7,7 @@ Part 4: A brief introduction to TypeScript
 
 I said this tutorial was designed for people who had used JavaScript but not TypeScript so I'll mostly just talk about the main differences between the two, but I will explain a few surprising facts about JavaScript too, in case you only studied a different language, like Java.
 
-### Types in TypeScript ###
-
-TypeScript code is translated into normal JavaScript (which has no static type system), and alongside that process, type checking is performed in order to discover *type errors* - mistakes you've made that have something to do with types. (Of course, occasionally, it also complains about things you did intentionally that nevertheless broke the rules of TypeScript).
+TypeScript is based on JavaScript, and the TypeScript compiler (or other tools based on  it, like `ts-node` or `ts-jest`) translates TypeScript into normal JavaScript simply by stripping out all the type information. Alongside that process, type checking is performed in order to discover *type errors* - mistakes you've made that have something to do with types. (Of course, occasionally, it also complains about things you did intentionally that nevertheless broke the rules of TypeScript).
 
 Types can be attached to variables with a colon (:) in their definition, like so:
 
@@ -41,6 +39,11 @@ Anyway, many people (including me) are of the opinion that allowing _any_ variab
 
 if you **want** z to be potentially null (`|` means "or").
 
+Features of TypeScript
+----------------------
+
+### Union types ###
+
 TypeScript has the ability to understand variables that can have multiple types. For example, here is some normal JavaScript code:
 
 ~~~js
@@ -70,7 +73,7 @@ To help you learn more about **JavaScript**, press F12 in Chrome, Firefox or Edg
 
 ![](img/chrome-console.png)
 
-Since TypeScript is just JavaScript with static type checking, you can use the console to help you learn the part of TypeScript that doesn't have static types. In your TypeScript file you can call `console.log(something)` to print things in the browser's console. In some browsers, `log` can display complex objects, for example, try writing `console.log({name:"Steve", age:37, favoriteNumbers:[7, 666, -1]})`:
+This console is fantastic because you can use it to run experiments in any browser tab. Since TypeScript is just JavaScript with static type checking, you can use the console to help you learn about the part of TypeScript that _doesn't_ have static types. In your TypeScript file you can call `console.log(something)` to print things in the browser's console. In some browsers, `log` can display complex objects, for example, try writing `console.log({name:"Steve", age:37, favoriteNumbers:[7, 666, -1]})`:
 
 ![](img/chrome-console-2.png)
 
@@ -100,12 +103,12 @@ console.log(`The big box is ${big.area/mini.area} times larger than the minibox`
 console.log(`The area of the zero-size box is ${Box.ZeroSize().area}.`);
 ~~~
 
-JavaScript is a little picky: when you create a function outside a class it has the word `function` in front of it, but when you create a function inside a `class`, it is _not allowed_ to have the word `function` in front of it. I don't know, maybe that's because functions inside classes are called "methods" instead of functions. Functions and methods are the same thing, except that methods in classes have access to `this` - a reference to the current object. Except for `static` methods. `static` methods are called on the `class` (e.g. `Box.ZeroSize` in this example) so they do not have "current object".
-
 The console output is
 
     The big box is 10000 times larger than the small one
     The zero-size box has an area of 0.
+
+JavaScript is a little picky: when you create a function outside a class it has the word `function` in front of it, but when you create a function inside a `class`, it is _not allowed_ to have the word `function` in front of it. I don't know, maybe that's because functions inside classes are called "methods" instead of functions. Functions and methods are the same thing, except that methods in classes have access to `this` - a reference to the current object. Except for `static` methods. `static` methods are called on the `class` (e.g. `Box.ZeroSize` in this example) so they do not have "current object". (Well, actually the current object of `ZeroSize` is the `Box` constructor function, which is *not* an instance of `Box`.)
 
 Unlike JavaScript, TypeScript classes allow variable declarations, such as `width` and `height` in this example:
 
@@ -161,7 +164,7 @@ console.log(x.width); // ERROR: 'width' is private and only
 
 ### Interfaces ###
 
-Interfaces are a way of describing "shapes" of objects. Interfaces in TypeScript work like interfaces in the Go programming language, not like interfaces in Java and C# - and that's a good thing. Here's an example:
+Interfaces are a way of describing "shapes" of objects. Here's an example:
 
 ~~~ts
 interface IBox {
@@ -179,6 +182,8 @@ interface IArea {
 let a: IBox = new Box(10,100);  // OK
 let b: IArea = new Box(10,100); // OK
 ~~~
+
+Interfaces in TypeScript work like interfaces in the Go programming language, not like interfaces in Java and C# - and that's a good thing. It means that classes don't have to **explicitly say** that they implement an interface: `Box` implements `IBox` and `IArea` without saying so. That's good because it means we can define interfaces for types that originally were not designed for any particular interface. For example, my [`BTree` package](https://www.npmjs.com/package/sorted-btree) defines an `IMapSource<Key,Val>` interface that represents a read-only dictionary of key-value pairs. The new `Map` class built into ES6 conforms to this interface so you can put a `Map` into an `IMapSource` variable.
 
 `readonly` means we can read, but not change:
 
@@ -308,7 +313,7 @@ If you don't check whether `found !== null`, TypeScript will give you an error:
 ~~~ts
 var found = s.match(/[0-9]+/);
 console.log("The string has a number in it: " + found[0]);
-           // Error: Object is possibly 'null'  -----
+           // Error: Object is possibly 'null'  ^^^^^
 ~~~
 
 So why _don't_ you get an error when you use the `if` statement? That's the magic of TypeScript's flow-based typing. In the first branch of the `if` statement, TypeScript knows that `found` _cannot_ be null, and so the type of `found` _changes within that block_ to exclude `null`. Thus, its type becomes `string[]`. Similarly, inside the `else {...}` block, TypeScript knows that `found` _cannot_ be `string[]`, so `string[]` is excluded and the type of `found` becomes `null` in that region.
@@ -345,9 +350,9 @@ function whatAmI(thing: string|RegExp|null|number[]|Date) {
 
 **Note:** In case you haven't heard, JavaScript has a funky distinction between "primitive" and "boxed primitive" types (which are objects). For example, `"yarn"` is a primitive, and its type is `string`. However there is also a _boxed_ string type called `String` with a capital S, which is rarely used. You can create a `String` by writing `new String("yarn")`. The thing to keep in mind is that these are totally different types. `"yarn" instanceof String` is `false`: `"yarn"` is a `string`, not a `String`! `"yarn" instanceof string` is not _false_; instead it's a totally illegal expression (because the right-hand side of `instanceof` must be a _constructor function_ and `string` does not have a constructor).
 
-JavaScript provides two different operators for testing the types of primitives and objects (i.e. non-primitives). [`instanceof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof) checks the [prototype chain](https://medium.freecodecamp.org/prototype-in-js-busted-5547ec68872) to find out if a value is a certain kind of object; `typeof` checks whether something is a primitive and if so, what kind. As you can see in the code above, `instanceof` is a binary operator that returns a boolean, while `typeof` is a unary operator that returns a string. For example, `typeof "yarn"` returns `"string"` and `typeof 12345` returns `"number"`. The primitive types are `number`, `boolean`, `string`, `symbol`, `undefined`, and `null`. Everything that is not a primitive is an "object" `Object`. Symbols are new in ES6, and although `null` is a primitive, `typeof null === "object"` [by mistake](http://2ality.com/2013/10/typeof-null.html).
+JavaScript provides two different operators for testing the types of primitives and objects (i.e. non-primitives). [`instanceof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/instanceof) checks the [prototype chain](https://medium.freecodecamp.org/prototype-in-js-busted-5547ec68872) to find out if a value is a certain kind of object; [`typeof`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/typeof) checks whether something is a primitive and if so, what kind. As you can see in the code above, `instanceof` is a binary operator that returns a boolean, while `typeof` is a unary operator that returns a string. For example, `typeof "yarn"` returns `"string"` and `typeof 12345` returns `"number"`. The primitive types are `number`, `boolean`, `string`, `symbol`, `undefined`, and `null`. Everything that is not a primitive is an "object" `Object`, including functions, but `typeof` treats functions specially (e.g. `typeof Math.sqrt === "function"` and `Math.sqrt instanceof Object === true`). Symbols are new in ES6, and although `null` is a primitive, `typeof null === "object"` [by mistake](http://2ality.com/2013/10/typeof-null.html).
 
-As you can see in the example above, TypeScript also understands `Array.isArray` as a way to detect an array. However, other common methods of detecting types in JavaScript are not supported:
+As you can see in the example above, TypeScript also understands `Array.isArray` as a way to detect an array. However, some other methods of detecting types in JavaScript are not supported:
 
 - `if (thing.unshift)` is sometimes used to distinguish strings from other things, because almost nothing except strings have an `unshift` method. This is not supported in TypeScript because you are not allowed to read a property that may not exist.
 - `if (thing.hasOwnProperty("unshift"))` isn't recognized as a type test.
@@ -360,7 +365,7 @@ The `type` statement creates a new name for a type; for example after writing
 
     type num = number;
 
-You can use `num` as a synonym for `number`. `type` similar to `interface` since you can write something like this...
+You can use `num` as a synonym for `number`. `type` is similar to `interface` since you can write something like this...
 
 ~~~ts
 type Point = {
@@ -632,7 +637,8 @@ Here, the type variable `K` has a _constraint_ attached to it, `K extends keyof 
 
 Putting this all together, when I write `get(options, 'use24hourTime')`, the compiler decides that `K='use24hourTime'`. Therefore, the `name` parameter has type `"use24hourTime"` and the return type is `TimeFormatOptions["use24hourTime"]`, which means `boolean | undefined`.
 
-### Holes in the type system ###
+Holes in the type system
+------------------------
 
 Since TypeScript is built on top of JavaScript, it accepts some flaws in its type system for various reasons. Earlier we saw one of these flaws, the fact that this code is legal:
 
@@ -660,7 +666,7 @@ A `Date` is a kind of `Object` so naturally you can write
 
 So it makes sense that we can also assign this `D` interface to this `O` interface, right? Well, no, not really:
 
-~~~js
+~~~ts
 interface D { date: Date }
 interface O { date: Object }
 var de: D = { date: new Date() };    // okay...
@@ -674,7 +680,7 @@ TypeScript now believes `de.date` is a `Date` when it is actually an `Object`.
 
 It makes sense that an array of two items, an `A` followed by a `B`, is also a an array of `A|B`, right? Actually, no, not really:
 
-~~~js
+~~~ts
 var array1: [number,string] = [5,"five"];
 var array2: (number|string)[] = array1;   // makes sense...
 array2[0] = "string!";                    // wait, what?
@@ -702,7 +708,7 @@ TypeScript now believes `n` is a `number` when it is actually `undefined`.
 
 A more obvious hole is that you can allocate a sized array of numbers... with no numbers in it:
 
-~~~js
+~~~ts
 var array = new Array<number>(2); // array of two "numbers"
 var n:number = array[0];
 ~~~
@@ -711,7 +717,7 @@ var n:number = array[0];
 
 Unlike other languages with static typing, TypeScript allows overriding with covariant parameters. "Covariant parameter" means that as the class gets more specific (A to B), the parameter also gets more specific (Object to Date):
 
-~~~js
+~~~ts
 class A {
     method(value: Object) { }
 }
@@ -726,7 +732,7 @@ a.method({}); // Calls B.method, which has a runtime error
 
 This is unsafe, but oddly it is allowed. In contrast, it is (relatively) safe to override with _contravariant_ parameters, like this:
 
-~~~js
+~~~ts
 class A {
     method(value: Date) { }
 }
@@ -737,7 +743,7 @@ class B extends A {
 
 Covariant return types are also safe:
 
-~~~js
+~~~ts
 class A {
     method(): Object { return {} }
 }
@@ -748,7 +754,7 @@ class B extends A {
 
 TypeScript rightly rejects contravariant return types:
 
-~~~js
+~~~ts
 class A {
     method(): Date { return new Date(); }
 }
@@ -760,6 +766,55 @@ class B extends A {
 }
 ~~~
 
+### Classes think they are interfaces (but they're not)
+
+TypeScript allows you to treat a class as though it were an interface. For example, this is legal:
+
+~~~ts
+class Class {
+  content: string = "";
+}
+
+var stuff: Class = {content:"stuff"};
+~~~
+
+Stuff isn't a real `Class`, but TypeScript thinks it is, which can cause a runtime `TypeError` if you use `instanceof Class` somewhere else in the program:
+
+~~~ts
+function typeTest(x: Class|Date) {
+  if (x instanceof Class)
+    console.log("The class's content is " + x.content);
+  else
+    console.log("It's a Date in the year " + x.getFullYear());
+}
+
+typeTest(stuff);
+~~~
+
+### `this` isn't necessarily what you think
+
+This is a loophole of JavaScript, not TypeScript, but any time a function uses `this`, it might be accessing some completely unexpected object, with a different type than you think:
+
+~~~ts
+class Time {
+  constructor(public hours: number, public minutes: number) { }
+  toDate(day: Date) {
+    var clone = new Date(day);
+    clone.setHours(this.hours, this.minutes);
+    return clone;
+  }
+}
+
+// Call toDate() with this=12345
+Time.prototype.toDate.call(12345, new Date());
+~~~
+
+TypeScript's only sin is that it won't try to stop you from doing this.
+
+<span class="tip">Speaking of `this`, one thing JavaScript developers should know is that _arrow functions_ like `x => x+1` work slightly differently than anonymous functions like `function(x) {return x+1}`. Arrow functions inherit the value of `this` from the outer function in which they are located, but normal functions receive a _new_ value of `this` from the caller. So if `f` is an arrow function, `f.call(12345, x)` doesn't change `this`, so it like calling `f(x)`. That's usually a good thing, but if you write <br/><br/>
+`var obj = { x: 5, f: () => this.x }`<br/><br/><!--GFM doesn't understand paragraph breaks in this context-->
+You should realize that `obj.f()` does **not** return `obj.x`.</span>
+
 ### Lessons
 
 To avoid these holes, you need to
@@ -769,6 +824,8 @@ To avoid these holes, you need to
 - Be careful not to leave any "holes" with undefined values in your arrays.
 - Be careful not to use out-of-bounds array indexes.
 - Not override a base-class method with covariant parameters.
+- Avoid treating a class `K` as though it were an interface, unless you are sure that no code will ever check the type with `instanceof`.
+- Avoid using `.call(...)`
 
 TypeScript actually had [more](https://github.com/Microsoft/TypeScript/issues/9765) [holes](https://github.com/Microsoft/TypeScript/issues/3410#issuecomment-111646030) in the past, which are now fixed.
 
@@ -777,7 +834,7 @@ JSX
 
 React introduced the concept of JSX code. Or maybe [Hyperscript](https://github.com/hyperhype/hyperscript) introduced it and React copied the idea soon afterward. In any case, JSX *looks* like HTML/XML code, but you are not making DOM elements, you're making plain-old JavaScript objects, which we call a "virtual DOM". For example `<img src={imageUrl}/>` actually means `React.createElement("img", { src: imageUrl })` in a .jsx or .tsx file.
 
-If JSX is a React thing, why am I talking about it in the TypeScript section? Because support for JSX is built into the TypeScript compiler.
+If JSX is a React thing, why am I talking about it in the TypeScript section? Because support for JSX is built into the TypeScript compiler. To get JSX support in any TypeScript file, you just have to change the file's extension from `.ts` to `.tsx`.
 
 JSX can be used in the same places as normal expressions: you can pass JSX code to a function...
 
@@ -803,8 +860,10 @@ Tips for using JSX:
 - JSX is XML-like, so all tags must be closed: write `<br/>`, not `<br>`.
 - JSX only supports string attributes and JavaScript expressions. When writing numeric attributes in TypeScript, use `<input type="number" min={0} max={100}/>`, because `max=100` is a syntax error and `max="100"` is a type error.
 - In React/Preact, you can use an array of elements in any location where a list of children are expected. For example, instead of `return <p>Ann<br/>Bob<br/>Cam</p>`, you can write `let x = [<br/>, 'Bob', <br/>]; return <p>Ann{x}Cam</p>`. This has the same effect because React/Preact "flattens" arrays in the child list.
+- In React, the `class` attribute is not supported for some reason. Use `className` instead.
+- JSX itself does not support optional property or children. For example, suppose you write `<Foo prop={x}>` but you want to omit the `prop` when `x` is `undefined`. Well, JSX itself doesn't support anything like that. However, most components treat an `undefined` property the same as a missing property, so it usually works anyway. JSX doesn't support optional children either, but you can get the same effect with an empty array: because arrays are "collapsed" by React/Preact, `<Foo>{ [] }</Foo>` has the same effect as `<Foo></Foo>`. `<Foo>{undefined}</Foo>` does not have this effect (you end up with a single child equal to `undefined`.)
 
-At the top of the file, the `@jsx` pragma can control the "factory" function that is called to translate JSX elements. For example if you use `/** @jsx h */` then `<b>this</b>` translates to `h('b', null, "this")` instead of `React.createElement('b', null, "this")`. Some Preact apps use this pragma (`h` is the preact function to create elements), but you won't need to use it in this tutorial (`createElement` is a synonym for `h`). Also, in tsconfig.json you can get the same effect with `"jsxFactory": "h"` in the `compilerOptions`.
+At the top of the file, the `@jsx` pragma can control the "factory" function that is called to translate JSX elements. For example if you use `/** @jsx h */` then `<b>this</b>` translates to `h('b', null, "this")` instead of `React.createElement('b', null, "this")`. Some Preact apps use this pragma (`h` is the preact function to create elements), but you won't need to use it in this tutorial (`createElement` is a synonym for `h` in preact). Also, in tsconfig.json you can get the same effect with `"jsxFactory": "h"` in the `compilerOptions`.
 
 See also
 --------
