@@ -9,15 +9,6 @@ Write a module that you want to publish, probably using the ES6 `export` command
 
 For [Part 5](tutorial-5.html#example-4-calendar-event-editor) I made a simple time parser/formatter; now I've published it as the `simplertime` npm package. See the [repo](https://github.com/qwertie/simplertime) to see how it is set up, and try `npm install simplertime` to download the installed package to find out how it differs from the version published in the repo (in short: the tests are gone and *package.json* was modified by npm).
 
-### If it's a TypeScript package... ###
-
-When publishing TypeScript packages on `npm`, it's polite to publish code that has been _compiled_ to JavaScript so that people who are not using TypeScript can still use your package. By also including a .d.ts file (which contains type information), you don't even need to publish the original TypeScript source code.
-
-- For compatibility with both web servers and web browsers, use the `"module": "umd"` option in your tsconfig.json (see [Part 3](tutorial-3.md#approaches-b-and-c) for a sample tsconfig.json file)
-- In *package.json* in the `"scripts"` section, create a build command for creating the Javascript files from the TypeScript code, e.g. `"build": "tsc"`. Use `npm run build` to run it.
-- (optional) A popular convention in npm packages is to place the code in a folder called *dist*. In tsconfig.json you can send output there using `"outDir": "dist"`. If you get the error "Cannot write file '.../dist/....d.ts' because it would overwrite input file", then outside the compiler options, you must add `"dist"` to the `"exclude"` list ([see example](https://github.com/qwertie/simplertime/blob/master/tsconfig.json)). And don't forget to add `dist/` to your `"main"` option.
-- When end-users import the published module, I have found that VS Code will detect your typing files (e.g. if `"main"` is `dist/index.js` then VS Code finds `dist/index.d.ts`), [**but `tsc` will not**](https://stackoverflow.com/questions/41292559/could-not-find-a-declaration-file-for-module-module-name-path-to-module-nam). Therefore, before you publish, you need an extra option in package.json beside your `main` option, such as `"typings": "dist/index"` to tell `tsc` where the d.ts file is. Also, should not include the `.d.ts` extension in the `"typings"` option, or you might get a strange error: "Cannot write file '[your-module].d.ts' because it would overwrite input file".
-
 ### Main preparation steps (for JavaScript and TypeScript) ###
 
 - Create a *readme.md* file with documentation for your package. This file will be rendered on npmjs.com.
@@ -28,7 +19,9 @@ When publishing TypeScript packages on `npm`, it's polite to publish code that h
 
 - Check [npmjs.com](https://www.npmjs.com) to find out if the package name you want is already in use.
 
-    <span class="note">New package names very similar to existing package names are [not always allowed](https://gist.github.com/ashleygwilliams/e466c1e9fd3be42545da511239edd554).</span>
+    <span class="note">New package names very similar to existing package names are [not always allowed](https://gist.github.com/ashleygwilliams/e466c1e9fd3be42545da511239edd554), and currently there is [no way to be sure if the name you want to use is available before you publish.](https://npm.community/t/please-provide-a-way-to-check-if-a-name-is-available/612)</span>
+
+- In *package.json*, set the `"main"` option to the module's **JavaScript** name, e.g. `"main": "index.js"`. This option is needed for users to be able to import a module like `import * from 'simplertime'`. `'simplertime'` refers to a folder name in *node_modules*, and `main` controls which file within the folder is loaded.
 
 - You can either (1) specify the files you **want** in your package using the [`"files"` option of package.json](https://docs.npmjs.com/files/package.json#files), or (2) specify the files you **don't want** in your package by creating an *.npmignore* file (if there is no *.npmignore* file, `npm` will look for `.gitignore` instead.) As an example, the `files` list for `simplertime` is
 
@@ -40,13 +33,21 @@ When publishing TypeScript packages on `npm`, it's polite to publish code that h
 
     <span class="warning">npm [will not warn you](https://github.com/npm/npm/issues/6582) if a file listed in `files` is missing.</span>
 
-- In *package.json*, set the `"main"` option to the module's **JavaScript** name, e.g. "simplertime.js". This option is needed for users to be able to write `import * from 'simplertime'`.
-- In *package.json*, check your dependencies. Make sure that the `"dependencies"` section contains all the dependencies that are required by people using your package, **but only those dependencies**. For example if you see `"typescript"` there, that's wrong, TypeScript should be in the `"devDependencies"` section instead. Other examples of packages that should _usually_ be in `"devDependencies"` include `webpack`, `uglifyjs`, `jasmine`, `mocha`, `jest`, and `ts-node`. If you find a dependency in the wrong section, you can move it by hand (be careful with those commas) or use <code>npm install --save-dev <i>package-name</i></code> to move `package-name` to the `devDependencies` section (but this seems to initiate a new package download).
 - If you're a perfectionist with OCD, review all [package.json fields](https://docs.npmjs.com/files/package.json)
+- In *package.json*, check your dependencies. Make sure that the `"dependencies"` section contains all the dependencies that are required by people using your package, **but only those dependencies**. For example if you see `"typescript"` there, that's wrong, TypeScript should be in the `"devDependencies"` section instead. Other examples of packages that should _usually_ be in `"devDependencies"` include `webpack`, `uglifyjs`, `jasmine`, `mocha`, `jest`, and `ts-node`. If you find a dependency in the wrong section, you can move it by hand (be careful with those commas) or use <code>npm install --save-dev <i>package-name</i></code> to move `package-name` to the `devDependencies` section (but this seems to initiate a new package download).
+
+### If it's a TypeScript package... ###
+
+When publishing TypeScript packages on `npm`, it's polite to publish code that has been _compiled_ to JavaScript so that people who are not using TypeScript can still use your package. By also including a .d.ts file (which contains type information), you don't even need to publish the original TypeScript source code.
+
+- For compatibility with both web servers and web browsers, use the `"module": "umd"` option in your *tsconfig.json* (see [Part 3](tutorial-3.md#approaches-b-and-c) for a sample *tsconfig.json* file.)
+- In *package.json* in the `"scripts"` section, create a build command for creating the Javascript files from the TypeScript code, e.g. `"build": "tsc"`. Use `npm run build` to run it.
+- (optional) A popular thing to do in npm packages is to place the code in a folder called *dist*. In *tsconfig.json* you can send output there using `"outDir": "dist"`. If you get the error "Cannot write file '.../dist/....d.ts' because it would overwrite input file", then outside the compiler options, you must add `"dist"` to the `"exclude"` list ([see example](https://github.com/qwertie/simplertime/blob/master/tsconfig.json)). And don't forget to add `dist/` to your `"main"` option.
+- When end-users import the published module, I have found that VS Code will detect your typing files automatically (e.g. if `"main"` is `dist/index.js` then VS Code finds `dist/index.d.ts`), [**but `tsc` will not**](https://stackoverflow.com/questions/41292559/could-not-find-a-declaration-file-for-module-module-name-path-to-module-nam). Therefore, before you publish, you need an extra option in package.json beside your `main` option, such as `"typings": "dist/index"` to tell `tsc` where the d.ts file is. Also, should not include the `.d.ts` extension in the `"typings"` option, or you might get a strange error: "Cannot write file '[your-module].d.ts' because it would overwrite input file".
 
 ### How to minify your code (optional) ###
 
-Some npm packages offer minified or production versions, but this is not required; there is no standardized method in npm to offer separate "development" and "production" versions of your package, and developers using Webpack get their entire app minified (including npm packages) when they use `webpack -p` or the `--optimize-minimize` option. Still, some developers will appreciate having a minified version that they can refer to via aliases ([Webpack aliases](https://webpack.js.org/configuration/resolve/) or [Parcel aliases](https://github.com/parcel-bundler/parcel/pull/850).
+Some npm packages offer minified or production versions, but this is not required; there is no standardized method in npm to offer separate "development" and "production" versions of your package, and developers using Webpack get their entire app minified (including npm packages) when they use `webpack -p` or the `--optimize-minimize` option. Still, some developers will appreciate having a minified version that they can refer to, e.g. via aliases ([Webpack aliases](https://webpack.js.org/configuration/resolve/) or [Parcel aliases](https://github.com/parcel-bundler/parcel/pull/850).
 
 <span class="note">[TypeScript aliases](https://stackoverflow.com/a/38677886/22820) don't work for this purpose because if you tell TypeScript that `A` is an alias for `B`, then TypeScript loads `B` for type-checking purposes, but it generates code that still refers to `A`.</span>
 
@@ -62,7 +63,6 @@ But **how**? npmjs.com offers no good answer to this question.
 
 You can run `npm pack` to get a preview of what your package will contain:
 
-    ~~~
     PS C:\Dev\simplertime> npm pack
     npm notice
     npm notice package: simplertime@1.0.0
@@ -81,11 +81,10 @@ You can run `npm pack` to get a preview of what your package will contain:
     npm notice shasum:        e731092eea4a4e49be9912e4710348f41c2c9dc4
     npm notice integrity:     sha512-6fxbApL17Dol9[...]WGtw70i6xv4mg==
     npm notice total files:   7
-    ~~~
 
-From this you can see whether the intended files were included, but it doesn't tell you if other settings are correct (e.g. `main`, `devDependencies`). 
+From this you can see whether the intended files were included, but it doesn't tell you if other settings are correct (e.g. `main`, `typings`, `devDependencies`).
 
-You can improve this a bit by building and running unit tests at the same time. `npm` runs the `prepare` script before `npm pack` and before `npm publish`, so you'd want something like this in package.json
+You can improve this a bit by building and running unit tests at the same time. `npm` runs the `prepare` script before `npm pack` and before `npm publish`, so you'd want something like this in package.json:
 
     "scripts": {
       ...
@@ -96,9 +95,9 @@ You can improve this a bit by building and running unit tests at the same time. 
 
 I think the right way to ensure that your package is packaged correctly is to run your unit tests against it - the same tests that make sure your code works _locally_ could also test the _packaged_ code.
 
-I was trying to write a custom script in my project that would automate this idea, but I hit a roadblock: the way module resolution works. Specifically, when you import a local code file you **must** import from `./`, e.g. `import {stuff} from "./yourModule"`, but when you import something from *node_modules* you must import from `your_package_name`. So even if your package has the same name as your module (e.g. `simplertime` has `simplertime.ts`) a single import command cannot work for both. Therefore, there's no obvious way to write your tests in TypeScript so that they can run against *either* the local copy *or* a packaged version in `node_modules`.
+I was trying to write a custom script in my project that would automate this idea, but I hit a roadblock: the way module resolution works. Specifically, when you import a local code file you **must** import from `./`, e.g. `import {stuff} from "./yourModule"`, but when you import something from *node_modules* you must import from `your_package_name`. So even if your package has the same name as your module (e.g. `simplertime` has `simplertime.ts`), a single import command cannot work for both. Therefore, there's no obvious way to write your tests in TypeScript so that they can run against *either* the local copy *or* a packaged version in `node_modules`.
 
-I decided to solve this problem in a way that I hoped would help the whole community: by making a testing tool to test your package before publishing. It's called `testpack-cli`. I tried other names, but names like `testpack`, `testpackage`, `packtest`, `packagetest`, `checkpack`, and `checkpackage` were already taken by random people publishing "test packages" to "check" if they could figure out how to use npm. Finally I settled on the name `npm-testpack` which seemed unused, but actually someone had taken `npm-test-pack`, which [blocked me](https://gist.github.com/ashleygwilliams/e466c1e9fd3be42545da511239edd554).
+I decided to solve this problem in a way that I hoped would help the whole community: by making a testing tool to test your package before publishing. It's called `testpack-cli`. I tried other names, but names like `testpack`, `testpackage`, `packtest`, `packagetest`, `checkpack`, and `checkpackage` were already taken by random people publishing "test packages" to "check" if they could figure out how to use npm. Finally I settled on the name `npm-testpack` which seemed unused, but it turned out that someone had already taken `npm-test-pack`, which [blocked me](https://gist.github.com/ashleygwilliams/e466c1e9fd3be42545da511239edd554).
 
 **You use it like this:**
 
