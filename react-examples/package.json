@@ -4,7 +4,8 @@
   "description": "Collection of react examples",
   "scripts": {
     "test": "ts-node ./4b-Calendar/tests.ts",
-    "start": "parcel index.html"
+    "start": "parcel index.html",
+    "typecheck": "tsc --noEmit"
   },
   "author": "David Piepgrass",
   "license": "MIT",
@@ -16,6 +17,8 @@
   },
   "dependencies": {
     "react": "^16.3.2",
-    "react-dom": "^16.3.2"
+    "react-dom": "^16.3.2",
+    "simplertime": "^1.0.8",
+    "sorted-btree": "^1.1.0"
   }
 }
