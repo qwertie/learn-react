@@ -12,7 +12,7 @@
         "alwaysStrict": true,       // browser may run non-strict code more slowly
         "downlevelIteration": true, // Allow for-of loops and yield statement in ES5
         "noErrorTruncation": true,  // Whether to truncate long type names
-        "lib": ["ES6", "DOM", "ScriptHost"]
+        "lib": ["ES6", "DOM", "ScriptHost"], // Libraries to expect at runtime
     },
     "exclude": ["node_modules"]
 }

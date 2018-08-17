@@ -4,7 +4,7 @@
   "description": "Collection of react examples",
   "scripts": {
     "test": "ts-node ./4b-Calendar/tests.ts",
-    "start": "parcel index.html",
+    "start": "parcel index.html --no-cache",
     "typecheck": "tsc --noEmit"
   },
   "author": "David Piepgrass",
