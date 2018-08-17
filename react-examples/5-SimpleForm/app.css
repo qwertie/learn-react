@@ -6,7 +6,7 @@ input[type=range] {
   margin: 0 0.5em 0 0.5em;
 }
 
-form {
+form, fieldset {
   max-width: 500px;
 }
 form p, fieldset p {

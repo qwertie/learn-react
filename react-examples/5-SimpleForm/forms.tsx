@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import {holdState, holdAllProps, Holders, TextBox, TextArea, Label, LabelSpan,
-        CheckBox, Radio, Button, Slider, TimeBox, DateBox} from './controls';
+        CheckBox, Radio, Button, Slider, TimeBox, DateBox} from 'holders';
 
 // Note: if wrapInHolders(model) is called without extra arguments,
 //       unspecified values must be explicitly set to undefined so
@@ -15,22 +15,21 @@ class Model {
   country: string = "";
   date?: Date = undefined;
   color: string = "#bbff44";
-  virgin: boolean = false;
+  married: boolean = false;
 }
 
 // A simple form component with react-holders
-function MyForm(p: Holders<Model> & { children: React.ReactNode }) {
+function MyForm(m: Holders<Model>) {
   return <form>
-    <TextBox p label="Name:"     value={p.name} autoComplete="name"/>
-    <TextBox p label="Age:"      value={p.age}  type="number"
+    <TextBox p label="Name:"     value={m.name} autoComplete="name"/>
+    <TextBox p label="Age:"      value={m.age}  type="number"
              parse={s => parseFloat(s) || new Error("Invalid age")}/>
-    <TextBox p label="Address:"  value={p.country}  autoComplete="address-line1"/>
-    <TextBox p label="City:"     value={p.city}     autoComplete="address-level1"/>
-    <TextBox p label="Province:" value={p.province} autoComplete="address-level1"/>
-    <TextBox p label="Country:"  value={p.country}/>
-    <TextBox p label="Color:"    value={p.color} type="color"/>
-    <CheckBox p label="Virgin"   value={p.virgin}/>
-    {p.children}
+    <TextBox p label="Address:"  value={m.address}  autoComplete="address-line1"/>
+    <TextBox p label="City:"     value={m.city}     autoComplete="address-level1"/>
+    <TextBox p label="Province:" value={m.province} autoComplete="address-level1"/>
+    <TextBox p label="Country:"  value={m.country}  autoComplete="country-name"/>
+    <TextBox p label="Favorite color:" value={m.color} type="color"/>
+    <CheckBox p label="Married"  value={m.married}/>
   </form>;
 }
 
@@ -59,7 +58,7 @@ class StatefulForm extends React.Component<{}, FormState>
   render() {
     var hs = holdState(this as StatefulForm), date = hs('date');
     return (
-      <form><fieldset>
+      <fieldset>
         <legend>Additional input fields:</legend>
         <CheckBox p value={hs('checkbox1')} label="I am prepared to see various form elements"/>
         { !this.state.checkbox1 ? [] : [
@@ -97,7 +96,7 @@ class StatefulForm extends React.Component<{}, FormState>
             <TextArea value={hs('code')} cols={50} rows={5}/>
           </p>
         ]}
-      </fieldset></form>);
+      </fieldset>);
   }
 }
 
@@ -107,20 +106,12 @@ class App extends React.Component<{model:Model}, Holders<Model>>
     super(props);
     this.state = holdAllProps(props.model, 
       (propName, newVal) => {
-        this.setState({});
+        this.setState({}); // refresh!
         return true;
       });
   }
   render() {
-    return (
-      <div>
-        <h3>Personal Information Form</h3>
-        <MyForm {...this.state}>
-          <textarea value={JSON.stringify(this.props,null," ")} style={ {width:"100%"} } rows={10} readOnly/>
-        </MyForm>
-        <br/>
-        <StatefulForm/>
-      </div>);
+    return <MyForm {...this.state}/>;
   }
 }
 
