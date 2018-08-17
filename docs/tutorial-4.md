@@ -7,7 +7,7 @@ Part 4: A brief introduction to TypeScript
 
 I said this tutorial was designed for people who had used JavaScript but not TypeScript so I'll mostly just talk about the main differences between the two, but I will explain a few surprising facts about JavaScript too, in case you only studied a different language, like Java.
 
-TypeScript is based on JavaScript, and the TypeScript compiler (or other tools based on  it, like `ts-node` or `ts-jest`) translates TypeScript into normal JavaScript simply by stripping out all the type information. Alongside that process, type checking is performed in order to discover *type errors* - mistakes you've made that have something to do with types. (Of course, occasionally, it also complains about things you did intentionally that nevertheless broke the rules of TypeScript).
+TypeScript is based on JavaScript, and the TypeScript compiler (or other tools based on it, like `ts-node` or `ts-jest`) translates TypeScript into normal JavaScript simply by stripping out all the type information. Alongside that process, type checking is performed in order to discover *type errors* - mistakes you've made that have something to do with types.
 
 Types can be attached to variables with a colon (:) in their definition, like so:
 
@@ -855,6 +855,8 @@ It is important whether a JSX tag starts with a capital letters; it is translate
 - `<div class="foo"/>` means `React.createElement('div', {"class":"foo"})`, but
 - `<Div class="foo"/>` means `React.createElement(Div, {"class":"foo"})` (without quotes around `Div`).
 
+You can also use a "complex" component name with dots or even type parameters, e.g. `<module.Component/>` or `<Thing<number>>12345</Thing>`. If the tag contains a dot, TypeScript assumes that it refers to a component even if the name is in lowercase.
+
 Tips for using JSX:
 
 - JSX is XML-like, so all tags must be closed: write `<br/>`, not `<br>`.
@@ -862,6 +864,7 @@ Tips for using JSX:
 - In React/Preact, you can use an array of elements in any location where a list of children are expected. For example, instead of `return <p>Ann<br/>Bob<br/>Cam</p>`, you can write `let x = [<br/>, 'Bob', <br/>]; return <p>Ann{x}Cam</p>`. This has the same effect because React/Preact "flattens" arrays in the child list.
 - In React, the `class` attribute is not supported for some reason. Use `className` instead.
 - JSX itself does not support optional property or children. For example, suppose you write `<Foo prop={x}>` but you want to omit the `prop` when `x` is `undefined`. Well, JSX itself doesn't support anything like that. However, most components treat an `undefined` property the same as a missing property, so it usually works anyway. JSX doesn't support optional children either, but you can get the same effect with an empty array: because arrays are "collapsed" by React/Preact, `<Foo>{ [] }</Foo>` has the same effect as `<Foo></Foo>`. `<Foo>{undefined}</Foo>` does not have this effect (you end up with a single child equal to `undefined`.)
+- If you have an object like `obj = {a:1, b:2}` and you would like to use all the properties of the object as properties of a Component, you can write `<Component {...obj}/>`. The dots are always required, as `<Component {obj}/>` is meaningless.
 
 At the top of the file, the `@jsx` pragma can control the "factory" function that is called to translate JSX elements. For example if you use `/** @jsx h */` then `<b>this</b>` translates to `h('b', null, "this")` instead of `React.createElement('b', null, "this")`. Some Preact apps use this pragma (`h` is the preact function to create elements), but you won't need to use it in this tutorial (`createElement` is a synonym for `h` in preact). Also, in tsconfig.json you can get the same effect with `"jsxFactory": "h"` in the `compilerOptions`.
 
@@ -869,7 +872,6 @@ See also
 --------
 
 - [TypeScript evolution](https://blog.mariusschulz.com/series/typescript-evolution): excellent documentation of the newer TypeScript features
-
 
 Next
 ----
