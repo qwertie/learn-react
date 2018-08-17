@@ -52,7 +52,7 @@ Usage:
 
 - Install in a terminal with `npm install --save-dev uglify-js`
 
-<span class="tip">Note: npm tools installed with `--save-dev` are located in `./node_modules/bin` and if you want to run it directly from the command-line you need to write `./node_modules/.bin/uglifyjs` instead of just `uglifyjs`. If you install globally with `npm install --global jsmin`, you don't have to do this. The advantage of using `--save-dev` is that the dependency is listed in package.json so that when your code is placed on a different machine, running `npm install` installs all dependencies (except global ones). It is possible to install two copies - global and local - like this: `npm install uglify-js --global --save-dev`</span>
+<span class="tip">Note: npm tools installed with `--save-dev` are located in `./node_modules/bin` and if you want to run it directly from the command-line you need to write `./node_modules/.bin/uglifyjs` instead of just `uglifyjs`. If you install globally with `npm install --global uglifyjs`, you don't have to do this. The advantage of using `--save-dev` is that the dependency is listed in package.json so that when your code is placed on a different machine, running `npm install` installs all dependencies (except global ones). It is possible to install two copies - global and local - like this: `npm install uglify-js --global --save-dev`</span>
 
 - In package.json in the `"scripts"` section, add a `minify` script that uses `uglifyjs` (replace `name` with the name of your JavaScript file, not your TypeScript file; multiple filenames are allowed):
 
