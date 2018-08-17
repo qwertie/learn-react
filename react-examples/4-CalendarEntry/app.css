@@ -1,3 +1,8 @@
+*, *:before, *:after {
+  /* See https://css-tricks.com/international-box-sizing-awareness-day/ */
+  box-sizing: border-box; 
+}
+  
 body                 { font-family: sans-serif; }
 .calendarEntryForm   { width: 24em; font-family: sans-serif; }
 .calendarEntryForm p { margin: 5px; }
