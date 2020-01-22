@@ -219,7 +219,7 @@ For example we can write `let p: Person = {name:'John Doe', age:37}`. Since `p` 
 
 ### Intersection types ###
 
-Intersection types are the lesser-known cousin of union types. A union type like `A | B` means that a value can be _either_ an A _or_ a B (but not both). An intersection type like `A & B` means that a value is both A and B at the same time. For instance, this `box` is both `IBox` and `IArea`, so it has all the properties from both interfaces:
+Intersection types are the lesser-known cousin of union types. A union type like `A | B` means that a value can be _either_ an A _or_ a B (but usually not both). An intersection type like `A & B` means that a value is both A and B at the same time. For instance, this `box` is both `IBox` and `IArea`, so it has all the properties from both interfaces:
 
 ~~~ts
 let box: IBox & IArea = new Box(5, 7);
@@ -676,7 +676,7 @@ oh.date = { date: {wait:"what?"} }   // wait, what?
 
 TypeScript now believes `de.date` is a `Date` when it is actually an `Object`.
 
-#### You can assign [A,B] to (A|B)[]
+### You can assign [A,B] to (A|B)[]
 
 It makes sense that an array of two items, an `A` followed by a `B`, is also a an array of `A|B`, right? Actually, no, not really:
 
@@ -686,7 +686,7 @@ var array2: (number|string)[] = array1;   // makes sense...
 array2[0] = "string!";                    // wait, what?
 ~~~
 
-TypeScript now believes `array1[0]` is a `number` when it is actually a `string`. This is an example of a more general problem, that arrays are covariant but.
+TypeScript now believes `array1[0]` is a `number` when it is actually a `string`. This is an example of a more general problem, that arrays are covariant but shouldn't be. You can put an array of `Date` in an variable of type `Object[]` but this is unsafe. **Fun fact:** Java and C# have the same problem. 
 
 ### Arrays? There be dragons.
 
